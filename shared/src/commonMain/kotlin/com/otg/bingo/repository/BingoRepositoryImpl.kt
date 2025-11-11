@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.flowOf
 
 class BingoRepositoryImpl: BingoRepository {
     override fun getGameThemes(): Flow<List<String>> {
-        val themes = listOf("Animals", "Movies", "Sports", "Food")
+        val themes = listOf("Animals", "Movies", "Sports", "Food","pizza")
         return flowOf(themes)
     }
 }

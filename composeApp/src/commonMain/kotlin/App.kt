@@ -1,7 +1,4 @@
-package com.otg.bingo
 
-import android.content.res.Configuration
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -35,24 +32,23 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.otg.bingo.Greeting
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import onthegobingo.composeapp.generated.resources.Res
-import onthegobingo.composeapp.generated.resources.compose_multiplatform
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-
-fun App(themesFlow: Flow<List<String>>) {
+public fun App(themesFlow: Flow<List<String>>) {
     MaterialTheme {
         GameThemesPager(themesFlow = themesFlow)
     }
 }
 
 @Composable
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Preview(showBackground = true)
 fun GameThemesPager(
     themesFlow: Flow<List<String>> = flowOf(
         listOf(
@@ -68,10 +64,6 @@ fun GameThemesPager(
     ) {
         val themes by themesFlow.collectAsState(initial = emptyList())
         val pagerState = rememberPagerState(pageCount = { themes.size })
-        Log.i(
-            "GameThemesPager",
-            "GameThemesPager: current page = ${pagerState.currentPage}, total pages = ${pagerState.pageCount} themes = $themes"
-        )
         HorizontalPager(
             state = pagerState,
             modifier = Modifier.fillMaxSize()
@@ -108,7 +100,8 @@ fun GameThemesPager(
                         )
                     } else {
                         Spacer(modifier = Modifier.size(24.dp))
-                    } }
+                    }
+                }
                 Text(text = themes[page])
             }
         }
@@ -135,7 +128,7 @@ fun GreetingUI() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Image(painterResource(Res.drawable.compose_multiplatform), null)
+//                Image(painterResource(Res.drawable.compose_multiplatform), null)
                 Text("Compose: $greeting")
             }
         }
