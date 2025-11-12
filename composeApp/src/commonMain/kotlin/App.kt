@@ -38,7 +38,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import onthegobingo.composeapp.generated.resources.Res
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
+
 
 @Composable
 public fun App(themesFlow: Flow<List<String>>) {
@@ -48,7 +48,7 @@ public fun App(themesFlow: Flow<List<String>>) {
 }
 
 @Composable
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 fun GameThemesPager(
     themesFlow: Flow<List<String>> = flowOf(
         listOf(
