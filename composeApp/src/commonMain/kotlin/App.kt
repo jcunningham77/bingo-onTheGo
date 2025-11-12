@@ -63,6 +63,15 @@ fun GameThemesPager(
         colorScheme = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()
     ) {
         val themes by themesFlow.collectAsState(initial = emptyList())
+
+        if (themes.isEmpty()) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text("Loading...")
+            }
+            return@MaterialTheme
+        }
+
+
         val pagerState = rememberPagerState(pageCount = { themes.size })
         HorizontalPager(
             state = pagerState,
