@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Preview
+@Preview(showBackground=true)
 @Composable
 fun AppAndroidPreview() {
     App(BingoRepositoryImpl().getGameThemes())
