@@ -122,8 +122,15 @@ fun GameThemesPager(
                             }
                         )
                         Text(
+                            modifier = Modifier.align(Alignment.BottomStart)
+                                .padding(16.dp)
+                                .background(
+                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+                                    shape = MaterialTheme.shapes.small
+                                )
+                                .padding(horizontal = 8.dp, vertical = 4.dp),
                             text = gameThemes[page].name,
-                            textAlign = TextAlign.Center,
+                            textAlign = TextAlign.Start,
                             style = MaterialTheme.typography.headlineMedium,
                             color = MaterialTheme.colorScheme.surface
                         )
