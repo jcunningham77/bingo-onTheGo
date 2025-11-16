@@ -1,3 +1,4 @@
+import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.implementation
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -33,13 +34,15 @@ kotlin {
             implementation(compose.uiTooling)
             implementation(libs.ktor.client.okhttp)
         }
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
+        }
         commonMain.dependencies {
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(projects.shared)
             implementation(compose.components.resources)
-//            implementation(compose.components.uiToolingPreview)
             implementation(libs.coil.compose)
             implementation(libs.coil.network)
             implementation(compose.foundation)

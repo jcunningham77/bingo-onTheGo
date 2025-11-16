@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
@@ -31,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -121,13 +123,25 @@ fun GameThemesPager(
                                 println("Error loading image: ${error}" )
                             }
                         )
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(120.dp)
+                                .align(Alignment.BottomCenter)
+                                .background(
+                                    brush = androidx.compose.ui.graphics.Brush.verticalGradient(
+                                        colors = listOf(
+                                            Color.Transparent,
+                                            Color.Black.copy(alpha = 0.7f)
+                                        ),
+                                        startY = 0f,
+                                        endY = Float.POSITIVE_INFINITY
+                                    )
+                                )
+                        )
                         Text(
                             modifier = Modifier.align(Alignment.BottomStart)
                                 .padding(16.dp)
-                                .background(
-                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
-                                    shape = MaterialTheme.shapes.small
-                                )
                                 .padding(horizontal = 8.dp, vertical = 4.dp),
                             text = gameThemes[page].name,
                             textAlign = TextAlign.Start,
