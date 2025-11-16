@@ -30,13 +30,26 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import coil3.ImageLoader
+import coil3.compose.AsyncImage
+import coil3.compose.setSingletonImageLoaderFactory
+import coil3.request.crossfade
+import coil3.util.DebugLogger
+import com.otg.bingo.model.GameTheme
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 
 @Composable
-fun App(themesFlow: Flow<List<String>>) {
+fun App(themesFlow: Flow<List<GameTheme>>) {
+    setSingletonImageLoaderFactory { context ->
+        ImageLoader.Builder(context)
+            .crossfade(true)
+            .logger(DebugLogger())
+            .build()
+    }
     MaterialTheme {
         GameThemesPager(gameThemesFlow = themesFlow)
     }
@@ -44,14 +57,7 @@ fun App(themesFlow: Flow<List<String>>) {
 
 @Composable
 fun GameThemesPager(
-    gameThemesFlow: Flow<List<String>> = flowOf(
-        listOf(
-            "Amusements",
-            "Animals",
-            "Foods",
-            "Sports"
-        )
-    )
+    gameThemesFlow: Flow<List<GameTheme>>
 ) {
     MaterialTheme(
         colorScheme = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()
@@ -100,13 +106,26 @@ fun GameThemesPager(
                                     width = 2.dp,
                                     color = MaterialTheme.colorScheme.onSurface,
                                     shape = MaterialTheme.shapes.medium
-                                ),
+                                )
+                                .clip(MaterialTheme.shapes.medium),
                         contentAlignment = Alignment.Center
                     ) {
+                        AsyncImage(
+                            model = gameThemes[page].imageUrl,
+                            contentDescription = gameThemes[page].name,
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop,
+                            onLoading = { println("Loading image...") },
+                            onSuccess = { println("Image loaded successfully") },
+                            onError = { error ->
+                                println("Error loading image: ${error}" )
+                            }
+                        )
                         Text(
-                            text = gameThemes[page],
+                            text = gameThemes[page].name,
                             textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.headlineMedium
+                            style = MaterialTheme.typography.headlineMedium,
+                            color = MaterialTheme.colorScheme.surface
                         )
                     }
 

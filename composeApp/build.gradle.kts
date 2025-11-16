@@ -31,6 +31,7 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(compose.uiTooling)
+            implementation(libs.ktor.client.okhttp)
         }
         commonMain.dependencies {
             implementation(libs.androidx.activity.compose)
@@ -39,11 +40,14 @@ kotlin {
             implementation(projects.shared)
             implementation(compose.components.resources)
 //            implementation(compose.components.uiToolingPreview)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network)
             implementation(compose.foundation)
             implementation(compose.material3)
             implementation(compose.materialIconsExtended)
             implementation(compose.ui)
             implementation(compose.runtime)
+            implementation(libs.ktor.client.core)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
