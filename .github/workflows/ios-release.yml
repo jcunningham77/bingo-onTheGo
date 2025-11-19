@@ -26,6 +26,7 @@ jobs:
         run: ./gradlew :composeApp:embedAndSignAppleFrameworkForXcode
         env:
           CONFIGURATION: Release
+          SDK_NAME: iphoneos
 
       - name: Set up Xcode
         uses: maxim-lobanov/setup-xcode@v1
