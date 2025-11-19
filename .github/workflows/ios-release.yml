@@ -93,4 +93,4 @@ jobs:
       - name: Clean up keychain
         if: always()
         run: |
-          security delete-keychain $RUNNER_TEMP/app-signing.keychain-db
+          security delete-keychain $RUNNER_TEMP/app-signing.keychain-db || true # Ignore errors during cleanup
