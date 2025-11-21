@@ -28,10 +28,13 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
 
       - name: Build Kotlin framework
-        run: ./gradlew :composeApp:embedAndSignAppleFrameworkForXcode
-        env:
-          CONFIGURATION: Release
-          SDK_NAME: iphoneos
+        run: |
+          cd iosApp
+          xcodebuild -project OnTheGoBingo/OnTheGoBingo.xcodeproj \
+            -scheme OnTheGoBingo \
+            -configuration Release \
+            -derivedDataPath $RUNNER_TEMP/DerivedData \
+            build-for-testing
 
       - name: Install Apple Certificate
         env:
