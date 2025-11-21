@@ -27,16 +27,6 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      - name: Build Kotlin framework
-        run: |
-          cd iosApp
-          xcodebuild -project OnTheGoBingo/OnTheGoBingo.xcodeproj \
-            -scheme OnTheGoBingo \
-            -configuration Release \
-            -destination 'generic/platform=iOS' \
-            -derivedDataPath $RUNNER_TEMP/DerivedData \
-            build-for-testing
-
       - name: Install Apple Certificate
         env:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
@@ -62,7 +52,17 @@ jobs:
           PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
           echo -n "$PROVISIONING_PROFILE_BASE64" | base64 --decode -o $PP_PATH
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles        
+
+      - name: Build Kotlin framework
+        run: |
+          cd iosApp
+          xcodebuild -project OnTheGoBingo/OnTheGoBingo.xcodeproj \
+            -scheme OnTheGoBingo \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath $RUNNER_TEMP/DerivedData \
+            build-for-testing
 
       - name: Build iOS app
         run: |
