@@ -33,6 +33,7 @@ jobs:
           xcodebuild -project OnTheGoBingo/OnTheGoBingo.xcodeproj \
             -scheme OnTheGoBingo \
             -configuration Release \
+            -destination 'generic/platform=iOS' \
             -derivedDataPath $RUNNER_TEMP/DerivedData \
             build-for-testing
 
