@@ -64,7 +64,7 @@ jobs:
 
       - name: Build Kotlin Multiplatform iOS Framework
         run: |
-          ./gradlew composeApp:packReleaseXCFramework
+          ./gradlew composeApp:linkReleaseFrameworkIosArm64
 
       - name: Build Kotlin framework
         run: |
