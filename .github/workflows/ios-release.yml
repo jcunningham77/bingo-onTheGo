@@ -79,6 +79,7 @@ jobs:
             -authenticationKeyIssuerID ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }} \
             -allowProvisioningUpdates \
             DEVELOPMENT_TEAM=${{ secrets.DEVELOPMENT_TEAM }} \
+            KOTLIN_FRAMEWORK_BUILD_TYPE=release \
             archive
 
       - name: Build iOS app
