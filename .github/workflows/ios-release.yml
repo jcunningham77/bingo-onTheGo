@@ -73,9 +73,8 @@ jobs:
             -authenticationKeyPath $RUNNER_TEMP/api_key.p8 \
             -authenticationKeyID ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }} \
             -authenticationKeyIssuerID ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }} \
+            DEVELOPMENT_TEAM=${{ secrets.DEVELOPMENT_TEAM }} \
             build-for-testing
-        env:
-          DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
 
       - name: Build iOS app
         run: |
