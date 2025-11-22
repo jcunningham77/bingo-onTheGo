@@ -62,6 +62,10 @@ jobs:
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles        
 
+      - name: Build Kotlin Multiplatform iOS Framework
+        run: |
+          ./gradlew composeApp:assembleReleaseIosArm64
+
       - name: Build Kotlin framework
         run: |
           cd iosApp
@@ -75,7 +79,7 @@ jobs:
             -authenticationKeyIssuerID ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }} \
             -allowProvisioningUpdates \
             DEVELOPMENT_TEAM=${{ secrets.DEVELOPMENT_TEAM }} \
-            build-for-testing
+            archive
 
       - name: Build iOS app
         run: |
