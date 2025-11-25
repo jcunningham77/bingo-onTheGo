@@ -26,7 +26,7 @@
 
 /* Begin PBXFileReference section */
 		160CAC542EC2D04D0035A63E /* OnTheGoBingo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheGoBingo.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		16CA70892EC4104B0044D4F4 /* ComposeApp-device.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "ComposeApp-device.framework"; path = ../../composeApp/build/bin/iosArm64/debugFramework/ComposeApp.framework; sourceTree = "<group>"; };
+		16CA70892EC4104B0044D4F4 /* ComposeApp-device.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "ComposeApp-device.framework"; path = ../../composeApp/build/bin/iosArm64/releaseFramework/ComposeApp.framework; sourceTree = "<group>"; };
 		16CA708B2EC413780044D4F4 /* ComposeApp-simulator.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "ComposeApp-simulator.framework"; path = ../../composeApp/build/bin/iosSimulatorArm64/debugFramework/ComposeApp.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
