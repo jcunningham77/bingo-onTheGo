@@ -88,7 +88,10 @@ jobs:
           xcodebuild -project OnTheGoBingo/OnTheGoBingo.xcodeproj \
             -scheme OnTheGoBingo \
             -configuration Release \
+            -destination 'generic/platform=iOS' \
             -archivePath $RUNNER_TEMP/OnTheGoBingo.xcarchive \
+            -allowProvisioningUpdates \
+            DEVELOPMENT_TEAM=${{ secrets.DEVELOPMENT_TEAM }} \    
             archive
 
       - name: Export IPA
