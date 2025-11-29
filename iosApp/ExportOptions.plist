@@ -17,7 +17,7 @@
     <key>provisioningProfiles</key>
     <dict>
         <key>com.otg.bingo.ios.OnTheGoBingo</key>
-        <string>OnTheGoBingo</string>
+        <string>OnTheGoBingo App Store</string>
     </dict>
 </dict>
 </plist>
