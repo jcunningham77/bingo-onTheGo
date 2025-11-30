@@ -81,6 +81,7 @@ jobs:
             -authenticationKeyID ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }} \
             -authenticationKeyIssuerID ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }} \
             -allowProvisioningUpdates \
+            CODE_SIGN_STYLE=Automatic \
             DEVELOPMENT_TEAM=${{ secrets.DEVELOPMENT_TEAM }} \
             KOTLIN_FRAMEWORK_BUILD_TYPE=release \
             archive
@@ -94,6 +95,7 @@ jobs:
             -destination 'generic/platform=iOS' \
             -archivePath $RUNNER_TEMP/OnTheGoBingo.xcarchive \
             -allowProvisioningUpdates \
+            CODE_SIGN_STYLE=Automatic \
             DEVELOPMENT_TEAM=${{ secrets.DEVELOPMENT_TEAM }} \
             archive
 
