@@ -100,9 +100,14 @@ jobs:
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
           APP_STORE_CONNECT_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
         run: |
-          API_KEY_PATH=$RUNNER_TEMP/api_key.p8
+          # Create the directory altool expects
+          mkdir -p ~/.appstoreconnect/private_keys
+
+          # Save the API key with the correct filename format
+          API_KEY_PATH=~/.appstoreconnect/private_keys/AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8
           echo -n "$APP_STORE_CONNECT_API_KEY_BASE64" | base64 --decode -o $API_KEY_PATH
-          
+          chmod 600 $API_KEY_PATH
+
           xcrun altool --upload-app \
             --type ios \
             --file $RUNNER_TEMP/export/OnTheGoBingo.ipa \
