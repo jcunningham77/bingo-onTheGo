@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		16FB41D92ED39B2A0081A2DB /* ComposeApp-device.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 16CA70892EC4104B0044D4F4 /* ComposeApp-device.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		16C78A612EE7BD7E001DEE3D /* ComposeApp.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 16C78A602EE7BD7E001DEE3D /* ComposeApp.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -17,7 +17,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				16FB41D92ED39B2A0081A2DB /* ComposeApp-device.framework in Embed Frameworks */,
+				16C78A612EE7BD7E001DEE3D /* ComposeApp.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -26,6 +26,7 @@
 
 /* Begin PBXFileReference section */
 		160CAC542EC2D04D0035A63E /* OnTheGoBingo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheGoBingo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		16C78A602EE7BD7E001DEE3D /* ComposeApp.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ComposeApp.framework; path = ../../composeApp/build/bin/iosSimulatorArm64/debugFramework/ComposeApp.framework; sourceTree = "<group>"; };
 		16CA70892EC4104B0044D4F4 /* ComposeApp-device.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "ComposeApp-device.framework"; path = ../../composeApp/build/bin/iosArm64/releaseFramework/ComposeApp.framework; sourceTree = "<group>"; };
 		16CA708B2EC413780044D4F4 /* ComposeApp-simulator.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "ComposeApp-simulator.framework"; path = ../../composeApp/build/bin/iosSimulatorArm64/debugFramework/ComposeApp.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -65,6 +66,7 @@
 		160CAC4B2EC2D04D0035A63E = {
 			isa = PBXGroup;
 			children = (
+				16C78A602EE7BD7E001DEE3D /* ComposeApp.framework */,
 				160CAC562EC2D04D0035A63E /* OnTheGoBingo */,
 				16CA70882EC4104B0044D4F4 /* Frameworks */,
 				160CAC552EC2D04D0035A63E /* Products */,
@@ -317,6 +319,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
+				"FRAMEWORK_SEARCH_PATHS[arch=*]" = "$(SRCROOT)/../../composeApp/build/bin/iosSimulatorArm64/debugFramework";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = OnTheGoBingo/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
