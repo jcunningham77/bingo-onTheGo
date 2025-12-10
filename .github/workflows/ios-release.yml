@@ -70,6 +70,9 @@ jobs:
           ./gradlew composeApp:linkReleaseFrameworkIosArm64
 
       - name: Build iOS app
+        env:
+          CONFIGURATION: Release
+          PLATFORM_NAME: iphoneos
         run: |
           cd iosApp
           
