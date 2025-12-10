@@ -59,25 +59,17 @@ kotlin {
 }
 
 tasks.named("embedAndSignAppleFrameworkForXcode") {
-    doFirst {
-        val targetBuildDir = System.getenv("TARGET_BUILD_DIR")
-        val configuration = System.getenv("CONFIGURATION")?.uppercase() ?: "DEBUG"
-        val platformName = System.getenv("PLATFORM_NAME") ?: "iphonesimulator"
+    val configuration = System.getenv("CONFIGURATION")?.uppercase() ?: "DEBUG"
+    val platformName = System.getenv("PLATFORM_NAME") ?: "iphonesimulator"
 
-        logger.lifecycle("Building for platform: $platformName, configuration: $configuration")
-        logger.lifecycle("Target build dir: $targetBuildDir")
-
-        val frameworkPath = when {
-            platformName == "iphonesimulator" ->
-                "iosSimulatorArm64/debugFramework"
-            configuration == "RELEASE" ->
-                "iosArm64/releaseFramework"
-            else ->
-                "iosArm64/debugFramework"
-        }
-
-        logger.lifecycle("Using framework path: $frameworkPath")
+    val buildTaskName = when {
+        platformName == "iphonesimulator" -> "linkDebugFrameworkIosSimulatorArm64"
+        configuration == "RELEASE" -> "linkReleaseFrameworkIosArm64"
+        else -> "linkDebugFrameworkIosArm64"
     }
+
+    logger.lifecycle("Depending on build task: $buildTaskName")
+    dependsOn(buildTaskName)
 }
 
 
