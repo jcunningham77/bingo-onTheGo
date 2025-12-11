@@ -69,6 +69,12 @@ jobs:
         run: |
           ./gradlew composeApp:linkReleaseFrameworkIosArm64
 
+      - name: Increment build number
+        working-directory: iosApp/OnTheGoBingo
+        run: |
+          BUILD_NUMBER=${{ github.run_number }}
+          xcrun agvtool new-version -all $BUILD_NUMBER
+
       - name: Build iOS app
         env:
           CONFIGURATION: Release
