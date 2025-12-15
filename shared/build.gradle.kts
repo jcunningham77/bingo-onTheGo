@@ -25,7 +25,15 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlin.coroutines.core)
-
+            implementation("io.ktor:ktor-client-core:2.3.7")
+            implementation("io.ktor:ktor-client-content-negotiation:2.3.7")
+            implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.7")
+        }
+        androidMain.dependencies {
+            implementation("io.ktor:ktor-client-okhttp:2.3.7")
+        }
+        iosMain.dependencies {
+            implementation("io.ktor:ktor-client-darwin:2.3.7")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
