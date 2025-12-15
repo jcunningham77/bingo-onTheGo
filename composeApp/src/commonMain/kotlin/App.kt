@@ -46,6 +46,9 @@ import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun App(themesFlow: Flow<List<GameTheme>>) {
+
+    val gameThemes by themesFlow.collectAsState(initial = emptyList())
+
     setSingletonImageLoaderFactory { context ->
         ImageLoader.Builder(context)
             .crossfade(true)
@@ -55,16 +58,15 @@ fun App(themesFlow: Flow<List<GameTheme>>) {
     MaterialTheme(
         colorScheme = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()
     ) {
-        GameThemesPager(gameThemesFlow = themesFlow)
+        GameThemesPager(gameThemes = gameThemes)
     }
 }
 
 @Composable
 fun GameThemesPager(
-    gameThemesFlow: Flow<List<GameTheme>>
+    gameThemes: List<GameTheme>
 ) {
 
-    val gameThemes by gameThemesFlow.collectAsState(initial = emptyList())
 
     if (gameThemes.isEmpty()) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -113,7 +115,7 @@ fun GameThemesPager(
                     contentAlignment = Alignment.Center
                 ) {
                     AsyncImage(
-                        model = gameThemes[page].imageUrl,
+                        model = gameThemes[page].imgUrl,
                         contentDescription = gameThemes[page].name,
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop,

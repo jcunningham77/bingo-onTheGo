@@ -1,3 +1,10 @@
 package com.otg.bingo.model
 
-data class GameTheme(val name: String, val imageUrl: String)
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class GameTheme(
+    @SerialName("name") val name: String,
+    @SerialName("imgUrl") val imgUrl: String
+)
