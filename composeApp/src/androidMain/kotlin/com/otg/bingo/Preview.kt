@@ -16,5 +16,5 @@ fun GameThemesPagerPreview() {
         GameTheme("Movies", "https://picsum.photos/400/600?random=3")
     )
 
-    App(themesFlow = flowOf(mockThemes))
+    App()
 }

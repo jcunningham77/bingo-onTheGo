@@ -42,12 +42,11 @@ import coil3.compose.setSingletonImageLoaderFactory
 import coil3.request.crossfade
 import coil3.util.DebugLogger
 import com.otg.bingo.model.GameTheme
+import com.otg.bingo.repository.BingoRepositoryImpl
 import kotlinx.coroutines.flow.Flow
 
 @Composable
-fun App(themesFlow: Flow<List<GameTheme>>) {
-
-    val gameThemes by themesFlow.collectAsState(initial = emptyList())
+fun App() {
 
     setSingletonImageLoaderFactory { context ->
         ImageLoader.Builder(context)
@@ -58,16 +57,16 @@ fun App(themesFlow: Flow<List<GameTheme>>) {
     MaterialTheme(
         colorScheme = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()
     ) {
-        GameThemesPager(gameThemes = gameThemes)
+        GameThemesPager(themesFlow = BingoRepositoryImpl().getGameThemes())
     }
 }
 
 @Composable
 fun GameThemesPager(
-    gameThemes: List<GameTheme>
+    themesFlow: Flow<List<GameTheme>>
 ) {
 
-
+    val gameThemes by themesFlow.collectAsState(initial = emptyList())
     if (gameThemes.isEmpty()) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Text("Loading...")
@@ -119,10 +118,10 @@ fun GameThemesPager(
                         contentDescription = gameThemes[page].name,
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop,
-                        onLoading = { println("Loading image...") },
-                        onSuccess = { println("Image loaded successfully") },
+                        onLoading = { println("JRC Loading image...") },
+                        onSuccess = { println("JRC Image loaded successfully") },
                         onError = { error ->
-                            println("Error loading image: ${error}")
+                            println("JRC Error loading image: ${error}")
                         }
                     )
                     Box(

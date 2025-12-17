@@ -15,7 +15,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            App(BingoRepositoryImpl().getGameThemes())
+            App()
         }
     }
 }
@@ -23,5 +23,5 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground=true)
 @Composable
 fun AppAndroidPreview() {
-    App(BingoRepositoryImpl().getGameThemes())
+    App()
 }
