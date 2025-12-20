@@ -33,6 +33,7 @@ kotlin {
             implementation(compose.preview)
             implementation(compose.uiTooling)
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.androidx.splash)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
