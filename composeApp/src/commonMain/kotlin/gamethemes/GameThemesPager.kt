@@ -41,126 +41,134 @@ import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun GameThemesPager(
-    themesFlow: Flow<List<GameTheme>>
+    themesFlowResult: Flow<Result<List<GameTheme>>>
 ) {
 
-    val gameThemes by themesFlow.collectAsState(initial = emptyList())
-    if (gameThemes.isEmpty()) {
+    val gameThemesResult by themesFlowResult.collectAsState(initial = Result.success(emptyList()))
+    if (gameThemesResult.isFailure) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text("Error loading data...")
+        }
+        return
+    }
+    if (gameThemesResult.isSuccess && gameThemesResult.getOrNull()?.isEmpty() == true) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Text("Loading...")
         }
         return
     }
 
+    gameThemesResult.getOrNull()?.let { gameThemes ->
+        val pagerState = rememberPagerState(pageCount = { gameThemes.size })
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .windowInsetsPadding(WindowInsets.systemBars)
+        ) {
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.weight(1f)
+            ) { page ->
 
-    val pagerState = rememberPagerState(pageCount = { gameThemes.size })
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.systemBars)
-    ) {
-        HorizontalPager(
-            state = pagerState,
-            modifier = Modifier.weight(1f)
-        ) { page ->
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (pagerState.currentPage > 0) {
+                        Icon(
+                            imageVector = Icons.Default.ChevronLeft,
+                            contentDescription = "Previous",
+                            modifier = Modifier.size(24.dp).alpha(.5f),
+                        )
+                    } else {
+                        Spacer(modifier = Modifier.size(24.dp))
+                    }
+                    Box(
+                        modifier =
+                            Modifier.weight(1f)
+                                .fillMaxSize()
+                                .padding(horizontal = 10.dp, vertical = 20.dp)
+                                .border(
+                                    width = 2.dp,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    shape = MaterialTheme.shapes.medium
+                                )
+                                .clip(MaterialTheme.shapes.medium),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        AsyncImage(
+                            model = gameThemes[page].imgUrl,
+                            contentDescription = gameThemes[page].name,
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop,
+                            onLoading = { println("JRC Loading image...") },
+                            onSuccess = { println("JRC Image loaded successfully") },
+                            onError = { error ->
+                                println("JRC Error loading image: ${error}")
+                            }
+                        )
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(120.dp)
+                                .align(Alignment.BottomCenter)
+                                .background(
+                                    brush = androidx.compose.ui.graphics.Brush.verticalGradient(
+                                        colors = listOf(
+                                            Color.Transparent,
+                                            Color.Black.copy(alpha = 0.7f)
+                                        ),
+                                        startY = 0f,
+                                        endY = Float.POSITIVE_INFINITY
+                                    )
+                                )
+                        )
+                        Text(
+                            modifier = Modifier.align(Alignment.BottomStart)
+                                .padding(16.dp)
+                                .padding(horizontal = 8.dp, vertical = 4.dp),
+                            text = gameThemes[page].name,
+                            textAlign = TextAlign.Start,
+                            style = MaterialTheme.typography.headlineMedium,
+                            color = MaterialTheme.colorScheme.surface
+                        )
+                    }
 
+                    if (pagerState.currentPage < gameThemes.size - 1) {
+                        Icon(
+                            imageVector = Icons.Default.ChevronRight,
+                            contentDescription = "Next",
+                            modifier = Modifier.size(24.dp).alpha(.5f),
+                        )
+                    } else {
+                        Spacer(modifier = Modifier.size(24.dp))
+                    }
+                }
+
+            }
             Row(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (pagerState.currentPage > 0) {
-                    Icon(
-                        imageVector = Icons.Default.ChevronLeft,
-                        contentDescription = "Previous",
-                        modifier = Modifier.size(24.dp).alpha(.5f),
-                    )
-                } else {
-                    Spacer(modifier = Modifier.size(24.dp))
-                }
-                Box(
-                    modifier =
-                        Modifier.weight(1f)
-                            .fillMaxSize()
-                            .padding(horizontal = 10.dp, vertical = 20.dp)
-                            .border(
-                                width = 2.dp,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                shape = MaterialTheme.shapes.medium
-                            )
-                            .clip(MaterialTheme.shapes.medium),
-                    contentAlignment = Alignment.Center
-                ) {
-                    AsyncImage(
-                        model = gameThemes[page].imgUrl,
-                        contentDescription = gameThemes[page].name,
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop,
-                        onLoading = { println("JRC Loading image...") },
-                        onSuccess = { println("JRC Image loaded successfully") },
-                        onError = { error ->
-                            println("JRC Error loading image: ${error}")
-                        }
-                    )
+                repeat(gameThemes.size) { index ->
+                    val isSelected = pagerState.currentPage == index
                     Box(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .height(120.dp)
-                            .align(Alignment.BottomCenter)
+                            .padding(horizontal = 4.dp)
+                            .size(if (isSelected) 10.dp else 8.dp)
+                            .alpha(if (isSelected) 1f else 0.4f)
                             .background(
-                                brush = androidx.compose.ui.graphics.Brush.verticalGradient(
-                                    colors = listOf(
-                                        Color.Transparent,
-                                        Color.Black.copy(alpha = 0.7f)
-                                    ),
-                                    startY = 0f,
-                                    endY = Float.POSITIVE_INFINITY
-                                )
+                                color = MaterialTheme.colorScheme.onSurface,
+                                shape = CircleShape
                             )
                     )
-                    Text(
-                        modifier = Modifier.align(Alignment.BottomStart)
-                            .padding(16.dp)
-                            .padding(horizontal = 8.dp, vertical = 4.dp),
-                        text = gameThemes[page].name,
-                        textAlign = TextAlign.Start,
-                        style = MaterialTheme.typography.headlineMedium,
-                        color = MaterialTheme.colorScheme.surface
-                    )
                 }
-
-                if (pagerState.currentPage < gameThemes.size - 1) {
-                    Icon(
-                        imageVector = Icons.Default.ChevronRight,
-                        contentDescription = "Next",
-                        modifier = Modifier.size(24.dp).alpha(.5f),
-                    )
-                } else {
-                    Spacer(modifier = Modifier.size(24.dp))
-                }
-            }
-
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            repeat(gameThemes.size) { index ->
-                val isSelected = pagerState.currentPage == index
-                Box(
-                    modifier = Modifier
-                        .padding(horizontal = 4.dp)
-                        .size(if (isSelected) 10.dp else 8.dp)
-                        .alpha(if (isSelected) 1f else 0.4f)
-                        .background(
-                            color = MaterialTheme.colorScheme.onSurface,
-                            shape = CircleShape
-                        )
-                )
             }
         }
     }
+
 }

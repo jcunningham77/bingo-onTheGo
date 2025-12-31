@@ -6,5 +6,5 @@ import androidx.compose.runtime.Composable
 fun GameThemesScreen(
     viewModel: GameThemesViewModel = GameThemesViewModel()
 ) {
-    GameThemesPager(themesFlow = viewModel.gameThemes)
+    GameThemesPager(themesFlowResult = viewModel.gameThemes)
 }
