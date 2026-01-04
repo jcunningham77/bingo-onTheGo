@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.otg.bingo.model.GameTheme
 import kotlinx.coroutines.flow.Flow
+import views.ThemedText
 
 @Composable
 fun GameThemesPager(
@@ -47,13 +48,17 @@ fun GameThemesPager(
     val gameThemesResult by themesFlowResult.collectAsState(initial = Result.success(emptyList()))
     if (gameThemesResult.isFailure) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("Error loading data...")
+            ThemedText(
+                "Error loading data...",
+            )
         }
         return
     }
     if (gameThemesResult.isSuccess && gameThemesResult.getOrNull()?.isEmpty() == true) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("Loading...")
+            ThemedText(
+                "Loading...",
+            )
         }
         return
     }
