@@ -13,7 +13,6 @@ import coil3.request.crossfade
 import coil3.util.DebugLogger
 import gamethemes.GameThemesScreen
 import nav.Screen
-import splash.SplashScreen
 
 @Composable
 fun App() {
@@ -25,14 +24,12 @@ fun App() {
             .build()
     }
 
-    var screenState by remember { mutableStateOf<Screen>(Screen.Splash) }
+    var screenState by remember { mutableStateOf<Screen>(Screen.GameThemes) }
 
     MaterialTheme(
         colorScheme = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()
     ) {
         when (screenState) {
-
-            is Screen.Splash -> SplashScreen(clickNavigation = { screenState = Screen.GameThemes })
             is Screen.GameThemes -> GameThemesScreen()
         }
     }
