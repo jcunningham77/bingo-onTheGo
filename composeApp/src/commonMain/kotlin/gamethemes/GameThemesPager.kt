@@ -68,7 +68,6 @@ fun GameThemesPager(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .windowInsetsPadding(WindowInsets.systemBars)
         ) {
             HorizontalPager(
                 state = pagerState,
