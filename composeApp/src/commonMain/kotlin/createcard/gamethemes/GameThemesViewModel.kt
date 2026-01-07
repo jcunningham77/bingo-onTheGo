@@ -1,4 +1,4 @@
-package gamethemes
+package createcard.gamethemes
 
 import com.otg.bingo.model.GameTheme
 import com.otg.bingo.repository.BingoRepositoryImpl

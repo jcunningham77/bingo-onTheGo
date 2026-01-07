@@ -1,9 +1,9 @@
-package gamethemes
+package createcard.gamethemes
 
 import androidx.compose.runtime.Composable
 
 @Composable
-fun GameThemesScreen(
+fun CreateCardScreen(
     viewModel: GameThemesViewModel = GameThemesViewModel()
 ) {
     GameThemesPager(themesFlowResult = viewModel.gameThemes)

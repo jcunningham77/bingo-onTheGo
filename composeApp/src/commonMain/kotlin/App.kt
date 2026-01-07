@@ -2,9 +2,18 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.filled.ViewList
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
@@ -17,8 +26,11 @@ import coil3.ImageLoader
 import coil3.compose.setSingletonImageLoaderFactory
 import coil3.request.crossfade
 import coil3.util.DebugLogger
-import gamethemes.GameThemesScreen
+import createcard.gamethemes.CreateCardScreen
+import leaderboard.LeaderboardScreen
 import nav.Screen
+import viewcard.ViewCardsScreen
+import views.ThemedText
 
 @Composable
 fun App() {
@@ -30,14 +42,42 @@ fun App() {
             .build()
     }
 
-    var screenState by remember { mutableStateOf<Screen>(Screen.GameThemes) }
+    var currentScreen by remember { mutableStateOf<Screen>(Screen.CreateCard) }
+
 
     MaterialTheme(
         colorScheme = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()
     ) {
-        Box(modifier = Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.systemBars)) {
-            when (screenState) {
-                is Screen.GameThemes -> GameThemesScreen()
+        Scaffold(modifier = Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.systemBars),
+            bottomBar = {
+                NavigationBar {
+                    NavigationBarItem(
+                        icon = { Icon(Icons.Default.Add, null) },
+                        label = { ThemedText("Create") },
+                        selected = currentScreen is Screen.CreateCard,
+                        onClick = { currentScreen = Screen.CreateCard }
+                    )
+                    NavigationBarItem(
+                        icon = { Icon(Icons.Default.ViewList, null) },
+                        label = { ThemedText("Cards") },
+                        selected = currentScreen is Screen.ViewCards,
+                        onClick = { currentScreen = Screen.ViewCards }
+                    )
+                    NavigationBarItem(
+                        icon = { Icon(Icons.Default.EmojiEvents, null) },
+                        label = { ThemedText("Leaderboards") },
+                        selected = currentScreen is Screen.Leaderboard,
+                        onClick = { currentScreen = Screen.Leaderboard }
+                    )
+                }
+            }
+        ) { paddingValues ->
+            Box(modifier = Modifier.padding(paddingValues)) {
+                when (currentScreen) {
+                    Screen.CreateCard -> CreateCardScreen()
+                    Screen.ViewCards -> ViewCardsScreen()
+                    Screen.Leaderboard -> LeaderboardScreen()
+                }
             }
         }
     }
