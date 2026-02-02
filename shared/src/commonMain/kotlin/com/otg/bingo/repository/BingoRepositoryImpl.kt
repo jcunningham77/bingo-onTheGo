@@ -1,5 +1,6 @@
 package com.otg.bingo.repository
 
+import com.otg.bingo.model.CardTile
 import com.otg.bingo.model.GameTheme
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -22,5 +23,15 @@ class BingoRepositoryImpl : BingoRepository {
     }.catch { e ->
         println("BingoRepository JRC Error fetching themes $e")
         emit(Result.failure(e)) // Emit empty list on error instead of crashing
+    }
+
+    override fun getCardTiles(gameThemeId: Int): Flow<Result<List<CardTile>>> = flow {
+        val cardTiles =
+            client.get("https://qwldabjzqgwyxihictth.supabase.co/rest/v1/CardTiles?game_theme_id=eq.$gameThemeId") {
+                header("Authorization", "Bearer sb_publishable_pNiCZbjQKm-q_l6_bcKN-w_qE-JwxkU")
+                header("apikey", "sb_publishable_pNiCZbjQKm-q_l6_bcKN-w_qE-JwxkU")
+            }.body<List<CardTile>>()
+        emit(Result.success(cardTiles))
+
     }
 }

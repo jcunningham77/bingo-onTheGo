@@ -71,7 +71,7 @@ fun GameThemesPager(
                 state = pagerState,
                 modifier = Modifier.weight(1f)
             ) { page ->
-
+                println("current game theme id = ${gameThemes[page].id}")
                 Row(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -147,7 +147,6 @@ fun GameThemesPager(
                         Spacer(modifier = Modifier.size(24.dp))
                     }
                 }
-
             }
             Row(
                 modifier = Modifier
@@ -172,5 +171,4 @@ fun GameThemesPager(
             }
         }
     }
-
 }

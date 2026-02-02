@@ -26,7 +26,7 @@ import coil3.ImageLoader
 import coil3.compose.setSingletonImageLoaderFactory
 import coil3.request.crossfade
 import coil3.util.DebugLogger
-import createcard.gamethemes.CreateCardScreen
+import createcard.gamethemes.GameThemeScreen
 import leaderboard.LeaderboardScreen
 import nav.Screen
 import viewcard.ViewCardsScreen
@@ -74,7 +74,7 @@ fun App() {
         ) { paddingValues ->
             Box(modifier = Modifier.padding(paddingValues)) {
                 when (currentScreen) {
-                    Screen.CreateCard -> CreateCardScreen()
+                    Screen.CreateCard -> GameThemeScreen()
                     Screen.ViewCards -> ViewCardsScreen()
                     Screen.Leaderboard -> LeaderboardScreen()
                 }
