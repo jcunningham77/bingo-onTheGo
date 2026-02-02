@@ -2,6 +2,7 @@ package createcard.gamethemes
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,10 +38,12 @@ import coil3.compose.AsyncImage
 import com.otg.bingo.model.GameTheme
 import kotlinx.coroutines.flow.Flow
 import views.ThemedText
+import kotlin.text.get
 
 @Composable
 fun GameThemesPager(
-    themesFlowResult: Flow<Result<List<GameTheme>>>
+    themesFlowResult: Flow<Result<List<GameTheme>>>,
+    onGameThemeSelected: (Int) -> Unit
 ) {
 
     val gameThemesResult by themesFlowResult.collectAsState(initial = Result.success(emptyList()))
@@ -73,7 +76,10 @@ fun GameThemesPager(
             ) { page ->
                 println("current game theme id = ${gameThemes[page].id}")
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .clickable { onGameThemeSelected(gameThemes[page].id) },
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {

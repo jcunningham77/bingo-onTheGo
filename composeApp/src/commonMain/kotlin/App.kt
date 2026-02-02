@@ -26,6 +26,7 @@ import coil3.ImageLoader
 import coil3.compose.setSingletonImageLoaderFactory
 import coil3.request.crossfade
 import coil3.util.DebugLogger
+import createcard.cards.CreateCardScreen
 import createcard.gamethemes.GameThemeScreen
 import leaderboard.LeaderboardScreen
 import nav.Screen
@@ -43,40 +44,50 @@ fun App() {
     }
 
     var currentScreen by remember { mutableStateOf<Screen>(Screen.CreateCard) }
+    var createCardGameThemeId by remember { mutableStateOf<Int?>(null) }
 
 
     MaterialTheme(
         colorScheme = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()
     ) {
-        Scaffold(modifier = Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.systemBars),
-            bottomBar = {
-                NavigationBar {
-                    NavigationBarItem(
-                        icon = { Icon(Icons.Default.Add, null) },
-                        label = { ThemedText("Create") },
-                        selected = currentScreen is Screen.CreateCard,
-                        onClick = { currentScreen = Screen.CreateCard }
-                    )
-                    NavigationBarItem(
-                        icon = { Icon(Icons.Default.ViewList, null) },
-                        label = { ThemedText("Cards") },
-                        selected = currentScreen is Screen.ViewCards,
-                        onClick = { currentScreen = Screen.ViewCards }
-                    )
-                    NavigationBarItem(
-                        icon = { Icon(Icons.Default.EmojiEvents, null) },
-                        label = { ThemedText("Leaderboards") },
-                        selected = currentScreen is Screen.Leaderboard,
-                        onClick = { currentScreen = Screen.Leaderboard }
-                    )
-                }
+        if (createCardGameThemeId != null) {
+            CreateCardScreen(gameThemeId = createCardGameThemeId!!) {
+                createCardGameThemeId = null
             }
-        ) { paddingValues ->
-            Box(modifier = Modifier.padding(paddingValues)) {
-                when (currentScreen) {
-                    Screen.CreateCard -> GameThemeScreen()
-                    Screen.ViewCards -> ViewCardsScreen()
-                    Screen.Leaderboard -> LeaderboardScreen()
+        } else {
+            Scaffold(
+                modifier = Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.systemBars),
+                bottomBar = {
+                    NavigationBar {
+                        NavigationBarItem(
+                            icon = { Icon(Icons.Default.Add, null) },
+                            label = { ThemedText("Create") },
+                            selected = currentScreen is Screen.CreateCard,
+                            onClick = { currentScreen = Screen.CreateCard }
+                        )
+                        NavigationBarItem(
+                            icon = { Icon(Icons.Default.ViewList, null) },
+                            label = { ThemedText("Cards") },
+                            selected = currentScreen is Screen.ViewCards,
+                            onClick = { currentScreen = Screen.ViewCards }
+                        )
+                        NavigationBarItem(
+                            icon = { Icon(Icons.Default.EmojiEvents, null) },
+                            label = { ThemedText("Leaderboards") },
+                            selected = currentScreen is Screen.Leaderboard,
+                            onClick = { currentScreen = Screen.Leaderboard }
+                        )
+                    }
+                }
+            ) { paddingValues ->
+                Box(modifier = Modifier.padding(paddingValues)) {
+                    when (currentScreen) {
+                        Screen.CreateCard -> GameThemeScreen(
+                            onGameThemeSelected = { id -> createCardGameThemeId = id }
+                        )
+                        Screen.ViewCards -> ViewCardsScreen()
+                        Screen.Leaderboard -> LeaderboardScreen()
+                    }
                 }
             }
         }

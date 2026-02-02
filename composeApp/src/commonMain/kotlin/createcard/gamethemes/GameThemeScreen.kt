@@ -4,7 +4,11 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun GameThemeScreen(
-    viewModel: GameThemesViewModel = GameThemesViewModel()
+    viewModel: GameThemesViewModel = GameThemesViewModel(),
+    onGameThemeSelected: (Int) -> Unit
 ) {
-    GameThemesPager(themesFlowResult = viewModel.gameThemes)
+    GameThemesPager(
+        themesFlowResult = viewModel.gameThemes,
+        onGameThemeSelected = onGameThemeSelected
+    )
 }
