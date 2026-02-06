@@ -3,15 +3,28 @@ package createcard.cards
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 
+import androidx.compose.ui.unit.dp
+
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CreateCardScreen(
     gameThemeId: Int,
@@ -19,10 +32,13 @@ fun CreateCardScreen(
     createCardViewModel: CreateCardViewModel = CreateCardViewModel()
 ) {
 
+    // TODO Backhandler is Android only...to handle swipe nav, use an expect/actual pattern for multiplatform support.
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
             .windowInsetsPadding(WindowInsets.systemBars)
+            .padding(20.dp),
+        topBar = { AppBarWithBackButton("Create Bingo Card", { onClose() }) }
     ) {
         Box(Modifier.fillMaxSize()) {
             Text(text = "id = $gameThemeId")
@@ -36,4 +52,29 @@ fun CreateCardScreen(
             println("retrieved list = $list")
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AppBarWithBackButton(
+    title: String,
+    onBackButtonClick: () -> Unit
+) {
+    TopAppBar(
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            titleContentColor = MaterialTheme.colorScheme.primary,
+        ),
+        title = {
+            Text(text = title)
+        },
+        navigationIcon = {
+            IconButton(onClick = onBackButtonClick) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Back"
+                )
+            }
+        }
+    )
 }
