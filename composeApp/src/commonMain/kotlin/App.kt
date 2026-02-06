@@ -51,9 +51,9 @@ fun App() {
         colorScheme = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()
     ) {
         if (createCardGameThemeId != null) {
-            CreateCardScreen(gameThemeId = createCardGameThemeId!!) {
+            CreateCardScreen(gameThemeId = createCardGameThemeId!!, onClose = {
                 createCardGameThemeId = null
-            }
+            })
         } else {
             Scaffold(
                 modifier = Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.systemBars),
@@ -85,6 +85,7 @@ fun App() {
                         Screen.CreateCard -> GameThemeScreen(
                             onGameThemeSelected = { id -> createCardGameThemeId = id }
                         )
+
                         Screen.ViewCards -> ViewCardsScreen()
                         Screen.Leaderboard -> LeaderboardScreen()
                     }

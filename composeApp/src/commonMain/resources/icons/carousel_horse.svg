@@ -1,0 +1,26 @@
+<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+
+  <!-- pole -->
+  <rect x="11.5" y="2" width="1" height="16"/>
+
+  <!-- horse body -->
+  <path d="M7 13
+           L10 10
+           L13 11
+           L15 10
+           L17 12
+           L15 14
+           L10 14
+           Z"/>
+
+  <!-- horse head -->
+  <path d="M13 9
+           L15 7
+           L17 8
+           L16 10
+           Z"/>
+
+  <!-- platform -->
+  <rect x="6" y="18" width="12" height="2" rx="1"/>
+
+</svg>

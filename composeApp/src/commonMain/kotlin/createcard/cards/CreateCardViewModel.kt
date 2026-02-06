@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 class CreateCardViewModel(val repository: BingoRepositoryImpl = BingoRepositoryImpl()) {
 
-    fun cardTimes(gameThemeId: Int): Flow<Result<List<CardTile>>> =
+    fun cardTiles(gameThemeId: Int): Flow<Result<List<CardTile>>> =
         repository.getCardTiles(gameThemeId)
 
 }
