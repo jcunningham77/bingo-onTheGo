@@ -36,7 +36,6 @@ fun CreateCardScreen(
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.systemBars)
             .padding(20.dp),
         topBar = { AppBarWithBackButton("Create Bingo Card", { onClose() }) }
     ) {

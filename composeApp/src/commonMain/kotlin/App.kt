@@ -3,17 +3,19 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.ViewList
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
@@ -36,6 +38,7 @@ import views.ThemedText
 @Composable
 fun App() {
 
+
     setSingletonImageLoaderFactory { context ->
         ImageLoader.Builder(context)
             .crossfade(true)
@@ -56,7 +59,7 @@ fun App() {
             })
         } else {
             Scaffold(
-                modifier = Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.systemBars),
+                modifier = Modifier.fillMaxSize(),
                 bottomBar = {
                     NavigationBar {
                         NavigationBarItem(
@@ -78,9 +81,19 @@ fun App() {
                             onClick = { currentScreen = Screen.Leaderboard }
                         )
                     }
-                }
+                },
+//                topBar = { AppBar("Create Bingo Card") }
             ) { paddingValues ->
-                Box(modifier = Modifier.padding(paddingValues)) {
+                // FIXME top padding seems too large on Android 14
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                ) {
+                    // Log the padding values
+                    println("Top padding: ${paddingValues.calculateTopPadding()}")
+                    println("Bottom padding: ${paddingValues.calculateBottomPadding()}")
+
                     when (currentScreen) {
                         Screen.CreateCard -> GameThemeScreen(
                             onGameThemeSelected = { id -> createCardGameThemeId = id }
@@ -96,3 +109,19 @@ fun App() {
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AppBar(
+    title: String,
+) {
+    TopAppBar(
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            titleContentColor = MaterialTheme.colorScheme.primary,
+        ),
+        title = {
+            Text(text = title)
+        },
+        windowInsets = WindowInsets(0, 0, 0, 0)
+    )
+}
