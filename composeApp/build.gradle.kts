@@ -10,6 +10,11 @@ plugins {
     alias(libs.plugins.composeCompiler)
 }
 
+compose.resources {
+    publicResClass = true
+    packageOfResClass = "onthegobingo.composeapp.generated.resources"
+}
+
 kotlin {
     androidTarget {
         compilerOptions {
@@ -53,6 +58,7 @@ kotlin {
             implementation(compose.runtime)
             implementation(libs.ktor.client.core)
         }
+
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
