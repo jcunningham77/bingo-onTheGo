@@ -35,8 +35,7 @@ fun CreateCardScreen(
     // TODO Backhandler is Android only...to handle swipe nav, use an expect/actual pattern for multiplatform support.
     Scaffold(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(20.dp),
+            .fillMaxSize(),
         topBar = { AppBarWithBackButton("Create Bingo Card", { onClose() }) }
     ) {
         Box(Modifier.fillMaxSize()) {
