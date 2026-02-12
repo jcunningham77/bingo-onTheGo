@@ -28,6 +28,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.otg.bingo.model.CardTile
+import icons.balloonDartPainter
 import onthegobingo.composeapp.generated.resources.Res
 import org.jetbrains.compose.resources.DrawableResource
 
@@ -53,16 +54,14 @@ fun CreateCardScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            Text(text = "id = $gameThemeId")
-        }
-    }
-
-    val cardTilesResult by createCardViewModel.cardTiles(gameThemeId)
-        .collectAsState(initial = Result.success(emptyList()))
-    if (cardTilesResult.isSuccess) {
-        cardTilesResult.getOrNull()?.let { list ->
-            CardTileGrid(list)
-            println("retrieved list = $list")
+            val cardTilesResult by createCardViewModel.cardTiles(gameThemeId)
+                .collectAsState(initial = Result.success(emptyList()))
+            if (cardTilesResult.isSuccess) {
+                cardTilesResult.getOrNull()?.let { list ->
+                    CardTileGrid(list)
+                    println("retrieved list = $list")
+                }
+            }
         }
     }
 }
@@ -96,7 +95,7 @@ fun CardTileItem(tile: CardTile) {
                 shape = MaterialTheme.shapes.medium
             ),
         content = { Icon(
-            painter = painterResource(Res.drawable.balloon_dart as DrawableResource),
+            painter = balloonDartPainter(),
             contentDescription = "Ferris Wheel",
             tint = MaterialTheme.colorScheme.onSurface
         ) })
