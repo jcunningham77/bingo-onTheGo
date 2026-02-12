@@ -29,8 +29,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.otg.bingo.model.CardTile
 import onthegobingo.composeapp.generated.resources.Res
+import org.jetbrains.compose.resources.DrawableResource
+
 import org.jetbrains.compose.resources.painterResource
-import onthegobingo.composeapp.generated.resources.ferris_wheel
 
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -60,6 +61,7 @@ fun CreateCardScreen(
         .collectAsState(initial = Result.success(emptyList()))
     if (cardTilesResult.isSuccess) {
         cardTilesResult.getOrNull()?.let { list ->
+            CardTileGrid(list)
             println("retrieved list = $list")
         }
     }
@@ -94,7 +96,7 @@ fun CardTileItem(tile: CardTile) {
                 shape = MaterialTheme.shapes.medium
             ),
         content = { Icon(
-            painter = painterResource(Res.drawable.ferris_wheel),
+            painter = painterResource(Res.drawable.balloon_dart as DrawableResource),
             contentDescription = "Ferris Wheel",
             tint = MaterialTheme.colorScheme.onSurface
         ) })
