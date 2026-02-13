@@ -30,7 +30,8 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.otg.bingo.model.CardTile
-import icons.balloonDartPainter
+import icons.toIcon
+import icons.toPainter
 
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -98,7 +99,7 @@ fun CardTileItem(tile: CardTile) {
         content = {
             Icon(
                 modifier = Modifier.size(50.dp),
-                painter = balloonDartPainter(),
+                painter = tile.toIcon().toPainter(),
                 contentDescription = "Ferris Wheel",
                 tint = MaterialTheme.colorScheme.onSurface,
             )

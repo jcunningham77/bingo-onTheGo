@@ -9,5 +9,6 @@ import onthegobingo.composeapp.generated.resources.balloon_dart
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-actual fun balloonDartPainter(): Painter =
-    painterResource(Res.drawable.balloon_dart)
+actual fun CardIcon.toPainter(): Painter {
+    return painterResource(Res.drawable.balloon_dart)
+}
