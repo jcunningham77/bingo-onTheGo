@@ -14,14 +14,11 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -32,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import com.otg.bingo.model.CardTile
 import icons.toIcon
 import icons.toPainter
+import navigation.BrandingTopBar
 import navigation.SystemBackHandler
 
 
@@ -48,7 +46,16 @@ fun CreateCardScreen(
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
-        topBar = { AppBarWithBackButton("Create Bingo Card") { onClose() } }
+        topBar = {
+            BrandingTopBar {
+                IconButton(onClick = onClose) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Back"
+                    )
+                }
+            }
+        }
     ) { paddingValues ->
         Box(
             Modifier
@@ -109,31 +116,6 @@ fun CardTileItem(tile: CardTile) {
                 style = MaterialTheme.typography.labelMedium,
                 modifier = Modifier.padding(top = 8.dp)
             )
-        }
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun AppBarWithBackButton(
-    title: String,
-    onBackButtonClick: () -> Unit
-) {
-    TopAppBar(
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            titleContentColor = MaterialTheme.colorScheme.primary,
-        ),
-        title = {
-            Text(text = title)
-        },
-        navigationIcon = {
-            IconButton(onClick = onBackButtonClick) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back"
-                )
-            }
         }
     )
 }

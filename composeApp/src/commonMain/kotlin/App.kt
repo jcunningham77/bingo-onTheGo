@@ -1,16 +1,11 @@
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.ViewList
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -24,8 +19,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.unit.dp
 import coil3.ImageLoader
 import coil3.compose.setSingletonImageLoaderFactory
 import coil3.request.crossfade
@@ -34,15 +27,12 @@ import createcard.cards.CreateCardScreen
 import createcard.gamethemes.GameThemeScreen
 import leaderboard.LeaderboardScreen
 import nav.Screen
-import onthegobingo.composeapp.generated.resources.Res
-import onthegobingo.composeapp.generated.resources.bingo_otg_banner
-import org.jetbrains.compose.resources.painterResource
+import navigation.BrandingTopBar
 import viewcard.ViewCardsScreen
 import views.ThemedText
 
 @Composable
 fun App() {
-
 
     setSingletonImageLoaderFactory { context ->
         ImageLoader.Builder(context)
@@ -110,7 +100,6 @@ fun App() {
                         .fillMaxSize()
                         .padding(paddingValues)
                 ) {
-
                     when (currentScreen) {
                         Screen.CreateCard -> GameThemeScreen(
                             onGameThemeSelected = { id -> createCardGameThemeId = id }
@@ -122,23 +111,4 @@ fun App() {
             }
         }
     }
-}
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun BrandingTopBar(
-) {
-    CenterAlignedTopAppBar(
-        modifier = Modifier.padding(top = 5.dp),
-        title = {
-            Image(
-                painter = painterResource(Res.drawable.bingo_otg_banner),
-                contentDescription = null,
-                modifier = Modifier.size(height = 50.dp, width = 225.dp),
-                contentScale = ContentScale.Fit
-
-            )
-        }
-    )
 }
