@@ -83,7 +83,6 @@ fun CardTileGrid(
     }
 }
 
-
 @Composable
 fun CardTileItem(tile: CardTile) {
     Column(
@@ -104,7 +103,7 @@ fun CardTileItem(tile: CardTile) {
                 tint = MaterialTheme.colorScheme.onSurface,
             )
             Text(
-                text = "Balloon Dart",
+                text = tile.tileName,
                 style = MaterialTheme.typography.labelMedium,
                 modifier = Modifier.padding(top = 8.dp)
             )

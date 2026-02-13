@@ -24,7 +24,6 @@ class BingoRepositoryImpl : BingoRepository {
     }
 
     override fun getGameThemes(): Flow<Result<List<GameTheme>>> = flow {
-
         val themes =
             client.get("$SUPABASE_HOST/rest/v1/GameTheme") { addSupabaseHeaders() }
                 .body<List<GameTheme>>()
@@ -39,7 +38,7 @@ class BingoRepositoryImpl : BingoRepository {
         val cardTiles =
             client.get("$SUPABASE_HOST/rest/v1/CardTiles?game_theme_id=eq.$gameThemeId") { addSupabaseHeaders() }
                 .body<List<CardTile>>()
-        
+
         emit(Result.success(cardTiles))
     }
 }
