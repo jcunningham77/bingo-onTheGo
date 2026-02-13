@@ -32,6 +32,7 @@ import com.otg.bingo.icons.toPainter
 import com.otg.bingo.model.CardTile
 import com.otg.bingo.navigation.BrandingTopBar
 import com.otg.bingo.navigation.SystemBackHandler
+import com.otg.bingo.views.ThemedText
 
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -65,11 +66,28 @@ fun CreateCardScreen(
         ) {
             val cardTilesResult by createCardViewModel.cardTiles(gameThemeId)
                 .collectAsState(initial = Result.success(emptyList()))
+
+            if (cardTilesResult.isFailure) {
+                ThemedText(
+                    "Error loading data...",
+                )
+                return@Box
+            }
+
+            if (cardTilesResult.isSuccess && cardTilesResult.getOrNull()?.isEmpty() == true) {
+                ThemedText(
+                    modifier = Modifier.align(Alignment.Center),
+                    text = "Loading...",
+                )
+                return@Box
+            }
+
             if (cardTilesResult.isSuccess) {
                 cardTilesResult.getOrNull()?.let { list ->
                     CardTileGrid(list)
                     println("retrieved list = $list")
                 }
+                return@Box
             }
         }
     }

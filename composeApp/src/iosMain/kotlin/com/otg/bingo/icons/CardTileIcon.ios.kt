@@ -2,7 +2,6 @@ package com.otg.bingo.icons
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.painter.Painter
-import com.otg.bingo.icons.CardIcon
 import onthegobingo.composeapp.generated.resources.Res
 import onthegobingo.composeapp.generated.resources.balloon_dart
 import onthegobingo.composeapp.generated.resources.carousel_horse
