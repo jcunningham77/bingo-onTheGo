@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -24,15 +25,12 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.otg.bingo.model.CardTile
 import icons.balloonDartPainter
-import onthegobingo.composeapp.generated.resources.Res
-import org.jetbrains.compose.resources.DrawableResource
-
-import org.jetbrains.compose.resources.painterResource
 
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -84,6 +82,7 @@ fun CardTileGrid(
     }
 }
 
+
 @Composable
 fun CardTileItem(tile: CardTile) {
     Column(
@@ -94,11 +93,22 @@ fun CardTileItem(tile: CardTile) {
                 color = MaterialTheme.colorScheme.outline,
                 shape = MaterialTheme.shapes.medium
             ),
-        content = { Icon(
-            painter = balloonDartPainter(),
-            contentDescription = "Ferris Wheel",
-            tint = MaterialTheme.colorScheme.onSurface
-        ) })
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        content = {
+            Icon(
+                modifier = Modifier.size(50.dp),
+                painter = balloonDartPainter(),
+                contentDescription = "Ferris Wheel",
+                tint = MaterialTheme.colorScheme.onSurface,
+            )
+            Text(
+                text = "Balloon Dart",
+                style = MaterialTheme.typography.labelMedium,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+        }
+    )
 }
 
 
