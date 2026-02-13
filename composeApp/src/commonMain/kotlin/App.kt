@@ -64,19 +64,34 @@ fun App() {
                     NavigationBar {
                         NavigationBarItem(
                             icon = { Icon(Icons.Default.Add, null) },
-                            label = { ThemedText("Create") },
+                            label = {
+                                ThemedText(
+                                    "Create",
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            },
                             selected = currentScreen is Screen.CreateCard,
                             onClick = { currentScreen = Screen.CreateCard }
                         )
                         NavigationBarItem(
                             icon = { Icon(Icons.Default.ViewList, null) },
-                            label = { ThemedText("Cards") },
+                            label = {
+                                ThemedText(
+                                    "Cards",
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            },
                             selected = currentScreen is Screen.ViewCards,
                             onClick = { currentScreen = Screen.ViewCards }
                         )
                         NavigationBarItem(
                             icon = { Icon(Icons.Default.EmojiEvents, null) },
-                            label = { ThemedText("Leaderboards") },
+                            label = {
+                                ThemedText(
+                                    "Leaderboards",
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            },
                             selected = currentScreen is Screen.Leaderboard,
                             onClick = { currentScreen = Screen.Leaderboard }
                         )
