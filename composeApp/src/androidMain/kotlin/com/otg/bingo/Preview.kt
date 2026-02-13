@@ -1,11 +1,9 @@
 package com.otg.bingo
 
 
-import App
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.otg.bingo.model.GameTheme
-import kotlinx.coroutines.flow.flowOf
 
 @Preview(showBackground = true)
 @Composable
