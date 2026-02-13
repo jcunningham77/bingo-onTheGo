@@ -1,5 +1,11 @@
 package com.otg.bingo.createcard.cards
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -59,38 +65,49 @@ fun CreateCardScreen(
             }
         }
     ) { paddingValues ->
-        Box(
-            Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            val cardTilesResult by createCardViewModel.cardTiles(gameThemeId)
-                .collectAsState(initial = Result.success(emptyList()))
 
-            if (cardTilesResult.isFailure) {
-                ThemedText(
-                    "Error loading data...",
-                )
-                return@Box
-            }
+        val cardTilesResult by createCardViewModel.cardTiles(gameThemeId)
+            .collectAsState(initial = Result.success(emptyList()))
 
-            if (cardTilesResult.isSuccess && cardTilesResult.getOrNull()?.isEmpty() == true) {
-                ThemedText(
-                    modifier = Modifier.align(Alignment.Center),
-                    text = "Loading...",
-                )
-                return@Box
-            }
+        val uiState: UiState = when {
+                cardTilesResult.isFailure -> UiState.Error
+                cardTilesResult.getOrNull().isNullOrEmpty() -> UiState.Loading
+                else -> UiState.Content(cardTilesResult.getOrNull().orEmpty())
+        }
 
-            if (cardTilesResult.isSuccess) {
-                cardTilesResult.getOrNull()?.let { list ->
-                    CardTileGrid(list)
-                    println("retrieved list = $list")
+        AnimatedContent(
+            targetState = uiState, transitionSpec = {
+                    (fadeIn(tween(220)) + scaleIn(initialScale = 0.98f)) togetherWith fadeOut(tween(180))
+            },
+            label = "loading-to-content"
+        ) { state ->
+            when (state) {
+
+                UiState.Loading -> Box(Modifier.fillMaxSize().padding(paddingValues)) {
+                    ThemedText(
+                        modifier = Modifier.align(Alignment.Center),
+                        text = "Loading...",
+                    )
                 }
-                return@Box
+
+                UiState.Error -> Box(Modifier.fillMaxSize().padding(paddingValues)) {
+                    ThemedText(
+                        "Error loading data...",
+                    )
+                }
+
+                is UiState.Content -> Box(Modifier.fillMaxSize().padding(paddingValues)) {
+                    CardTileGrid(state.tiles)
+                }
             }
         }
     }
+}
+
+sealed interface UiState {
+    data object Loading : UiState
+    data object Error : UiState
+    data class Content(val tiles: List<CardTile>) : UiState
 }
 
 @Composable
