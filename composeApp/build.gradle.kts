@@ -39,14 +39,12 @@ kotlin {
             implementation(compose.uiTooling)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.androidx.splash)
+            implementation(libs.androidx.activity.compose)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
         }
         commonMain.dependencies {
-            implementation(libs.androidx.activity.compose)
-            implementation(libs.androidx.lifecycle.viewmodelCompose)
-            implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(projects.shared)
             implementation(compose.components.resources)
             implementation(libs.coil.compose)
