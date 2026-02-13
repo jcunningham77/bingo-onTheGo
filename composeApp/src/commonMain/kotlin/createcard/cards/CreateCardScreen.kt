@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import com.otg.bingo.model.CardTile
 import icons.toIcon
 import icons.toPainter
+import navigation.SystemBackHandler
 
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -42,7 +43,8 @@ fun CreateCardScreen(
     createCardViewModel: CreateCardViewModel = CreateCardViewModel()
 ) {
 
-    // TODO Backhandler is Android only...to handle swipe nav, use an expect/actual pattern for multiplatform support.
+    SystemBackHandler(onBack = onClose)
+
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
@@ -110,9 +112,6 @@ fun CardTileItem(tile: CardTile) {
         }
     )
 }
-
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
