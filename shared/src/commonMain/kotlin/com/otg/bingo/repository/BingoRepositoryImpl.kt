@@ -15,17 +15,13 @@ class BingoRepositoryImpl : BingoRepository {
 
     private val client = HttpClientFactory.client
 
-    private val SUPABASE_HOST = "https://qwldabjzqgwyxihictth.supabase.co"
-    private val SUPABASE_KEY = "sb_publishable_pNiCZbjQKm-q_l6_bcKN-w_qE-JwxkU"
-
     private fun HttpRequestBuilder.addSupabaseHeaders() {
-        header("Authorization", "Bearer $SUPABASE_KEY")
-        header("apikey", SUPABASE_KEY)
+        header(AUTHORIZATION_KEY, AUTHORIZATION_VALUE)
+        header(API_KEY_KEY, API_KEY_VALUE)
     }
 
     override fun getGameThemes(): Flow<Result<List<GameTheme>>> = flow {
-        val themes =
-            client.get("$SUPABASE_HOST/rest/v1/GameTheme") { addSupabaseHeaders() }
+        val themes = client.get("$SUPABASE_HOST/rest/v1/GameTheme") { addSupabaseHeaders() }
                 .body<List<GameTheme>>()
 
         emit(Result.success(themes))
@@ -40,5 +36,15 @@ class BingoRepositoryImpl : BingoRepository {
                 .body<List<CardTile>>()
 
         emit(Result.success(cardTiles))
+    }
+
+    companion object {
+        private const val SUPABASE_HOST = "https://qwldabjzqgwyxihictth.supabase.co"
+
+        private const val API_KEY_KEY = "apiKey"
+        private const val API_KEY_VALUE = "sb_publishable_pNiCZbjQKm-q_l6_bcKN-w_qE-JwxkU"
+
+        private const val AUTHORIZATION_KEY = "Authorization"
+        private const val AUTHORIZATION_VALUE = "Bearer $API_KEY_VALUE"
     }
 }
