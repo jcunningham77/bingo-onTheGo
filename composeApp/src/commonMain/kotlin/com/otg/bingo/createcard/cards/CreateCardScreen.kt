@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.otg.bingo.di.LocalAppComponent
 import com.otg.bingo.icons.toIcon
 import com.otg.bingo.icons.toPainter
 import com.otg.bingo.model.CardTile
@@ -38,7 +39,7 @@ import com.otg.bingo.navigation.SystemBackHandler
 fun CreateCardScreen(
     gameThemeId: Int,
     onClose: () -> Unit,
-    createCardViewModel: CreateCardViewModel = CreateCardViewModel()
+    createCardViewModel: CreateCardViewModel = LocalAppComponent.current.createCardViewModel
 ) {
 
     SystemBackHandler(onBack = onClose)
