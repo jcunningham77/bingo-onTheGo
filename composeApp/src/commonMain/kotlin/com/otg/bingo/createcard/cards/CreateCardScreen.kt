@@ -39,6 +39,8 @@ import com.otg.bingo.model.CardTile
 import com.otg.bingo.navigation.BrandingTopBar
 import com.otg.bingo.navigation.SystemBackHandler
 import com.otg.bingo.views.ThemedText
+import com.otg.bingo.views.UiState
+import com.otg.bingo.views.toUIState
 
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -69,11 +71,7 @@ fun CreateCardScreen(
         val cardTilesResult by createCardViewModel.cardTiles(gameThemeId)
             .collectAsState(initial = Result.success(emptyList()))
 
-        val uiState: UiState = when {
-                cardTilesResult.isFailure -> UiState.Error
-                cardTilesResult.getOrNull().isNullOrEmpty() -> UiState.Loading
-                else -> UiState.Content(cardTilesResult.getOrNull().orEmpty())
-        }
+        val uiState: UiState = cardTilesResult.toUIState()
 
         AnimatedContent(
             targetState = uiState, transitionSpec = {
@@ -97,17 +95,11 @@ fun CreateCardScreen(
                 }
 
                 is UiState.Content -> Box(Modifier.fillMaxSize().padding(paddingValues)) {
-                    CardTileGrid(state.tiles)
+                    CardTileGrid(state.items.filterIsInstance<CardTile>())
                 }
             }
         }
     }
-}
-
-sealed interface UiState {
-    data object Loading : UiState
-    data object Error : UiState
-    data class Content(val tiles: List<CardTile>) : UiState
 }
 
 @Composable
