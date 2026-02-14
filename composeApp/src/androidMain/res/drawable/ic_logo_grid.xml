@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="512dp"
+    android:height="512dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+
+    <!-- ROOT GROUP WE ANIMATE -->
+    <group
+        android:name="logo_group"
+        android:pivotX="256"
+        android:pivotY="256">
+
+        <!-- Rounded tile -->
+        <path
+            android:name="tile"
+            android:fillColor="#1976D2"
+            android:pathData="
+                M96,32 h320
+                a64,64 0 0 1 64,64
+                v320
+                a64,64 0 0 1 -64,64
+                h-320
+                a64,64 0 0 1 -64,-64
+                v-320
+                a64,64 0 0 1 64,-64z" />
+
+        <!-- Cloud -->
+        <path
+            android:name="cloud"
+            android:alpha="0"
+            android:fillColor="#2196F3"
+            android:pathData="
+                M120,250
+                c0,-60 55,-95 110,-80
+                c20,-55 110,-60 145,0
+                c55,-10 95,30 95,80
+                c0,55 -40,90 -95,90
+                h-175
+                c-55,0 -80,-35 -80,-90z" />
+
+        <!-- Bingo grid group -->
+        <group
+            android:name="grid"
+            android:alpha="0">
+
+            <!-- 9 squares -->
+            <path
+                android:fillColor="#FFFFFF"
+                android:pathData="M170 210h40v40h-40z" />
+            <path
+                android:fillColor="#FFFFFF"
+                android:pathData="M236 210h40v40h-40z" />
+            <path
+                android:fillColor="#FFFFFF"
+                android:pathData="M302 210h40v40h-40z" />
+
+            <path
+                android:fillColor="#FFFFFF"
+                android:pathData="M170 276h40v40h-40z" />
+            <path
+                android:fillColor="#FFFFFF"
+                android:pathData="M236 276h40v40h-40z" />
+            <path
+                android:fillColor="#FFFFFF"
+                android:pathData="M302 276h40v40h-40z" />
+
+            <path
+                android:fillColor="#FFFFFF"
+                android:pathData="M170 342h40v40h-40z" />
+            <path
+                android:fillColor="#FFFFFF"
+                android:pathData="M236 342h40v40h-40z" />
+            <path
+                android:fillColor="#FFFFFF"
+                android:pathData="M302 342h40v40h-40z" />
+
+        </group>
+
+    </group>
+</vector>
