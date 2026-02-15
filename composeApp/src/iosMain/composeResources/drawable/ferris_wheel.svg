@@ -1,0 +1,22 @@
+<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+
+  <!-- wheel rim -->
+  <circle cx="12" cy="10" r="6"/>
+
+  <!-- hub -->
+  <circle cx="12" cy="10" r="1.5" fill="white"/>
+
+  <!-- spokes -->
+  <rect x="11.5" y="4" width="1" height="12"/>
+  <rect x="6" y="9.5" width="12" height="1"/>
+
+  <!-- gondolas -->
+  <rect x="11" y="2" width="2" height="2" rx="0.5"/>
+  <rect x="11" y="16" width="2" height="2" rx="0.5"/>
+  <rect x="4" y="9" width="2" height="2" rx="0.5"/>
+  <rect x="18" y="9" width="2" height="2" rx="0.5"/>
+
+  <!-- support legs -->
+  <polygon points="9,22 12,16 15,22"/>
+
+</svg>

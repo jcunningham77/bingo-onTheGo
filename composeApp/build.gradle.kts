@@ -10,6 +10,11 @@ plugins {
     alias(libs.plugins.composeCompiler)
 }
 
+compose.resources {
+    publicResClass = true
+    packageOfResClass = "onthegobingo.composeapp.generated.resources"
+}
+
 kotlin {
     androidTarget {
         compilerOptions {
@@ -33,14 +38,13 @@ kotlin {
             implementation(compose.preview)
             implementation(compose.uiTooling)
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.androidx.splash)
+            implementation(libs.androidx.activity.compose)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
         }
         commonMain.dependencies {
-            implementation(libs.androidx.activity.compose)
-            implementation(libs.androidx.lifecycle.viewmodelCompose)
-            implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(projects.shared)
             implementation(compose.components.resources)
             implementation(libs.coil.compose)
@@ -52,6 +56,7 @@ kotlin {
             implementation(compose.runtime)
             implementation(libs.ktor.client.core)
         }
+
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
