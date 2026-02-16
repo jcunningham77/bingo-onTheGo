@@ -1,7 +1,6 @@
-// `composeApp/src/commonMain/kotlin/com/otg/bingo/auth/AuthRepository.kt`
-package com.otg.bingo.auth
 
-import com.otg.bingo.repository.HttpClientFactory
+package com.otg.bingo.repository
+
 import io.ktor.client.call.body
 import io.ktor.client.request.header
 import io.ktor.client.request.post
@@ -24,7 +23,7 @@ class AuthRepository(
      */
     suspend fun signInWithGoogleIdToken(idToken: String): SupabaseSession {
         println("signInWGoogleToke = $idToken")
-        val url = supabaseUrl.trimEnd('/') + "/auth/v1/token?grant_type=id_token"
+        val url = "$SUPABASE_HOST/auth/v1/token?grant_type=id_token"
 
         return client.post(url) {
             header(API_KEY_KEY, API_KEY_VALUE)
@@ -50,7 +49,7 @@ class AuthRepository(
 }
 
 @Serializable
-private data class IdTokenGrantRequest(
+data class IdTokenGrantRequest(
     val provider: String,
     @SerialName("id_token") val idToken: String
 )
