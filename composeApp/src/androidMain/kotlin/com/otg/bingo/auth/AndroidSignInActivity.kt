@@ -18,6 +18,8 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.otg.bingo.AndroidApp
 import com.otg.bingo.navigation.BrandingTopBar
+import com.otg.bingo.repository.OAuthData
+import com.otg.bingo.repository.OauthProvider
 import kotlinx.coroutines.launch
 
 class AndroidSignInActivity : ComponentActivity() {
@@ -32,7 +34,7 @@ class AndroidSignInActivity : ComponentActivity() {
 
             lifecycleScope.launch {
                 val authRepository = (application as AndroidApp).appComponent.authRepository
-                authRepository.signInWithGoogleIdToken(idToken)
+                authRepository.signInWithOauthToken(OAuthData(idToken, OauthProvider.GOOGLE))
             }
         }
 

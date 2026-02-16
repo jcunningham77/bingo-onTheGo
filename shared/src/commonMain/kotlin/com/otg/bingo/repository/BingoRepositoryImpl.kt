@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.flow
 
 class BingoRepositoryImpl : BingoRepository {
 
+    // FIXME inject client
     private val client = HttpClientFactory.client
 
     private fun HttpRequestBuilder.addSupabaseHeaders() {
