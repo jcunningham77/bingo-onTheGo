@@ -40,6 +40,7 @@ kotlin {
             implementation(libs.ktor.client.okhttp)
             implementation(libs.androidx.splash)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.google.auth)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
