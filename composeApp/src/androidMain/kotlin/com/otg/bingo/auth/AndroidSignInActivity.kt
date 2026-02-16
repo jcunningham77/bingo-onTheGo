@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 
 class AndroidSignInActivity : ComponentActivity() {
 
-    private val webClientId: String = "BuildConfig.GOOGLE_WEB_CLIENT_ID"
+    private val webClientId: String = "783933800390-hd9crn8jsrdpv8jcsqhike595qhhp22u.apps.googleusercontent.com"
 
     private val googleIdToken by lazy { GoogleIdTokenAndroid(this, webClientId) }
 
@@ -66,7 +66,7 @@ class AndroidSignInActivity : ComponentActivity() {
                         onClick = {
                             googleIdToken.beginSignIn(
                                 launcher = oneTapLauncher,
-                                onError = { /* handle error */ }
+                                onError = { error-> println("google sign in error: $error") }
                             )
                         },
                     ) { Text("Sign in w Google") }

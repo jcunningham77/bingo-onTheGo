@@ -23,11 +23,12 @@ class AuthRepository(
      * Body: { "provider": "google", "id_token": "<token>" }
      */
     suspend fun signInWithGoogleIdToken(idToken: String): SupabaseSession {
+        println("signInWGoogleToke = $idToken")
         val url = supabaseUrl.trimEnd('/') + "/auth/v1/token?grant_type=id_token"
 
         return client.post(url) {
-            header("apikey", supabaseAnonKey)
-            header("Authorization", "Bearer $supabaseAnonKey")
+            header(API_KEY_KEY, API_KEY_VALUE)
+            header(AUTHORIZATION_KEY, AUTHORIZATION_VALUE)
             contentType(ContentType.Application.Json)
             setBody(
                 IdTokenGrantRequest(
@@ -36,6 +37,15 @@ class AuthRepository(
                 )
             )
         }.body()
+    }
+
+    companion object {
+        private const val SUPABASE_HOST = "https://qwldabjzqgwyxihictth.supabase.co"
+        private const val API_KEY_KEY = "apiKey"
+        private const val API_KEY_VALUE = "sb_publishable_pNiCZbjQKm-q_l6_bcKN-w_qE-JwxkU"
+
+        private const val AUTHORIZATION_KEY = "Authorization"
+        private const val AUTHORIZATION_VALUE = "Bearer $API_KEY_VALUE"
     }
 }
 
