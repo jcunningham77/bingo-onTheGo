@@ -1,11 +1,23 @@
 package com.otg.bingo.auth
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.otg.bingo.AndroidApp
+import com.otg.bingo.navigation.BrandingTopBar
 import kotlinx.coroutines.launch
 
 class AndroidSignInActivity : ComponentActivity() {
@@ -25,15 +37,41 @@ class AndroidSignInActivity : ComponentActivity() {
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
+        val splashScreen = installSplashScreen()
+
+        var keepSplashOnScreen = true
+        splashScreen.setKeepOnScreenCondition { keepSplashOnScreen }
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            keepSplashOnScreen = false
+        }, 2000)
         super.onCreate(savedInstanceState)
+        actionBar?.hide()
 
         setContent {
-            // Call googleIdToken.beginSignIn(...) from your sign-in button click.
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                topBar = {
+                    BrandingTopBar()
+                }
+            ) { paddingValues ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                ) {
+                    androidx.compose.material3.Button(
+                        modifier = Modifier.align(Alignment.Center),
+                        onClick = {
+                            googleIdToken.beginSignIn(
+                                launcher = oneTapLauncher,
+                                onError = { /* handle error */ }
+                            )
+                        },
+                    ) { Text("Sign in w Google") }
+                }
+            }
         }
-
-        googleIdToken.beginSignIn(
-            launcher = oneTapLauncher,
-            onError = { /* handle error */ }
-        )
     }
 }
