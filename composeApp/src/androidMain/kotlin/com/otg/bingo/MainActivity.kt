@@ -23,14 +23,15 @@ class MainActivity : ComponentActivity() {
         }, 2000)
         super.onCreate(savedInstanceState)
         actionBar?.hide()
+        val appComponent = (application as AndroidApp).appComponent
         setContent {
-            App()
+            App(appComponent)
         }
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun AppAndroidPreview() {
-    App()
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun AppAndroidPreview() {
+//    App()
+//}

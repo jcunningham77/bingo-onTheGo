@@ -5,8 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
+import com.otg.bingo.AndroidApp
 import kotlinx.coroutines.launch
-import kotlin.getValue
 
 class AndroidSignInActivity : ComponentActivity() {
 
@@ -19,8 +19,8 @@ class AndroidSignInActivity : ComponentActivity() {
             val idToken = googleIdToken.extractIdToken(result.data) ?: return@registerForActivityResult
 
             lifecycleScope.launch {
-                val repo = (application as HasAuthRepository).authRepository
-                repo.signInWithGoogleIdToken(idToken)
+                val authRepository = (application as AndroidApp).appComponent.authRepository
+                authRepository.signInWithGoogleIdToken(idToken)
             }
         }
 

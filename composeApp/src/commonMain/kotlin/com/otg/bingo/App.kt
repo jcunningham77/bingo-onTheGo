@@ -38,9 +38,9 @@ import com.otg.bingo.viewcard.ViewCardsScreen
 import com.otg.bingo.views.ThemedText
 
 @Composable
-fun App() {
+fun App(appComponent: AppComponent) {
 
-    val appComponent: AppComponent = remember { AppComponentImpl() }
+//    val appComponent: AppComponent = remember { AppComponentImpl() }
 
     CompositionLocalProvider(LocalAppComponent provides appComponent) {
         setSingletonImageLoaderFactory { context ->

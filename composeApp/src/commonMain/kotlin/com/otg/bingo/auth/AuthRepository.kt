@@ -1,7 +1,7 @@
 // `composeApp/src/commonMain/kotlin/com/otg/bingo/auth/AuthRepository.kt`
 package com.otg.bingo.auth
 
-import io.ktor.client.HttpClient
+import com.otg.bingo.repository.HttpClientFactory
 import io.ktor.client.call.body
 import io.ktor.client.request.header
 import io.ktor.client.request.post
@@ -12,10 +12,10 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 class AuthRepository(
-    private val http: HttpClient,
-    private val supabaseUrl: String,
-    private val supabaseAnonKey: String
+    private val supabaseUrl: String="",
+    private val supabaseAnonKey: String=""
 ) {
+    private val client = HttpClientFactory.client
     /**
      * Exchanges a Google ID token for a Supabase session.
      *
@@ -25,7 +25,7 @@ class AuthRepository(
     suspend fun signInWithGoogleIdToken(idToken: String): SupabaseSession {
         val url = supabaseUrl.trimEnd('/') + "/auth/v1/token?grant_type=id_token"
 
-        return http.post(url) {
+        return client.post(url) {
             header("apikey", supabaseAnonKey)
             header("Authorization", "Bearer $supabaseAnonKey")
             contentType(ContentType.Application.Json)
