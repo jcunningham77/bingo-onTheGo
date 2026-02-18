@@ -9,7 +9,7 @@ import io.ktor.http.contentType
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-class AuthRepositoryImpl(
+class AuthRepositoryImpl(authTokenStore: AuthTokenStore= AuthTokenStoreImpl()
 ) : AuthRepository {
 
 
