@@ -64,29 +64,45 @@ class AndroidSignInActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         actionBar?.hide()
 
-        setContent {
-            Scaffold(
-                modifier = Modifier.fillMaxSize(),
-                topBar = {
-                    BrandingTopBar()
+        lifecycleScope.launch {
+            if ((application as AndroidApp).appComponent.authRepository.tryRestoreSession()) {
+                println("JRC tryRestoreSession workd, forwarding to app.kt")
+                setContent {
+                    App((application as AndroidApp).appComponent)
                 }
-            ) { paddingValues ->
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                ) {
-                    androidx.compose.material3.Button(
-                        modifier = Modifier.align(Alignment.Center),
-                        onClick = {
-                            googleIdToken.beginSignIn(
-                                launcher = oneTapLauncher,
-                                onError = { error-> println("JRC google sign in error: $error") }
-                            )
-                        },
-                    ) { Text("Sign in w Google") }
+            } else {
+                println("JRC tryRestoreSession did not work, forwarding to sign in w google")
+                setContent {
+                    Scaffold(
+                        modifier = Modifier.fillMaxSize(),
+                        topBar = {
+                            BrandingTopBar()
+                        }
+                    ) { paddingValues ->
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(paddingValues)
+                        ) {
+                            androidx.compose.material3.Button(
+                                modifier = Modifier.align(Alignment.Center),
+                                onClick = {
+                                    googleIdToken.beginSignIn(
+                                        launcher = oneTapLauncher,
+                                        onError = { error -> println("JRC google sign in error: $error") }
+                                    )
+                                },
+                            ) { Text("Sign in w Google") }
+                        }
+                    }
                 }
             }
+
         }
+
+
+
+
+
     }
 }

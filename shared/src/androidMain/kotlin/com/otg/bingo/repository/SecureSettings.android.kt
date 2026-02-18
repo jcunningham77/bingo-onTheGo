@@ -3,9 +3,6 @@ package com.otg.bingo.repository
 import android.content.Context
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
-import kotlin.getValue
-
-
 
 actual class SecureSettings(private val context: Context) {
 

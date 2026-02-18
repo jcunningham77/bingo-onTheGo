@@ -10,6 +10,7 @@ class AuthTokenStoreImpl(
     private val key = "supabase.session.v1"
 
     override suspend fun saveSession(session: PersistedSession) {
+        println("JRC saving session $session")
         secureSettings.putString(key, json.encodeToString(PersistedSession.serializer(), session))
     }
 
