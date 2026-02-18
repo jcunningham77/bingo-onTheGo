@@ -32,20 +32,20 @@ class AndroidSignInActivity : ComponentActivity() {
     private val oneTapLauncher =
         registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
             val idToken = googleIdToken.extractIdToken(result.data) ?: return@registerForActivityResult
-            println("onTapLauncher - received google ID token from sign in: $idToken")
+            println("JRC onTapLauncher - received google ID token from sign in: $idToken")
             lifecycleScope.launch {
 
                 try {
 
                     val authRepository = (application as AndroidApp).appComponent.authRepository
                     val supabaseSession = authRepository.signInWithOauthToken(OAuthData(idToken, OauthProvider.GOOGLE))
-                    println("Supabase session: $supabaseSession")
+                    println("JRC Supabase session: $supabaseSession")
                     setContent {
                         App((application as AndroidApp).appComponent)
                     }
 
                 } catch (throwable: Throwable) {
-                    println("error signing in w supabase: $throwable")
+                    println("JRC error signing in w supabase: $throwable")
                 }
 
             }
@@ -81,7 +81,7 @@ class AndroidSignInActivity : ComponentActivity() {
                         onClick = {
                             googleIdToken.beginSignIn(
                                 launcher = oneTapLauncher,
-                                onError = { error-> println("google sign in error: $error") }
+                                onError = { error-> println("JRC google sign in error: $error") }
                             )
                         },
                     ) { Text("Sign in w Google") }

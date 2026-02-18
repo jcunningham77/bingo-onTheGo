@@ -24,10 +24,10 @@ class AuthRepositoryImpl(authTokenStore: AuthTokenStore= AuthTokenStoreImpl()
      */
     // TODO this is `suspend`, should it be?
     override suspend fun signInWithOauthToken(oAuthData: OAuthData): SupabaseSession {
-        println("signInWithOauthToken = ${oAuthData.token}")
+        println("JRC signInWithOauthToken = ${oAuthData.token}")
         val url = "$SUPABASE_HOST/auth/v1/token?grant_type=id_token"
 
-        return client.post(url) {
+        val response = client.post(url) {
             header(API_KEY_KEY, API_KEY_VALUE)
             header(AUTHORIZATION_KEY, AUTHORIZATION_VALUE)
             contentType(ContentType.Application.Json)
@@ -37,7 +37,11 @@ class AuthRepositoryImpl(authTokenStore: AuthTokenStore= AuthTokenStoreImpl()
                     idToken = oAuthData.token
                 )
             )
-        }.body()
+        }
+        println("JRC signInWithOauthToken, response status = ${response.status}")
+        println("signInWithOauthToken, response body = ${response.body<SupabaseSession>()}")
+
+        return response.body()
     }
 
     override fun getOauthData(): OAuthData {
