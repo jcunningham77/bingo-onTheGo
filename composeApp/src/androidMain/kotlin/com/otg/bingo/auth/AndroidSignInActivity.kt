@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.otg.bingo.AndroidApp
+import com.otg.bingo.App
 import com.otg.bingo.navigation.BrandingTopBar
 import com.otg.bingo.repository.OAuthData
 import com.otg.bingo.repository.OauthProvider
@@ -31,10 +32,22 @@ class AndroidSignInActivity : ComponentActivity() {
     private val oneTapLauncher =
         registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
             val idToken = googleIdToken.extractIdToken(result.data) ?: return@registerForActivityResult
-
+            println("onTapLauncher - received google ID token from sign in: $idToken")
             lifecycleScope.launch {
-                val authRepository = (application as AndroidApp).appComponent.authRepository
-                authRepository.signInWithOauthToken(OAuthData(idToken, OauthProvider.GOOGLE))
+
+                try {
+
+                    val authRepository = (application as AndroidApp).appComponent.authRepository
+                    val supabaseSession = authRepository.signInWithOauthToken(OAuthData(idToken, OauthProvider.GOOGLE))
+                    println("Supabase session: $supabaseSession")
+                    setContent {
+                        App((application as AndroidApp).appComponent)
+                    }
+
+                } catch (throwable: Throwable) {
+                    println("error signing in w supabase: $throwable")
+                }
+
             }
         }
 
