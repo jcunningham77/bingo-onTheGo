@@ -45,7 +45,8 @@ class AuthRepositoryImpl(
         println("JRC signInWithOauthToken, response status = ${response.status}")
         println("signInWithOauthToken, response body = ${response.body<SupabaseSession>()}")
         if (response.status == HttpStatusCode.OK) {
-            authTokenStore.saveSession(response.body())
+
+            authTokenStore.saveSession(response.body<SupabaseSession>().toPersistedSession())
         } else {
             println("JRC error signing into Supabase ${response.status}")
         }
@@ -120,10 +121,3 @@ data class RefreshTokenRequest(
 )
 
 
-@Serializable
-data class SupabaseSession(
-    @SerialName("access_token") val accessToken: String,
-    @SerialName("token_type") val tokenType: String,
-    @SerialName("expires_in") val expiresIn: Long,
-    @SerialName("refresh_token") val refreshToken: String? = null
-)
