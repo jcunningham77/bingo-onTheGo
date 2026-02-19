@@ -11,6 +11,7 @@ import io.ktor.client.request.get
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlin.random.Random
 
 
 class BingoRepositoryImpl(val httpClient: HttpClient) : BingoRepository {
@@ -31,5 +32,9 @@ class BingoRepositoryImpl(val httpClient: HttpClient) : BingoRepository {
                 .body<List<CardTile>>()
 
         emit(Result.success(cardTiles))
+    }
+
+    override fun playCard(gameThemeId: Int): Result<Unit> {
+        return Random.nextBoolean().let { if (it) Result.success(Unit) else Result.failure(Exception("Supabase exception")) }
     }
 }

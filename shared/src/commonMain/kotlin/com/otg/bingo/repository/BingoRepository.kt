@@ -8,4 +8,6 @@ interface BingoRepository {
     fun getGameThemes(): Flow<Result<List<GameTheme>>>
 
     fun getCardTiles(gameThemeId:Int): Flow<Result<List<CardTile>>>
+
+    fun playCard(gameThemeId:Int): Result<Unit>
 }

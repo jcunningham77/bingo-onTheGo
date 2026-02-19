@@ -20,14 +20,19 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -51,6 +56,8 @@ fun CreateCardScreen(
     createCardViewModel: CreateCardViewModel = LocalAppComponent.current.createCardViewModel
 ) {
 
+    val snackbarHostState = remember { SnackbarHostState() }
+
     SystemBackHandler(onBack = onClose)
 
     Scaffold(
@@ -65,9 +72,25 @@ fun CreateCardScreen(
                     )
                 }
             }
-        }
+        },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
     ) { paddingValues ->
 
+        // region events
+        LaunchedEffect(createCardViewModel) {
+            createCardViewModel.events.collect { event ->
+                when (event) {
+                    is CreateCardViewModel.CreateCardUiEvent.ShowSuccessMessage ->
+                        snackbarHostState.showSnackbar(event.message)
+
+                    is CreateCardViewModel.CreateCardUiEvent.ShowErrorMessage ->
+                        snackbarHostState.showSnackbar(event.message)
+                }
+            }
+        }
+        // endregion events
+
+        // region state
         val cardTilesResult by createCardViewModel.cardTiles(gameThemeId)
             .collectAsState(initial = Result.success(emptyList()))
 
@@ -95,10 +118,22 @@ fun CreateCardScreen(
                 }
 
                 is UiState.Content -> Box(Modifier.fillMaxSize().padding(paddingValues)) {
-                    CardTileGrid(state.items.filterIsInstance<CardTile>())
+                    Column(modifier = Modifier.fillMaxSize()) {
+                        CardTileGrid(state.items.filterIsInstance<CardTile>())
+                        Button(
+                            modifier = Modifier.align(Alignment.CenterHorizontally),
+                            onClick = {
+                                createCardViewModel.playCard(gameThemeId)
+                            }
+                        ) {
+                            Text("Play card!")
+                        }
+                    }
+
                 }
             }
         }
+        // endregion state
     }
 }
 
@@ -109,7 +144,6 @@ fun CardTileGrid(
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
-        modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
