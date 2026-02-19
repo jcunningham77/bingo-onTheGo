@@ -1,13 +1,15 @@
 package com.otg.bingo.di
 
-import com.otg.bingo.repository.AuthRepositoryImpl
 import com.otg.bingo.createcard.cards.CreateCardViewModel
 import com.otg.bingo.createcard.gamethemes.GameThemesViewModel
+import com.otg.bingo.repository.AuthRepository
 import com.otg.bingo.repository.BingoRepository
+import com.otg.bingo.repository.internal.AuthTokenStore
 
 interface AppComponent {
     val bingoRepository: BingoRepository
-    val authRepository: AuthRepositoryImpl
+    val authRepository: AuthRepository
+    val authTokenStore: AuthTokenStore
     val createCardViewModel: CreateCardViewModel
     val gameThemesViewModel: GameThemesViewModel
 }

@@ -1,8 +1,6 @@
 package com.otg.bingo.repository
 
 import com.otg.bingo.repository.internal.AuthTokenStore
-import com.otg.bingo.repository.internal.AuthTokenStoreImpl
-import com.otg.bingo.repository.internal.HttpClientFactory
 import com.otg.bingo.repository.internal.IdTokenGrantRequest
 import com.otg.bingo.repository.internal.OAuthData
 import com.otg.bingo.repository.internal.PersistedSession
@@ -12,6 +10,7 @@ import com.otg.bingo.repository.internal.SupabaseSession
 import com.otg.bingo.repository.internal.addSupabaseHeaders
 import com.otg.bingo.repository.internal.toPersistedSession
 import com.otg.bingo.util.loggi
+import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -22,12 +21,9 @@ import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 class AuthRepositoryImpl(
-    val authTokenStore: AuthTokenStore = AuthTokenStoreImpl()
+    val httpClient: HttpClient,
+    val authTokenStore: AuthTokenStore
 ) : AuthRepository {
-
-
-    // FIXME inject client
-    private val client = HttpClientFactory.client
 
     // TODO this is `suspend`, should it be?
     override suspend fun signInWithOauthToken(oAuthData: OAuthData): SupabaseSession {
@@ -35,7 +31,7 @@ class AuthRepositoryImpl(
         loggi("signInWithOauthToken = ${oAuthData.token}")
         val url = "${SUPABASE_HOST}/auth/v1/token?grant_type=id_token"
 
-        val response = client.post(url) {
+        val response = httpClient.post(url) {
             addSupabaseHeaders()
             contentType(ContentType.Application.Json)
             setBody(
@@ -58,7 +54,7 @@ class AuthRepositoryImpl(
     }
 
     @OptIn(ExperimentalTime::class)
-    suspend fun tryRestoreSession(
+    override suspend fun tryRestoreSession(
     ): Boolean {
 
         loggi(" tryRestoreSession 1")
@@ -77,7 +73,7 @@ class AuthRepositoryImpl(
         loggi(" signInWithRefreshToken 1")
         val url = "${SUPABASE_HOST}/auth/v1/token?grant_type=id_token"
         loggi(" signInWithRefreshToken 2")
-        val response = client.post(url) {
+        val response = httpClient.post(url) {
             addSupabaseHeaders()
             contentType(ContentType.Application.Json)
             setBody(
