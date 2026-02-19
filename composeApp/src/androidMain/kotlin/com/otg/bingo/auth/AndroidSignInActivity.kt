@@ -21,6 +21,7 @@ import com.otg.bingo.App
 import com.otg.bingo.navigation.BrandingTopBar
 import com.otg.bingo.repository.OAuthData
 import com.otg.bingo.repository.OauthProvider
+import com.otg.bingo.util.loggi
 import kotlinx.coroutines.launch
 
 class AndroidSignInActivity : ComponentActivity() {
@@ -32,20 +33,20 @@ class AndroidSignInActivity : ComponentActivity() {
     private val oneTapLauncher =
         registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
             val idToken = googleIdToken.extractIdToken(result.data) ?: return@registerForActivityResult
-            println("JRC onTapLauncher - received google ID token from sign in: $idToken")
+            loggi(" onTapLauncher - received google ID token from sign in: $idToken")
             lifecycleScope.launch {
 
                 try {
 
                     val authRepository = (application as AndroidApp).appComponent.authRepository
                     val supabaseSession = authRepository.signInWithOauthToken(OAuthData(idToken, OauthProvider.GOOGLE))
-                    println("JRC Supabase session: $supabaseSession")
+                    loggi(" Supabase session: $supabaseSession")
                     setContent {
                         App((application as AndroidApp).appComponent)
                     }
 
                 } catch (throwable: Throwable) {
-                    println("JRC error signing in w supabase: $throwable")
+                    loggi(" error signing in w supabase: $throwable")
                 }
 
             }
@@ -66,12 +67,12 @@ class AndroidSignInActivity : ComponentActivity() {
 
         lifecycleScope.launch {
             if ((application as AndroidApp).appComponent.authRepository.tryRestoreSession()) {
-                println("JRC tryRestoreSession workd, forwarding to app.kt")
+                loggi(" tryRestoreSession workd, forwarding to app.kt")
                 setContent {
                     App((application as AndroidApp).appComponent)
                 }
             } else {
-                println("JRC tryRestoreSession did not work, forwarding to sign in w google")
+                loggi(" tryRestoreSession did not work, forwarding to sign in w google")
                 setContent {
                     Scaffold(
                         modifier = Modifier.fillMaxSize(),
@@ -89,7 +90,7 @@ class AndroidSignInActivity : ComponentActivity() {
                                 onClick = {
                                     googleIdToken.beginSignIn(
                                         launcher = oneTapLauncher,
-                                        onError = { error -> println("JRC google sign in error: $error") }
+                                        onError = { error -> loggi(" google sign in error: $error") }
                                     )
                                 },
                             ) { Text("Sign in w Google") }

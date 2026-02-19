@@ -42,6 +42,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.otg.bingo.model.GameTheme
+import com.otg.bingo.util.loggi
 import com.otg.bingo.views.ThemedText
 import com.otg.bingo.views.UiState
 import com.otg.bingo.views.toUIState
@@ -93,7 +94,10 @@ fun GameThemesPager(
                             state = pagerState,
                             modifier = Modifier.weight(1f)
                         ) { page ->
-                            println("JRC current game theme id = ${gameThemes[page].id}")
+
+                            loggi(" current game theme id = ${gameThemes[page].id}")
+
+
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -129,10 +133,10 @@ fun GameThemesPager(
                                         contentDescription = gameThemes[page].name,
                                         modifier = Modifier.fillMaxSize(),
                                         contentScale = ContentScale.Crop,
-                                        onLoading = { println("JRC Loading image...") },
-                                        onSuccess = { println("JRC Image loaded successfully") },
+                                        onLoading = { loggi(" Loading image...") },
+                                        onSuccess = { loggi(" Image loaded successfully") },
                                         onError = { error ->
-                                            println("JRC Error loading image: ${error}")
+                                            loggi(" Error loading image: ${error}")
                                         }
                                     )
                                     Box(

@@ -1,5 +1,6 @@
 package com.otg.bingo.repository
 
+import com.otg.bingo.util.loggi
 import kotlinx.serialization.json.Json
 
 class AuthTokenStoreImpl(
@@ -10,7 +11,7 @@ class AuthTokenStoreImpl(
     private val key = "supabase.session.v1"
 
     override suspend fun saveSession(session: PersistedSession) {
-        println("JRC saving session $session")
+        loggi(" saving session $session")
         secureSettings.putString(key, json.encodeToString(PersistedSession.serializer(), session))
     }
 
