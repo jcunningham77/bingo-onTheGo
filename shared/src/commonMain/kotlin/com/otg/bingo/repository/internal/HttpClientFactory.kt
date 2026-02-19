@@ -1,4 +1,4 @@
-package com.otg.bingo.repository
+package com.otg.bingo.repository.internal
 
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation

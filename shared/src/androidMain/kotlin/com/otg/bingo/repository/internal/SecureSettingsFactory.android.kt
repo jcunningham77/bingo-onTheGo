@@ -1,4 +1,4 @@
-package com.otg.bingo.repository
+package com.otg.bingo.repository.internal
 
 import android.content.Context
 

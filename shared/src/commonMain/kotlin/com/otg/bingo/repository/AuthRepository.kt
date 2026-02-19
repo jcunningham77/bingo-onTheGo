@@ -1,5 +1,8 @@
 package com.otg.bingo.repository
 
+import com.otg.bingo.repository.internal.OAuthData
+import com.otg.bingo.repository.internal.SupabaseSession
+
 interface AuthRepository {
 
 

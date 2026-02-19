@@ -1,8 +1,9 @@
-package com.otg.bingo.repository
+package com.otg.bingo.repository.internal
 
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.header
 
+// TODO extract to Secrets
 private const val API_KEY_KEY = "apiKey"
 private const val API_KEY_VALUE = "sb_publishable_pNiCZbjQKm-q_l6_bcKN-w_qE-JwxkU"
 

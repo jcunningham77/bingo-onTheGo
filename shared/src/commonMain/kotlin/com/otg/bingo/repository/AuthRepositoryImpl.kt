@@ -1,5 +1,16 @@
 package com.otg.bingo.repository
 
+import com.otg.bingo.repository.internal.AuthTokenStore
+import com.otg.bingo.repository.internal.AuthTokenStoreImpl
+import com.otg.bingo.repository.internal.HttpClientFactory
+import com.otg.bingo.repository.internal.IdTokenGrantRequest
+import com.otg.bingo.repository.internal.OAuthData
+import com.otg.bingo.repository.internal.PersistedSession
+import com.otg.bingo.repository.internal.RefreshTokenRequest
+import com.otg.bingo.repository.internal.SUPABASE_HOST
+import com.otg.bingo.repository.internal.SupabaseSession
+import com.otg.bingo.repository.internal.addSupabaseHeaders
+import com.otg.bingo.repository.internal.toPersistedSession
 import com.otg.bingo.util.loggi
 import io.ktor.client.call.body
 import io.ktor.client.request.post
@@ -7,8 +18,6 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -20,17 +29,11 @@ class AuthRepositoryImpl(
     // FIXME inject client
     private val client = HttpClientFactory.client
 
-    /**
-     * Exchanges a Google ID token for a Supabase session.
-     *
-     * Endpoint: POST {supabaseUrl}/auth/v1/token?grant_type=id_token
-     * Body: { "provider": "google", "id_token": "<token>" }
-     */
     // TODO this is `suspend`, should it be?
     override suspend fun signInWithOauthToken(oAuthData: OAuthData): SupabaseSession {
         
         loggi("signInWithOauthToken = ${oAuthData.token}")
-        val url = "$SUPABASE_HOST/auth/v1/token?grant_type=id_token"
+        val url = "${SUPABASE_HOST}/auth/v1/token?grant_type=id_token"
 
         val response = client.post(url) {
             addSupabaseHeaders()
@@ -72,7 +75,7 @@ class AuthRepositoryImpl(
 
     private suspend fun signInWithRefreshToken(refreshToken: String) {
         loggi(" signInWithRefreshToken 1")
-        val url = "$SUPABASE_HOST/auth/v1/token?grant_type=id_token"
+        val url = "${SUPABASE_HOST}/auth/v1/token?grant_type=id_token"
         loggi(" signInWithRefreshToken 2")
         val response = client.post(url) {
             addSupabaseHeaders()
@@ -94,20 +97,5 @@ class AuthRepositoryImpl(
         TODO("Not yet implemented")
     }
 }
-
-data class OAuthData(val token:String,val provider:OauthProvider)
-
-enum class OauthProvider(val apiValue:String){
-    GOOGLE("google")
-}
-
-@Serializable
-data class IdTokenGrantRequest(
-    val provider: String,
-    @SerialName("id_token") val idToken: String
-)
-data class RefreshTokenRequest(
-    @SerialName("refresh_token") val refreshToken: String
-)
 
 

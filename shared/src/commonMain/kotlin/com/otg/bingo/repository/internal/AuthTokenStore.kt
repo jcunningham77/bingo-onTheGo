@@ -1,4 +1,4 @@
-package com.otg.bingo.repository
+package com.otg.bingo.repository.internal
 
 interface AuthTokenStore {
     suspend fun saveSession(session: PersistedSession)

@@ -1,5 +1,4 @@
-package com.otg.bingo.repository
-//import com.russhwolf.settings.Settings
+package com.otg.bingo.repository.internal
 
 actual class SecureSettings {
 

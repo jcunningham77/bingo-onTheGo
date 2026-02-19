@@ -19,8 +19,8 @@ import androidx.lifecycle.lifecycleScope
 import com.otg.bingo.AndroidApp
 import com.otg.bingo.App
 import com.otg.bingo.navigation.BrandingTopBar
-import com.otg.bingo.repository.OAuthData
-import com.otg.bingo.repository.OauthProvider
+import com.otg.bingo.repository.internal.OAuthData
+import com.otg.bingo.repository.internal.OauthProvider
 import com.otg.bingo.util.loggi
 import kotlinx.coroutines.launch
 
