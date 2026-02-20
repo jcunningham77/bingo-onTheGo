@@ -21,10 +21,13 @@ class CreateCardViewModel(val repository: BingoRepository) {
     fun cardTiles(gameThemeId: Int): Flow<Result<List<CardTile>>> =
         repository.getCardTiles(gameThemeId)
 
-    fun playCard(gameThemeId: Int) {
-        repository.playCard(gameThemeId)
+    suspend fun playCard(gameThemeId: Int) {
+        repository.playCard(gameThemeId).collect { result ->
+            result
             .onSuccess { _events.tryEmit(CreateCardUiEvent.ShowSuccessMessage("Card successfully played")) }
             .onFailure { _events.tryEmit(CreateCardUiEvent.ShowErrorMessage("Sorry, technical difficulties")) }
+        }
+
     }
 
 }

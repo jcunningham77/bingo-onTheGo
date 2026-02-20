@@ -33,6 +33,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -46,6 +47,7 @@ import com.otg.bingo.navigation.SystemBackHandler
 import com.otg.bingo.views.ThemedText
 import com.otg.bingo.views.UiState
 import com.otg.bingo.views.toUIState
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -57,6 +59,7 @@ fun CreateCardScreen(
 ) {
 
     val snackbarHostState = remember { SnackbarHostState() }
+    val playCardScope = rememberCoroutineScope()
 
     SystemBackHandler(onBack = onClose)
 
@@ -123,7 +126,9 @@ fun CreateCardScreen(
                         Button(
                             modifier = Modifier.align(Alignment.CenterHorizontally),
                             onClick = {
-                                createCardViewModel.playCard(gameThemeId)
+                                playCardScope.launch {
+                                    createCardViewModel.playCard(gameThemeId)
+                                }
                             }
                         ) {
                             Text("Play card!")
