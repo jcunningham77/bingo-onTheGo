@@ -2,6 +2,7 @@ package com.otg.bingo.repository
 
 import com.otg.bingo.model.CardTile
 import com.otg.bingo.model.GameTheme
+import com.otg.bingo.repository.internal.AuthTokenStore
 import com.otg.bingo.repository.internal.SUPABASE_HOST
 import com.otg.bingo.repository.internal.addSupabaseHeaders
 import com.otg.bingo.util.loggi
@@ -19,10 +20,15 @@ import kotlinx.coroutines.flow.flow
 import kotlin.random.Random
 
 
-class BingoRepositoryImpl(val httpClient: HttpClient) : BingoRepository {
+class BingoRepositoryImpl(val httpClient: HttpClient, val authTokenStore: AuthTokenStore) : BingoRepository {
 
     override fun getGameThemes(): Flow<Result<List<GameTheme>>> = flow {
-        val themes = httpClient.get("${SUPABASE_HOST}/rest/v1/GameTheme") { addSupabaseHeaders() }
+        val themes = httpClient.get("${SUPABASE_HOST}/rest/v1/GameTheme")
+        {
+            authTokenStore.getAuthToken()?.let {
+                addSupabaseHeaders(it)
+            }
+        }
                 .body<List<GameTheme>>()
 
         emit(Result.success(themes))
@@ -33,14 +39,24 @@ class BingoRepositoryImpl(val httpClient: HttpClient) : BingoRepository {
 
     override fun getCardTiles(gameThemeId: Int): Flow<Result<List<CardTile>>> = flow {
         val cardTiles =
-            httpClient.get("${SUPABASE_HOST}/rest/v1/CardTiles?game_theme_id=eq.$gameThemeId") { addSupabaseHeaders() }
+            httpClient.get("${SUPABASE_HOST}/rest/v1/CardTiles?game_theme_id=eq.$gameThemeId")
+            {
+                authTokenStore.getAuthToken()?.let {
+                    addSupabaseHeaders(it)
+                }
+            }
                 .body<List<CardTile>>()
 
         emit(Result.success(cardTiles))
     }
 
     override fun playCard(gameThemeId: Int): Flow<Result<Unit>> = flow {
-        val savedGameResult = httpClient.post (urlString = "${SUPABASE_HOST}/rest/v1/SavedGames") { addSupabaseHeaders()
+        val savedGameResult = httpClient.post(urlString = "${SUPABASE_HOST}/rest/v1/SavedGames")
+        {
+            authTokenStore.getAuthToken()?.let {
+                addSupabaseHeaders(it)
+            }
+
             // PostgREST requires JSON for inserts
             header(HttpHeaders.ContentType, ContentType.Application.Json)
 

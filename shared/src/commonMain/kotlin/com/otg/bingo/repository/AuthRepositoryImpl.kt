@@ -32,7 +32,9 @@ class AuthRepositoryImpl(
         val url = "${SUPABASE_HOST}/auth/v1/token?grant_type=id_token"
 
         val response = httpClient.post(url) {
-            addSupabaseHeaders()
+            authTokenStore.getAuthToken()?.let {
+                addSupabaseHeaders(it)
+            }
             contentType(ContentType.Application.Json)
             setBody(
                 IdTokenGrantRequest(
@@ -74,7 +76,9 @@ class AuthRepositoryImpl(
         val url = "${SUPABASE_HOST}/auth/v1/token?grant_type=id_token"
         loggi(" signInWithRefreshToken 2")
         val response = httpClient.post(url) {
-            addSupabaseHeaders()
+            authTokenStore.getAuthToken()?.let {
+                addSupabaseHeaders(it)
+            }
             contentType(ContentType.Application.Json)
             setBody(
                 RefreshTokenRequest(refreshToken = refreshToken)

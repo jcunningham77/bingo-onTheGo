@@ -15,7 +15,7 @@ class AppComponentImpl : AppComponent {
 
     private val httpClient: HttpClient = HttpClientFactory.client
 
-    override val bingoRepository: BingoRepository by lazy { BingoRepositoryImpl(httpClient) }
+    override val bingoRepository: BingoRepository by lazy { BingoRepositoryImpl(httpClient, authTokenStore) }
     override val authRepository: AuthRepository by lazy { AuthRepositoryImpl(httpClient, authTokenStore) }
 
     override val authTokenStore: AuthTokenStore by lazy { AuthTokenStoreImpl() }

@@ -23,4 +23,8 @@ class AuthTokenStoreImpl(
     override suspend fun clear() {
         secureSettings.remove(key)
     }
+
+    override suspend fun getAuthToken(): String? {
+        return loadSession()?.accessToken
+    }
 }
