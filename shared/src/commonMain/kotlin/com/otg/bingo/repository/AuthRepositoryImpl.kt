@@ -7,7 +7,6 @@ import com.otg.bingo.repository.internal.PersistedSession
 import com.otg.bingo.repository.internal.RefreshTokenRequest
 import com.otg.bingo.repository.internal.SUPABASE_HOST
 import com.otg.bingo.repository.internal.SupabaseSession
-import com.otg.bingo.repository.internal.addSupabaseHeaders
 import com.otg.bingo.repository.internal.toPersistedSession
 import com.otg.bingo.util.loggi
 import io.ktor.client.HttpClient
@@ -32,9 +31,6 @@ class AuthRepositoryImpl(
         val url = "${SUPABASE_HOST}/auth/v1/token?grant_type=id_token"
 
         val response = httpClient.post(url) {
-            authTokenStore.getAuthToken()?.let {
-                addSupabaseHeaders(it)
-            }
             contentType(ContentType.Application.Json)
             setBody(
                 IdTokenGrantRequest(
@@ -46,7 +42,6 @@ class AuthRepositoryImpl(
         loggi(" signInWithOauthToken, response status = ${response.status}")
         loggi("signInWithOauthToken, response body = ${response.body<SupabaseSession>()}")
         if (response.status == HttpStatusCode.OK) {
-
             authTokenStore.saveSession(response.body<SupabaseSession>().toPersistedSession())
         } else {
             loggi(" error signing into Supabase ${response.status}")
@@ -76,9 +71,6 @@ class AuthRepositoryImpl(
         val url = "${SUPABASE_HOST}/auth/v1/token?grant_type=id_token"
         loggi(" signInWithRefreshToken 2")
         val response = httpClient.post(url) {
-            authTokenStore.getAuthToken()?.let {
-                addSupabaseHeaders(it)
-            }
             contentType(ContentType.Application.Json)
             setBody(
                 RefreshTokenRequest(refreshToken = refreshToken)

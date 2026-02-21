@@ -15,7 +15,7 @@ class AuthTokenStoreImpl(
         secureSettings.putString(key, json.encodeToString(PersistedSession.serializer(), session))
     }
 
-    override suspend fun loadSession(): PersistedSession? {
+    override fun loadSession(): PersistedSession? {
         val raw = secureSettings.getStringOrNull(key) ?: return null
         return runCatching { json.decodeFromString(PersistedSession.serializer(), raw) }.getOrNull()
     }
@@ -24,7 +24,7 @@ class AuthTokenStoreImpl(
         secureSettings.remove(key)
     }
 
-    override suspend fun getAuthToken(): String? {
+    override fun getAuthToken(): String? {
         return loadSession()?.accessToken
     }
 }

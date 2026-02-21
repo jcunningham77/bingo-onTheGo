@@ -12,13 +12,12 @@ import com.otg.bingo.repository.internal.HttpClientFactory
 import io.ktor.client.HttpClient
 
 class AppComponentImpl : AppComponent {
+    override val authTokenStore: AuthTokenStore by lazy { AuthTokenStoreImpl() }
 
-    private val httpClient: HttpClient = HttpClientFactory.client
+    private val httpClient: HttpClient = HttpClientFactory.build(authTokenStore)
 
     override val bingoRepository: BingoRepository by lazy { BingoRepositoryImpl(httpClient, authTokenStore) }
     override val authRepository: AuthRepository by lazy { AuthRepositoryImpl(httpClient, authTokenStore) }
-
-    override val authTokenStore: AuthTokenStore by lazy { AuthTokenStoreImpl() }
 
     override val createCardViewModel: CreateCardViewModel by lazy { CreateCardViewModel(bingoRepository) }
     override val gameThemesViewModel: GameThemesViewModel by lazy { GameThemesViewModel(bingoRepository) }

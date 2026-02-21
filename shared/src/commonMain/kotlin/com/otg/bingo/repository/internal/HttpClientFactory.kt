@@ -9,8 +9,10 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 object HttpClientFactory {
-    val client: HttpClient by lazy {
-        HttpClient {
+    private lateinit var client: HttpClient
+
+    fun build(tokenStore: AuthTokenStore): HttpClient {
+        client = HttpClient {
             charlesUrl()?.let {
                 loggi("charles proxy URL is configured: $it")
                 engine { proxy = ProxyBuilder.http(it) }
@@ -21,7 +23,12 @@ object HttpClientFactory {
                     isLenient = true
                 })
             }
+            install(SupabaseAuthPlugin) {
+                tokenProvider = { tokenStore.getAuthToken() }
+            }
+
         }
+        return client
     }
 }
 
