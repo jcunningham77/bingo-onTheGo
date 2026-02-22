@@ -43,8 +43,9 @@ class AndroidSignInActivity : ComponentActivity() {
 
     private val oneTapLauncher =
         registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
-            val idToken = googleIdToken.extractIdToken(result.data) ?: return@registerForActivityResult
-            loggi(" onTapLauncher - received google ID token from sign in: $idToken")
+            val googleSignInResult = googleIdToken.extractGoogleAccountData(result.data)
+            val idToken = googleSignInResult.idToken ?: return@registerForActivityResult
+            loggi(" onTapLauncher - received googleSignInResult from sign in: $googleSignInResult")
             lifecycleScope.launch {
 
                 try {
