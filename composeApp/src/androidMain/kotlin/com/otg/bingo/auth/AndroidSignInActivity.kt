@@ -8,16 +8,27 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.otg.bingo.AndroidApp
 import com.otg.bingo.App
+import com.otg.bingo.R
 import com.otg.bingo.navigation.BrandingTopBar
 import com.otg.bingo.repository.internal.OAuthData
 import com.otg.bingo.repository.internal.OauthProvider
@@ -85,25 +96,44 @@ class AndroidSignInActivity : ComponentActivity() {
                                 .fillMaxSize()
                                 .padding(paddingValues)
                         ) {
-                            androidx.compose.material3.Button(
-                                modifier = Modifier.align(Alignment.Center),
+                            GoogleSignInButton(
                                 onClick = {
                                     googleIdToken.beginSignIn(
                                         launcher = oneTapLauncher,
                                         onError = { error -> loggi(" google sign in error: $error") }
                                     )
-                                },
-                            ) { Text("Sign in w Google") }
+                                }, modifier = Modifier
+                                    .align(Alignment.Center)
+                                    .size(width = 175.dp, height = 40.dp)
+                            )
                         }
                     }
                 }
             }
 
         }
+    }
 
-
-
-
-
+    @Preview
+    @Composable
+    private fun GoogleSignInButton(
+        onClick: () -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        Button(
+            onClick = onClick, modifier = modifier,
+            contentPadding = PaddingValues(0.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.White,
+                contentColor = Color(0xFF1F1F1F),
+            ),
+            elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp), shape = RectangleShape
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.sign_in_w_google_light),
+                contentDescription = "Google",
+                tint = Color.Unspecified,
+            )
+        }
     }
 }
