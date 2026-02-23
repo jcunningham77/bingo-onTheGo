@@ -9,6 +9,7 @@ import androidx.activity.result.IntentSenderRequest
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
+import com.otg.bingo.repository.internal.OauthProvider
 
 class GoogleIdTokenAndroid(
     activity: Activity,
@@ -39,25 +40,33 @@ class GoogleIdTokenAndroid(
             .addOnFailureListener { onError(it) }
     }
 
-    fun extractGoogleAccountData(data: Intent?): GoogleSignInResult {
+    fun extractOauthAccountData(data: Intent?): OAuthAccountData {
         val credential = oneTapClient.getSignInCredentialFromIntent(data)
         val photoUri: Uri? = credential.profilePictureUri
 
-        return GoogleSignInResult(
+        return OAuthAccountData(
             idToken = credential.googleIdToken,
             photoUri = photoUri,
             displayName = credential.displayName,
             email = credential.id,
+            OauthProvider.GOOGLE,
         )
     }
 
-    data class GoogleSignInResult(val idToken: String?, val photoUri: Uri?, val displayName: String?, val email: String){
+    data class OAuthAccountData(
+        val idToken: String?,
+        val photoUri: Uri?,
+        val displayName: String?,
+        val email: String,
+        val oAuthProvider: OauthProvider
+    ) {
         override fun toString(): String {
             return """
                 idToken: $idToken
                 photoUri: $photoUri
                 displayName: $displayName
                 email: $email
+                oAuthProvider: $oAuthProvider
             """.trimIndent()
 
         }

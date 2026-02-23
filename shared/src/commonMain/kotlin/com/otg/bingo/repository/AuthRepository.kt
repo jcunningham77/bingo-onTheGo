@@ -10,4 +10,6 @@ interface AuthRepository {
 
     suspend fun tryRestoreSession(): Boolean
     fun getOauthData(): OAuthData
+
+    suspend fun persistCurrentUserData()
 }
