@@ -46,29 +46,10 @@ class GoogleIdTokenAndroid(
 
         return OAuthAccountData(
             idToken = credential.googleIdToken,
-            photoUri = photoUri,
+            photoUri = photoUri.toString(),
             displayName = credential.displayName,
             email = credential.id,
             OauthProvider.GOOGLE,
         )
-    }
-
-    data class OAuthAccountData(
-        val idToken: String?,
-        val photoUri: Uri?,
-        val displayName: String?,
-        val email: String,
-        val oAuthProvider: OauthProvider
-    ) {
-        override fun toString(): String {
-            return """
-                idToken: $idToken
-                photoUri: $photoUri
-                displayName: $displayName
-                email: $email
-                oAuthProvider: $oAuthProvider
-            """.trimIndent()
-
-        }
     }
 }

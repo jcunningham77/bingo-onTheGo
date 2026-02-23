@@ -29,6 +29,7 @@ import androidx.lifecycle.lifecycleScope
 import com.otg.bingo.AndroidApp
 import com.otg.bingo.App
 import com.otg.bingo.R
+import com.otg.bingo.model.UserProfile
 import com.otg.bingo.navigation.BrandingTopBar
 import com.otg.bingo.repository.internal.OAuthData
 import com.otg.bingo.repository.internal.OauthProvider
@@ -52,11 +53,12 @@ class AndroidSignInActivity : ComponentActivity() {
 
                     val authRepository = (application as AndroidApp).appComponent.authRepository
                     val supabaseSession = authRepository.signInWithOauthToken(OAuthData(idToken, OauthProvider.GOOGLE))
+                    val userProfile = UserProfile(googleOAuthResult.displayName, googleOAuthResult.photoUri)
+                    authRepository.setCurrentUser(userProfile)
                     loggi(" Supabase session: $supabaseSession")
                     setContent {
                         App((application as AndroidApp).appComponent)
                     }
-
                 } catch (throwable: Throwable) {
                     loggi(" error signing in w supabase: $throwable")
                 }

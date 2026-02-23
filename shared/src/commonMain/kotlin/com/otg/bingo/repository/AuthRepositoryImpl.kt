@@ -1,5 +1,6 @@
 package com.otg.bingo.repository
 
+import com.otg.bingo.model.UserProfile
 import com.otg.bingo.repository.internal.AuthTokenStore
 import com.otg.bingo.repository.internal.IdTokenGrantRequest
 import com.otg.bingo.repository.internal.OAuthData
@@ -80,13 +81,23 @@ class AuthRepositoryImpl(
         if (response.status == HttpStatusCode.OK) {
             loggi(" signInWithRefreshToken 4")
             authTokenStore.saveSession(response.body<PersistedSession>())
-        }else {
+        } else {
             throw Exception("refresh token failed")
         }
     }
 
     override fun getOauthData(): OAuthData {
         TODO("Not yet implemented")
+    }
+
+    private var internalUserProfile: UserProfile? = null
+
+    override suspend fun setCurrentUser(userProfile: UserProfile) {
+        internalUserProfile = userProfile
+    }
+
+    override suspend fun getCurrentUser(): UserProfile? {
+        return internalUserProfile
     }
 }
 
