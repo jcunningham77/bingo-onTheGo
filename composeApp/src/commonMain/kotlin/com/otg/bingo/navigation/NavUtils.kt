@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import com.otg.bingo.util.loggi
 import onthegobingo.composeapp.generated.resources.Res
 import onthegobingo.composeapp.generated.resources.bingo_otg_banner
 import org.jetbrains.compose.resources.painterResource
@@ -21,12 +22,40 @@ expect fun SystemBackHandler(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BrandingTopBar(navigationIcon: @Composable (() -> Unit) = {}
-) {
+fun BrandingTopBar(navigationIcon: @Composable (() -> Unit) = {}) {
+
     CenterAlignedTopAppBar(
         modifier = Modifier.padding(top = 5.dp),
         title = { BrandBanner() },
         navigationIcon = navigationIcon
+    )
+
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BrandingTopBar(avatarUrl: String?) {
+    loggi("BrandingTopBar: avatarUrl $avatarUrl")
+    avatarUrl?.let {
+        CenterAlignedTopAppBar(
+            modifier = Modifier.padding(top = 5.dp),
+            title = { BrandBanner() },
+            navigationIcon = { Avatar(avatarUrl) }
+        )
+    } ?: run {
+        CenterAlignedTopAppBar(
+            modifier = Modifier.padding(top = 5.dp),
+            title = { BrandBanner() },
+        )
+    }
+}
+
+@Composable
+fun Avatar(avatarUrl: String?) {
+    loggi("avatarUrl = $avatarUrl")
+    coil3.compose.AsyncImage(
+        model = avatarUrl,
+        contentDescription = "User avatar"
     )
 }
 

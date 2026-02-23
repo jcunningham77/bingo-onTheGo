@@ -8,6 +8,7 @@ import com.otg.bingo.repository.internal.PersistedSession
 import com.otg.bingo.repository.internal.RefreshTokenRequest
 import com.otg.bingo.repository.internal.SUPABASE_HOST
 import com.otg.bingo.repository.internal.SupabaseSession
+import com.otg.bingo.repository.internal.UserProfileStore
 import com.otg.bingo.repository.internal.toPersistedSession
 import com.otg.bingo.util.loggi
 import io.ktor.client.HttpClient
@@ -17,13 +18,28 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 class AuthRepositoryImpl(
     val httpClient: HttpClient,
-    val authTokenStore: AuthTokenStore
+    val authTokenStore: AuthTokenStore,
+    val userProfileStore: UserProfileStore,
+    // FIXME inject a scope
+    private val scope: CoroutineScope = MainScope(),
 ) : AuthRepository {
+
+    init {
+        scope.launch {
+            _currentUser.value = userProfileStore.loadUserProfile()
+        }
+    }
 
     // TODO this is `suspend`, should it be?
     override suspend fun signInWithOauthToken(oAuthData: OAuthData): SupabaseSession {
@@ -90,15 +106,21 @@ class AuthRepositoryImpl(
         TODO("Not yet implemented")
     }
 
-    private var internalUserProfile: UserProfile? = null
+
+
+    private val _currentUser = MutableStateFlow<UserProfile?>(null)
 
     override suspend fun setCurrentUser(userProfile: UserProfile) {
-        internalUserProfile = userProfile
+        loggi("setUser: $userProfile")
+        userProfileStore.setUserProfile(userProfile)
+        _currentUser.value = userProfile
     }
 
-    override suspend fun getCurrentUser(): UserProfile? {
-        return internalUserProfile
+    override suspend fun signOut() {
+        _currentUser.value = null
+    }
+
+    override fun currentUser(): Flow<UserProfile?> {
+        return _currentUser.asStateFlow()
     }
 }
-
-

@@ -3,6 +3,7 @@ package com.otg.bingo.repository
 import com.otg.bingo.model.UserProfile
 import com.otg.bingo.repository.internal.OAuthData
 import com.otg.bingo.repository.internal.SupabaseSession
+import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
 
@@ -15,5 +16,7 @@ interface AuthRepository {
 
     suspend fun setCurrentUser(userProfile: UserProfile)
 
-    suspend fun getCurrentUser(): UserProfile?
+    suspend fun signOut()
+
+    fun currentUser(): Flow<UserProfile?>
 }

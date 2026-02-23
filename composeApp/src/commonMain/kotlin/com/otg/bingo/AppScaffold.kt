@@ -13,6 +13,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.otg.bingo.createcard.cards.CreateCardScreen
 import com.otg.bingo.createcard.gamethemes.GameThemeScreen
+import com.otg.bingo.di.LocalAppComponent
 import com.otg.bingo.leaderboard.LeaderboardScreen
 import com.otg.bingo.nav.Screen
 import com.otg.bingo.navigation.BrandingTopBar
@@ -27,8 +29,10 @@ import com.otg.bingo.viewcard.ViewCardsScreen
 import com.otg.bingo.views.ThemedText
 
 @Composable
-fun AppScaffold() {
+fun AppScaffold(viewModel: AppScaffoldViewModel = LocalAppComponent.current.appScaffoldViewModel
+) {
 
+    val currentUserProfile by viewModel.userProfile().collectAsState(null)
     var currentScreen by remember { mutableStateOf<Screen>(Screen.CreateCard) }
     var createCardGameThemeId by remember { mutableStateOf<Int?>(null) }
 
@@ -76,7 +80,7 @@ fun AppScaffold() {
                     )
                 }
             },
-            topBar = { BrandingTopBar() }
+            topBar = { BrandingTopBar(currentUserProfile?.avatarUrl) }
         ) { paddingValues ->
             // FIXME top padding seems too large on Android 14
             Box(
