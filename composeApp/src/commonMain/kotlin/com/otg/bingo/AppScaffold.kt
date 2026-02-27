@@ -19,12 +19,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import com.otg.bingo.auth.SettingsScreen
 import com.otg.bingo.createcard.cards.CreateCardScreen
 import com.otg.bingo.createcard.gamethemes.GameThemeScreen
 import com.otg.bingo.di.LocalAppComponent
 import com.otg.bingo.leaderboard.LeaderboardScreen
 import com.otg.bingo.nav.Screen
-import com.otg.bingo.navigation.BrandingTopBar
+import com.otg.bingo.navigation.BrandingTopBarWithAvatar
 import com.otg.bingo.viewcard.ViewCardsScreen
 import com.otg.bingo.views.ThemedText
 
@@ -33,10 +34,17 @@ fun AppScaffold(viewModel: AppScaffoldViewModel = LocalAppComponent.current.appS
 ) {
 
     val currentUserProfile by viewModel.userProfile().collectAsState(null)
+
+
     var currentScreen by remember { mutableStateOf<Screen>(Screen.CreateCard) }
     var createCardGameThemeId by remember { mutableStateOf<Int?>(null) }
+    var profileAvatarClicked by remember { mutableStateOf<Int?>(null) }
 
-    if (createCardGameThemeId != null) {
+    if (profileAvatarClicked != null) {
+        SettingsScreen (onClose = {
+            profileAvatarClicked = null
+        })
+    } else if (createCardGameThemeId != null) {
         CreateCardScreen(gameThemeId = createCardGameThemeId!!, onClose = {
             createCardGameThemeId = null
         })
@@ -80,7 +88,10 @@ fun AppScaffold(viewModel: AppScaffoldViewModel = LocalAppComponent.current.appS
                     )
                 }
             },
-            topBar = { BrandingTopBar(currentUserProfile?.avatarUrl) }
+            topBar = {
+
+                BrandingTopBarWithAvatar(currentUserProfile?.avatarUrl, onClick = { profileAvatarClicked = 1 })
+            }
         ) { paddingValues ->
             // FIXME top padding seems too large on Android 14
             Box(

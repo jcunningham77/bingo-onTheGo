@@ -2,6 +2,8 @@ package com.otg.bingo.navigation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -54,17 +56,47 @@ fun BrandingTopBar(avatarUrl: String?) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Avatar(avatarUrl: String?) {
+fun BrandingTopBarWithAvatar(avatarUrl: String?, onClick: () -> Unit = {}) {
+    loggi("BrandingTopBar: avatarUrl $avatarUrl, onClick = $onClick")
+    avatarUrl?.let {
+        CenterAlignedTopAppBar(
+            modifier = Modifier.padding(top = 5.dp, start = 15.dp),
+            title = { BrandBanner() },
+            navigationIcon = { Avatar(avatarUrl, onClick) }
+        )
+    } ?: run {
+        CenterAlignedTopAppBar(
+            modifier = Modifier.padding(top = 5.dp),
+            title = { BrandBanner() },
+        )
+    }
+}
+
+@Composable
+fun Avatar(avatarUrl: String?, onClick: () -> Unit = {}) {
+
     loggi("avatarUrl = $avatarUrl")
-    coil3.compose.AsyncImage(
+
+    Box(
         modifier = Modifier
             .size(40.dp)
             .border(1.dp, Color.Black, RoundedCornerShape(16.dp))
-            .clip(CircleShape),
-        model = avatarUrl,
-        contentDescription = "User avatar"
-    )
+            .clip(CircleShape)
+            .clickable { onClick() }
+    ) {
+        coil3.compose.AsyncImage(
+            modifier = Modifier
+                .size(40.dp)
+                .border(1.dp, Color.Black, RoundedCornerShape(16.dp))
+                .clip(CircleShape),
+            model = avatarUrl,
+            contentDescription = "User avatar"
+
+        )
+    }
+
 }
 
 @Composable
