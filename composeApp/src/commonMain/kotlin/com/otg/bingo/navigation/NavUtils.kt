@@ -1,12 +1,17 @@
 package com.otg.bingo.navigation
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.otg.bingo.util.loggi
@@ -23,22 +28,21 @@ expect fun SystemBackHandler(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BrandingTopBar(navigationIcon: @Composable (() -> Unit) = {}) {
-
     CenterAlignedTopAppBar(
         modifier = Modifier.padding(top = 5.dp),
         title = { BrandBanner() },
         navigationIcon = navigationIcon
     )
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+// FIXME add a better way to specify Avatar besides String?
 fun BrandingTopBar(avatarUrl: String?) {
     loggi("BrandingTopBar: avatarUrl $avatarUrl")
     avatarUrl?.let {
         CenterAlignedTopAppBar(
-            modifier = Modifier.padding(top = 5.dp),
+            modifier = Modifier.padding(top = 5.dp, start = 15.dp),
             title = { BrandBanner() },
             navigationIcon = { Avatar(avatarUrl) }
         )
@@ -54,6 +58,10 @@ fun BrandingTopBar(avatarUrl: String?) {
 fun Avatar(avatarUrl: String?) {
     loggi("avatarUrl = $avatarUrl")
     coil3.compose.AsyncImage(
+        modifier = Modifier
+            .size(40.dp)
+            .border(1.dp, Color.Black, RoundedCornerShape(16.dp))
+            .clip(CircleShape),
         model = avatarUrl,
         contentDescription = "User avatar"
     )
