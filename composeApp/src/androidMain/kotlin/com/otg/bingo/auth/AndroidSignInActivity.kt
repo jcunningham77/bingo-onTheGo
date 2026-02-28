@@ -85,34 +85,37 @@ class AndroidSignInActivity : ComponentActivity() {
                     App((application as AndroidApp).appComponent)
                 }
             } else {
-                loggi(" tryRestoreSession did not work, forwarding to sign in w google")
-                setContent {
-                    Scaffold(
-                        modifier = Modifier.fillMaxSize(),
-                        topBar = {
-                            BrandingTopBar()
-                        }
-                    ) { paddingValues ->
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(paddingValues)
-                        ) {
-                            GoogleSignInButton(
-                                onClick = {
-                                    googleIdToken.beginSignIn(
-                                        launcher = oneTapLauncher,
-                                        onError = { error -> loggi(" google sign in error: $error") }
-                                    )
-                                }, modifier = Modifier
-                                    .align(Alignment.Center)
-                                    .size(width = 175.dp, height = 40.dp)
+                showSignInScreen()
+            }
+        }
+    }
+
+    fun showSignInScreen() {
+
+        setContent {
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                topBar = {
+                    BrandingTopBar()
+                }
+            ) { paddingValues ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                ) {
+                    GoogleSignInButton(
+                        onClick = {
+                            googleIdToken.beginSignIn(
+                                launcher = oneTapLauncher,
+                                onError = { error -> loggi(" google sign in error: $error") }
                             )
-                        }
-                    }
+                        }, modifier = Modifier
+                            .align(Alignment.Center)
+                            .size(width = 175.dp, height = 40.dp)
+                    )
                 }
             }
-
         }
     }
 

@@ -26,6 +26,7 @@ import com.otg.bingo.di.LocalAppComponent
 import com.otg.bingo.leaderboard.LeaderboardScreen
 import com.otg.bingo.nav.Screen
 import com.otg.bingo.navigation.BrandingTopBarWithAvatar
+import com.otg.bingo.navigation.NavigateToSignIn
 import com.otg.bingo.viewcard.ViewCardsScreen
 import com.otg.bingo.views.ThemedText
 
@@ -33,17 +34,24 @@ import com.otg.bingo.views.ThemedText
 fun AppScaffold(viewModel: AppScaffoldViewModel = LocalAppComponent.current.appScaffoldViewModel
 ) {
 
+    // TODO should any of this 'state' be moved to the ViewModel?
     val currentUserProfile by viewModel.userProfile().collectAsState(null)
-
-
     var currentScreen by remember { mutableStateOf<Screen>(Screen.CreateCard) }
     var createCardGameThemeId by remember { mutableStateOf<Int?>(null) }
     var profileAvatarClicked by remember { mutableStateOf<Int?>(null) }
 
+    var signedOut by remember { mutableStateOf(false) }
+    if (signedOut) {
+        NavigateToSignIn()
+        return
+    }
+
     if (profileAvatarClicked != null) {
         SettingsScreen (onClose = {
             profileAvatarClicked = null
-        })
+        },
+            onSignedOut = { signedOut = true }
+        )
     } else if (createCardGameThemeId != null) {
         CreateCardScreen(gameThemeId = createCardGameThemeId!!, onClose = {
             createCardGameThemeId = null

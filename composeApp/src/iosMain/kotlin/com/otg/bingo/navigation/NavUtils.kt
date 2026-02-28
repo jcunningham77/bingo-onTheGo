@@ -9,3 +9,8 @@ actual fun SystemBackHandler(
 ) {
     // TODO implement iOS specific logic
 }
+
+@Composable
+actual fun NavigateToSignIn() {
+    // TODO implement iOS specific logic
+}

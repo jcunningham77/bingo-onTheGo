@@ -121,7 +121,7 @@ class AuthRepositoryImpl(
         _currentUser.value = null
         userProfileStore.setUserProfile(null)
         authTokenStore.clear()
-
+        loggi("sign out")
         emit(Result.success(Unit))
     }
 

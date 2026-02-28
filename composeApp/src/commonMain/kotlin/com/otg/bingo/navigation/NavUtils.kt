@@ -27,6 +27,9 @@ expect fun SystemBackHandler(
     onBack:()-> Unit
 )
 
+@Composable
+expect fun NavigateToSignIn()
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
