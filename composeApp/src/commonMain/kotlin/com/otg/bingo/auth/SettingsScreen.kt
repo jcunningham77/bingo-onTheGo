@@ -9,18 +9,44 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import com.otg.bingo.di.LocalAppComponent
 import com.otg.bingo.navigation.BrandingTopBar
 import com.otg.bingo.navigation.SystemBackHandler
 import com.otg.bingo.util.loggi
+import kotlinx.coroutines.launch
 
 @Composable
-fun SettingsScreen(onClose: () -> Unit) {
+fun SettingsScreen(
+    settingsViewModel: SettingsViewModel = LocalAppComponent.current.settingsViewModel,
+    onClose: () -> Unit
+) {
+
+    val snackbarHostState = remember { SnackbarHostState() }
+    val signOutScope = rememberCoroutineScope()
+
+    // region events
+    LaunchedEffect(settingsViewModel) {
+        settingsViewModel.events.collect { event ->
+
+            when (event) {
+                is SettingsViewModel.SettingsUiEvent.SignOutSuccessMessage ->
+                    snackbarHostState.showSnackbar(event.message)
+
+                is SettingsViewModel.SettingsUiEvent.ShowErrorMessage ->
+                    snackbarHostState.showSnackbar(event.message)
+            }
+        }
+    }
 
     SystemBackHandler(onBack = onClose)
 
@@ -42,8 +68,14 @@ fun SettingsScreen(onClose: () -> Unit) {
         Box(Modifier.fillMaxSize().padding(paddingValues)) {
             Box(Modifier.fillMaxSize().padding(16.dp)){
                 TextButton(
-                    onClick = {}
-                ) {Text("Sign out")}
+                    onClick = {
+                        signOutScope.launch {
+                            settingsViewModel.signOut()
+                        }
+                    }
+                ) {
+                    Text("Sign out")
+                }
             }
 
         }

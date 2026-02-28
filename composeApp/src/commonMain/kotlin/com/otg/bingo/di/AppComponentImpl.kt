@@ -1,6 +1,7 @@
 package com.otg.bingo.di
 
 import com.otg.bingo.AppScaffoldViewModel
+import com.otg.bingo.auth.SettingsViewModel
 import com.otg.bingo.createcard.cards.CreateCardViewModel
 import com.otg.bingo.createcard.gamethemes.GameThemesViewModel
 import com.otg.bingo.repository.AuthRepository
@@ -23,7 +24,10 @@ class AppComponentImpl : AppComponent {
     override val bingoRepository: BingoRepository by lazy { BingoRepositoryImpl(httpClient, authTokenStore) }
     override val authRepository: AuthRepository by lazy { AuthRepositoryImpl(httpClient, authTokenStore, userProfileStore) }
 
+
     override val appScaffoldViewModel: AppScaffoldViewModel by lazy { AppScaffoldViewModel(authRepository) }
     override val createCardViewModel: CreateCardViewModel by lazy { CreateCardViewModel(bingoRepository) }
     override val gameThemesViewModel: GameThemesViewModel by lazy { GameThemesViewModel(bingoRepository) }
+    override val settingsViewModel: SettingsViewModel by lazy { SettingsViewModel(authRepository) }
+
 }

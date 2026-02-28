@@ -1,6 +1,7 @@
 package com.otg.bingo.di
 
 import com.otg.bingo.AppScaffoldViewModel
+import com.otg.bingo.auth.SettingsViewModel
 import com.otg.bingo.createcard.cards.CreateCardViewModel
 import com.otg.bingo.createcard.gamethemes.GameThemesViewModel
 import com.otg.bingo.repository.AuthRepository
@@ -18,4 +19,5 @@ interface AppComponent {
     val appScaffoldViewModel: AppScaffoldViewModel
     val createCardViewModel: CreateCardViewModel
     val gameThemesViewModel: GameThemesViewModel
+    val settingsViewModel: SettingsViewModel
 }
