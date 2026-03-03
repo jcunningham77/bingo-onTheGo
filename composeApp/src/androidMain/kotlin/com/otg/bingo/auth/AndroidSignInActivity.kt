@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -46,10 +47,21 @@ class AndroidSignInActivity : ComponentActivity() {
             val googleOAuthResult = googleIdToken.extractOauthAccountData(result.data)
             val idToken = googleOAuthResult.idToken ?: return@registerForActivityResult
             loggi(" onTapLauncher - received googleOAuthResult from sign in: $googleOAuthResult")
+            setContent {
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                ) { paddingValues ->
+                    Box(
+                        Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                    ) {
+                        CircularProgressIndicator(Modifier.align(Alignment.Center))
+                    }
+                }
+            }
             lifecycleScope.launch {
-
                 try {
-
                     val authRepository = (application as AndroidApp).appComponent.authRepository
                     val supabaseSession = authRepository.signInWithOauthToken(OAuthData(idToken, OauthProvider.GOOGLE))
                     val userProfile = UserProfile(googleOAuthResult.displayName, googleOAuthResult.photoUri)
