@@ -61,7 +61,6 @@ class AndroidSignInActivity : ComponentActivity() {
                 } catch (throwable: Throwable) {
                     loggi(" error signing in w supabase: $throwable")
                 }
-
             }
         }
 

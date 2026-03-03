@@ -33,7 +33,7 @@ class AuthRepositoryImpl(
     val authTokenStore: AuthTokenStore,
     val userProfileStore: UserProfileStore,
     // FIXME inject a scope
-    private val scope: CoroutineScope = MainScope(),
+    scope: CoroutineScope = MainScope(),
 ) : AuthRepository {
 
     init {
@@ -42,7 +42,6 @@ class AuthRepositoryImpl(
         }
     }
 
-    // TODO this is `suspend`, should it be?
     override suspend fun signInWithOauthToken(oAuthData: OAuthData): SupabaseSession {
         
         loggi("signInWithOauthToken = ${oAuthData.token}")
@@ -57,8 +56,7 @@ class AuthRepositoryImpl(
                 )
             )
         }
-        loggi(" signInWithOauthToken, response status = ${response.status}")
-        loggi("signInWithOauthToken, response body = ${response.body<SupabaseSession>()}")
+
         if (response.status == HttpStatusCode.OK) {
             authTokenStore.saveSession(response.body<SupabaseSession>().toPersistedSession())
         } else {
@@ -71,43 +69,30 @@ class AuthRepositoryImpl(
     @OptIn(ExperimentalTime::class)
     override suspend fun tryRestoreSession(
     ): Boolean {
-
-        loggi(" tryRestoreSession 1")
         val session = authTokenStore.loadSession() ?: return false
-        loggi(" tryRestoreSession 2")
         val now = Clock.System.now().epochSeconds
         val isExpired = now >= (session.obtainedAtEpochSeconds + session.expiresInSeconds)
-        loggi(" tryRestoreSession 3")
         if (!isExpired) return true
-        loggi(" tryRestoreSession 4")
         val refresh = session.refreshToken ?: return false
         return runCatching { signInWithRefreshToken(refresh) }.isSuccess
     }
 
     private suspend fun signInWithRefreshToken(refreshToken: String) {
-        loggi(" signInWithRefreshToken 1")
+        loggi("signInWithRefreshToken: $refreshToken")
         val url = "${SUPABASE_HOST}/auth/v1/token?grant_type=id_token"
-        loggi(" signInWithRefreshToken 2")
         val response = httpClient.post(url) {
             contentType(ContentType.Application.Json)
             setBody(
                 RefreshTokenRequest(refreshToken = refreshToken)
             )
         }
-        loggi(" signInWithRefreshToken 3")
+
         if (response.status == HttpStatusCode.OK) {
-            loggi(" signInWithRefreshToken 4")
             authTokenStore.saveSession(response.body<PersistedSession>())
         } else {
             throw Exception("refresh token failed")
         }
     }
-
-    override fun getOauthData(): OAuthData {
-        TODO("Not yet implemented")
-    }
-
-
 
     private val _currentUser = MutableStateFlow<UserProfile?>(null)
 
@@ -118,10 +103,10 @@ class AuthRepositoryImpl(
     }
 
     override suspend fun signOut() = flow {
+        loggi("sign out")
         _currentUser.value = null
         userProfileStore.setUserProfile(null)
         authTokenStore.clear()
-        loggi("sign out")
         emit(Result.success(Unit))
     }
 

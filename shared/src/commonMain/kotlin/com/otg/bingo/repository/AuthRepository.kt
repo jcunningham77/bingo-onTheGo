@@ -11,7 +11,7 @@ interface AuthRepository {
     suspend fun signInWithOauthToken(oAuthData: OAuthData): SupabaseSession
 
     suspend fun tryRestoreSession(): Boolean
-    fun getOauthData(): OAuthData
+
 
 
     suspend fun setCurrentUser(userProfile: UserProfile)
