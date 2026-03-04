@@ -17,6 +17,5 @@ data class OAuthAccountData(
             email: $email
             oAuthProvider: $oAuthProvider
         """.trimIndent()
-
     }
 }

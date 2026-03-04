@@ -16,7 +16,6 @@ import io.ktor.http.HttpHeaders
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
-import kotlin.random.Random
 
 
 class BingoRepositoryImpl(val httpClient: HttpClient, val authTokenStore: AuthTokenStore) : BingoRepository {
@@ -38,15 +37,18 @@ class BingoRepositoryImpl(val httpClient: HttpClient, val authTokenStore: AuthTo
         emit(Result.success(cardTiles))
     }
 
-    override fun playCard(gameThemeId: Int): Flow<Result<Unit>> = flow {
-        val savedGameResult = httpClient.post(urlString = "${SUPABASE_HOST}/rest/v1/SavedGames")
+    override suspend fun playCard(gameThemeId: Int): Result<Unit>  {
+        val savedGameResponse = httpClient.post(urlString = "${SUPABASE_HOST}/rest/v1/SavedGames")
         {
-            // PostgREST requires JSON for inserts
             header(HttpHeaders.ContentType, ContentType.Application.Json)
             setBody(mapOf("game_theme_id" to gameThemeId))
         }
 
-        loggi("result = $savedGameResult")
-        emit(Random.nextBoolean().let { if (it) Result.success(Unit) else Result.failure(Exception("Supabase exception")) })
+        loggi("result = $savedGameResponse")
+        return if (savedGameResponse.status.value in 200..299){
+            Result.success(Unit)
+        } else {
+            Result.failure(Exception("Supabase exception"))
+        }
     }
 }
