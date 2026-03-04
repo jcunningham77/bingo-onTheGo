@@ -41,7 +41,7 @@ fun SettingsScreen(
             when (event) {
                 is SettingsViewModel.SettingsUiEvent.SignOutSuccessMessage -> {
                     launch {
-                        withTimeoutOrNull(2000) {
+                        withTimeoutOrNull(1000) {
                             snackbarHostState.showSnackbar(event.message, duration = SnackbarDuration.Indefinite)
                         }
                         onSignedOut()
