@@ -3,8 +3,7 @@ package com.otg.bingo.navigation
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import com.otg.bingo.auth.AndroidSignInActivity
-import com.otg.bingo.util.loggi
+import com.otg.bingo.auth.MainActivity
 
 
 @Composable
@@ -18,12 +17,7 @@ actual fun SystemBackHandler(
 @Composable
 actual fun NavigateToSignIn() {
     val context = LocalContext.current
-    loggi("navigate context = $context")
-    if (context is AndroidSignInActivity) {
-        loggi("navigate if")
+    if (context is MainActivity) {
         context.showSignInScreen()
-    } else {
-        loggi("navigate else")
     }
-
 }

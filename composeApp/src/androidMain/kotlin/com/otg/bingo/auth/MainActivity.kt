@@ -36,7 +36,7 @@ import com.otg.bingo.repository.internal.OauthProvider
 import com.otg.bingo.util.loggi
 import kotlinx.coroutines.launch
 
-class AndroidSignInActivity : ComponentActivity() {
+class MainActivity : ComponentActivity() {
 
     private val webClientId: String = "783933800390-hd9crn8jsrdpv8jcsqhike595qhhp22u.apps.googleusercontent.com"
 
@@ -91,7 +91,7 @@ class AndroidSignInActivity : ComponentActivity() {
 
         lifecycleScope.launch {
             if ((application as AndroidApp).appComponent.authRepository.tryRestoreSession()) {
-                loggi(" tryRestoreSession workd, forwarding to app.kt")
+                loggi(" tryRestoreSession worked, forwarding to app.kt")
                 setContent {
                     App((application as AndroidApp).appComponent)
                 }
@@ -102,7 +102,6 @@ class AndroidSignInActivity : ComponentActivity() {
     }
 
     fun showSignInScreen() {
-
         setContent {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
@@ -129,17 +128,6 @@ class AndroidSignInActivity : ComponentActivity() {
             }
         }
     }
-
-    override fun onResume() {
-        super.onResume()
-        loggi("onResume")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        loggi("onPause")
-    }
-
 
     @Composable
     private fun GoogleSignInButton(
