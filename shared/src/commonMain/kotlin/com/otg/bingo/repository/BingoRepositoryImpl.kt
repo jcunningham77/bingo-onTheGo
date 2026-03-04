@@ -17,7 +17,7 @@ import io.ktor.http.HttpHeaders
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class BingoRepositoryImpl(val httpClient: HttpClient, val authTokenStore: AuthTokenStore) : BingoRepository {
+class BingoRepositoryImpl(val httpClient: HttpClient) : BingoRepository {
 
     override suspend fun getGameThemes(): Result<List<GameTheme>> {
         val themesHttpResponse = httpClient.get("${SUPABASE_HOST}/rest/v1/GameTheme")
