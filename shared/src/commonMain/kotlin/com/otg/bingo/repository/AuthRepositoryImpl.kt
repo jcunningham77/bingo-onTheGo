@@ -19,7 +19,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -33,7 +33,7 @@ class AuthRepositoryImpl(
     val authTokenStore: AuthTokenStore,
     val userProfileStore: UserProfileStore,
     // FIXME inject a scope
-    scope: CoroutineScope = MainScope(),
+    scope: CoroutineScope = CoroutineScope(Dispatchers.Default),
 ) : AuthRepository {
 
     init {
@@ -43,7 +43,6 @@ class AuthRepositoryImpl(
     }
 
     override suspend fun signInWithOauthToken(oAuthData: OAuthData): SupabaseSession {
-        
         loggi("signInWithOauthToken = ${oAuthData.token}")
         val url = "${SUPABASE_HOST}/auth/v1/token?grant_type=id_token"
 
@@ -67,8 +66,7 @@ class AuthRepositoryImpl(
     }
 
     @OptIn(ExperimentalTime::class)
-    override suspend fun tryRestoreSession(
-    ): Boolean {
+    override suspend fun tryRestoreSession(): Boolean {
         val session = authTokenStore.loadSession() ?: return false
         val now = Clock.System.now().epochSeconds
         val isExpired = now >= (session.obtainedAtEpochSeconds + session.expiresInSeconds)
