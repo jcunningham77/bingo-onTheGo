@@ -2,7 +2,6 @@ package com.otg.bingo.createcard.cards
 
 import com.otg.bingo.model.CardTile
 import com.otg.bingo.repository.BingoRepository
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -17,9 +16,8 @@ class CreateCardViewModel(val repository: BingoRepository) {
         data class ShowErrorMessage(val message: String) : CreateCardUiEvent
     }
 
-    // TODO represent the below as [MutableStateFlow] ?
-    fun cardTiles(gameThemeId: Int): Flow<Result<List<CardTile>>> =
-        repository.getCardTiles(gameThemeId)
+
+    suspend fun cardTiles(gameThemeId: Int): Result<List<CardTile>> = repository.getCardTiles(gameThemeId)
 
     suspend fun playCard(gameThemeId: Int) {
         val result = repository.playCard(gameThemeId)

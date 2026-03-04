@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 interface BingoRepository {
     suspend fun getGameThemes(): Result<List<GameTheme>>
 
-    fun getCardTiles(gameThemeId:Int): Flow<Result<List<CardTile>>>
+    suspend fun getCardTiles(gameThemeId:Int): Result<List<CardTile>>
 
     suspend fun playCard(gameThemeId:Int): Result<Unit>
 }
