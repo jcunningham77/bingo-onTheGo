@@ -14,5 +14,5 @@ fun GameThemesPagerPreview() {
         GameTheme(3, "Movies", "https://picsum.photos/400/600?random=3")
     )
 
-    App()
+//    App()
 }

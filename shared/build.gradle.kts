@@ -34,6 +34,7 @@ kotlin {
         }
         androidMain.dependencies {
             implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
+            implementation("androidx.security:security-crypto:1.1.0")
         }
         iosMain.dependencies {
             implementation("io.ktor:ktor-client-darwin:$ktorVersion")
@@ -51,7 +52,17 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
+    buildFeatures {
+        buildConfig = true
+    }
+
+    val charlesHost = (findProperty("charles.host") as String?)?.trim().orEmpty()
+    val charlesPort = (findProperty("charles.port") as String?)?.toIntOrNull() ?: 0
+
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
+        buildConfigField("String", "CHARLES_HOST", "\"$charlesHost\"")
+        buildConfigField("int", "CHARLES_PORT", "$charlesPort")
     }
 }

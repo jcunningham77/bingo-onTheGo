@@ -1,0 +1,16 @@
+package com.otg.bingo.repository.internal
+
+import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.client.request.header
+
+// TODO extract to Secrets
+private const val API_KEY_KEY = "apiKey"
+private const val API_KEY_VALUE = "sb_publishable_pNiCZbjQKm-q_l6_bcKN-w_qE-JwxkU"
+
+private const val AUTHORIZATION_KEY = "Authorization"
+private const val AUTHORIZATION_VALUE = "Bearer"
+internal const val SUPABASE_HOST = "https://qwldabjzqgwyxihictth.supabase.co"
+fun HttpRequestBuilder.addSupabaseHeaders(authToken:String) {
+    header(AUTHORIZATION_KEY, "$AUTHORIZATION_VALUE $authToken")
+    header(API_KEY_KEY, API_KEY_VALUE)
+}

@@ -29,8 +29,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -42,18 +45,22 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.otg.bingo.model.GameTheme
+import com.otg.bingo.util.loggi
 import com.otg.bingo.views.ThemedText
 import com.otg.bingo.views.UiState
 import com.otg.bingo.views.toUIState
-import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun GameThemesPager(
-    themesFlowResult: Flow<Result<List<GameTheme>>>,
+    loadGameThemes: suspend () -> Result<List<GameTheme>>,
     onGameThemeSelected: (Int) -> Unit
 ) {
 
-    val gameThemesResult by themesFlowResult.collectAsState(initial = Result.success(emptyList()))
+    var gameThemesResult by remember { mutableStateOf<Result<List<GameTheme>>>(Result.success(emptyList())) }
+
+    LaunchedEffect(Unit) {
+        gameThemesResult = loadGameThemes()
+    }
 
     val uiState = gameThemesResult.toUIState()
     AnimatedContent(
@@ -93,7 +100,10 @@ fun GameThemesPager(
                             state = pagerState,
                             modifier = Modifier.weight(1f)
                         ) { page ->
-                            println("current game theme id = ${gameThemes[page].id}")
+
+                            loggi(" current game theme id = ${gameThemes[page].id}")
+
+
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -129,10 +139,10 @@ fun GameThemesPager(
                                         contentDescription = gameThemes[page].name,
                                         modifier = Modifier.fillMaxSize(),
                                         contentScale = ContentScale.Crop,
-                                        onLoading = { println("JRC Loading image...") },
-                                        onSuccess = { println("JRC Image loaded successfully") },
+                                        onLoading = { loggi(" Loading image...") },
+                                        onSuccess = { loggi(" Image loaded successfully") },
                                         onError = { error ->
-                                            println("JRC Error loading image: ${error}")
+                                            loggi(" Error loading image: ${error}")
                                         }
                                     )
                                     Box(
