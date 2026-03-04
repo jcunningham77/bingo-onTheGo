@@ -7,12 +7,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
 
-
     suspend fun signInWithOauthToken(oAuthData: OAuthData): SupabaseSession
 
     suspend fun tryRestoreSession(): Boolean
-
-
 
     suspend fun setCurrentUser(userProfile: UserProfile)
 

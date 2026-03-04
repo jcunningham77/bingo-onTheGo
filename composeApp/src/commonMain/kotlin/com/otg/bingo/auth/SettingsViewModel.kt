@@ -18,7 +18,9 @@ class SettingsViewModel(val repository: AuthRepository) {
                     loggi("emitting sign out event")
                     _events.tryEmit(SettingsUiEvent.SignOutSuccessMessage("Successfully signed out"))
                 }
-                .onFailure { _events.tryEmit(SettingsUiEvent.ShowErrorMessage("Sorry, technical difficulties")) }
+                .onFailure {
+                    _events.tryEmit(SettingsUiEvent.ShowErrorMessage("Sorry, technical difficulties"))
+                }
         }
     }
 
