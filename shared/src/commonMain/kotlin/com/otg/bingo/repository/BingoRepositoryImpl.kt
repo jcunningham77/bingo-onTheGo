@@ -14,19 +14,18 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
-
 
 class BingoRepositoryImpl(val httpClient: HttpClient, val authTokenStore: AuthTokenStore) : BingoRepository {
 
-    override fun getGameThemes(): Flow<Result<List<GameTheme>>> = flow {
-        val themes = httpClient.get("${SUPABASE_HOST}/rest/v1/GameTheme").body<List<GameTheme>>()
+    override suspend fun getGameThemes(): Result<List<GameTheme>> {
+        val themesHttpResponse = httpClient.get("${SUPABASE_HOST}/rest/v1/GameTheme")
 
-        emit(Result.success(themes))
-    }.catch { e ->
-        loggi("BingoRepository  Error fetching themes $e")
-        emit(Result.failure(e)) // Emit empty list on error instead of crashing
+        return if (themesHttpResponse.status.value in 200..299) {
+            Result.success(themesHttpResponse.body<List<GameTheme>>())
+        } else {
+            Result.failure(Exception("GET game themes failed"))
+        }
     }
 
     override fun getCardTiles(gameThemeId: Int): Flow<Result<List<CardTile>>> = flow {

@@ -9,7 +9,7 @@ fun GameThemeScreen(
     onGameThemeSelected: (Int) -> Unit
 ) {
     GameThemesPager(
-        themesFlowResult = viewModel.gameThemes,
+        loadGameThemes = { viewModel.gameThemes() },
         onGameThemeSelected = onGameThemeSelected
     )
 }
