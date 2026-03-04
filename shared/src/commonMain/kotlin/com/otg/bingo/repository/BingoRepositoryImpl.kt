@@ -11,6 +11,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import kotlinx.coroutines.flow.Flow
@@ -21,7 +22,7 @@ class BingoRepositoryImpl(val httpClient: HttpClient, val authTokenStore: AuthTo
     override suspend fun getGameThemes(): Result<List<GameTheme>> {
         val themesHttpResponse = httpClient.get("${SUPABASE_HOST}/rest/v1/GameTheme")
 
-        return if (themesHttpResponse.status.value in 200..299) {
+        return if (themesHttpResponse.isSuccess()) {
             Result.success(themesHttpResponse.body<List<GameTheme>>())
         } else {
             Result.failure(Exception("GET game themes failed"))
@@ -44,10 +45,14 @@ class BingoRepositoryImpl(val httpClient: HttpClient, val authTokenStore: AuthTo
         }
 
         loggi("result = $savedGameResponse")
-        return if (savedGameResponse.status.value in 200..299){
+        return if (savedGameResponse.isSuccess()) {
             Result.success(Unit)
         } else {
             Result.failure(Exception("Supabase exception"))
         }
+    }
+
+    private fun HttpResponse.isSuccess(): Boolean {
+        return this.status.value in 200..299
     }
 }
