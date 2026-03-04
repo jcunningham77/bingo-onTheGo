@@ -14,16 +14,25 @@ import com.otg.bingo.repository.internal.HttpClientFactory
 import com.otg.bingo.repository.internal.UserProfileStore
 import com.otg.bingo.repository.internal.UserProfileStoreImpl
 import io.ktor.client.HttpClient
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 
 class AppComponentImpl : AppComponent {
     override val userProfileStore: UserProfileStore by lazy { UserProfileStoreImpl() }
     override val authTokenStore: AuthTokenStore by lazy { AuthTokenStoreImpl() }
 
     private val httpClient: HttpClient = HttpClientFactory.build(authTokenStore)
+    private val repoCoroutineScope = CoroutineScope(Dispatchers.Default)
 
     override val bingoRepository: BingoRepository by lazy { BingoRepositoryImpl(httpClient, authTokenStore) }
-    override val authRepository: AuthRepository by lazy { AuthRepositoryImpl(httpClient, authTokenStore, userProfileStore) }
-
+    override val authRepository: AuthRepository by lazy {
+        AuthRepositoryImpl(
+            httpClient,
+            authTokenStore,
+            userProfileStore,
+            repoCoroutineScope
+        )
+    }
 
     override val appScaffoldViewModel: AppScaffoldViewModel by lazy { AppScaffoldViewModel(authRepository) }
     override val createCardViewModel: CreateCardViewModel by lazy { CreateCardViewModel(bingoRepository) }

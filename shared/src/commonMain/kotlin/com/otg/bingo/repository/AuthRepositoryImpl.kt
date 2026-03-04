@@ -19,7 +19,6 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -32,8 +31,7 @@ class AuthRepositoryImpl(
     val httpClient: HttpClient,
     val authTokenStore: AuthTokenStore,
     val userProfileStore: UserProfileStore,
-    // FIXME inject a scope
-    scope: CoroutineScope = CoroutineScope(Dispatchers.Default),
+    scope: CoroutineScope,
 ) : AuthRepository {
 
     init {
