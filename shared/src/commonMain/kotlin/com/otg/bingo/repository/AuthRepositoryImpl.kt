@@ -22,7 +22,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
@@ -98,12 +97,12 @@ class AuthRepositoryImpl(
         _currentUser.value = userProfile
     }
 
-    override suspend fun signOut() = flow {
+    override suspend fun signOut(): Result<Unit> {
         loggi("sign out")
         _currentUser.value = null
         userProfileStore.setUserProfile(null)
         authTokenStore.clear()
-        emit(Result.success(Unit))
+        return Result.success(Unit)
     }
 
     override fun currentUser(): Flow<UserProfile?> {

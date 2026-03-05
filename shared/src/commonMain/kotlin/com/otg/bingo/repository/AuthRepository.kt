@@ -13,7 +13,7 @@ interface AuthRepository {
 
     suspend fun setCurrentUser(userProfile: UserProfile)
 
-    suspend fun signOut():Flow<Result<Unit>>
+    suspend fun signOut(): Result<Unit>
 
     fun currentUser(): Flow<UserProfile?>
 }

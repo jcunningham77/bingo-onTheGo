@@ -1,7 +1,6 @@
 package com.otg.bingo.auth
 
 import com.otg.bingo.repository.AuthRepository
-import com.otg.bingo.util.loggi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -12,16 +11,8 @@ class SettingsViewModel(val repository: AuthRepository) {
     val events: SharedFlow<SettingsUiEvent> = _events.asSharedFlow()
 
     suspend fun signOut() {
-        repository.signOut().collect { result ->
-            result
-                .onSuccess {
-                    loggi("emitting sign out event")
-                    _events.tryEmit(SettingsUiEvent.SignOutSuccessMessage("Successfully signed out"))
-                }
-                .onFailure {
-                    _events.tryEmit(SettingsUiEvent.ShowErrorMessage("Sorry, technical difficulties"))
-                }
-        }
+        repository.signOut()
+        _events.tryEmit(SettingsUiEvent.SignOutSuccessMessage("Successfully signed out"))
     }
 
     sealed interface SettingsUiEvent {
