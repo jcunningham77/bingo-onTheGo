@@ -27,7 +27,7 @@ import com.otg.bingo.leaderboard.LeaderboardScreen
 import com.otg.bingo.nav.Screen
 import com.otg.bingo.navigation.BrandingTopBarWithAvatar
 import com.otg.bingo.navigation.NavigateToSignIn
-import com.otg.bingo.viewcard.MyCardsScreen
+import com.otg.bingo.cards.MyCardsScreen
 import com.otg.bingo.views.ThemedText
 
 @Composable

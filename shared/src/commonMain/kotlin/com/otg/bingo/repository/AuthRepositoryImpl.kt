@@ -54,6 +54,7 @@ class AuthRepositoryImpl(
         }
 
         if (response.status == HttpStatusCode.OK) {
+            // TODO save supabase UUID in authTokenStore so we can select by own records
             authTokenStore.saveSession(response.body<SupabaseSession>().toPersistedSession())
         } else {
             loggi(" error signing into Supabase ${response.status}")
