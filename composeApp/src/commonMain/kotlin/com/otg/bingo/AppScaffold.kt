@@ -27,7 +27,7 @@ import com.otg.bingo.leaderboard.LeaderboardScreen
 import com.otg.bingo.nav.Screen
 import com.otg.bingo.navigation.BrandingTopBarWithAvatar
 import com.otg.bingo.navigation.NavigateToSignIn
-import com.otg.bingo.viewcard.ViewCardsScreen
+import com.otg.bingo.viewcard.MyCardsScreen
 import com.otg.bingo.views.ThemedText
 
 @Composable
@@ -57,7 +57,7 @@ fun AppScaffold(viewModel: AppScaffoldViewModel = LocalAppComponent.current.appS
             gameThemeId = createCardGameThemeId!!,
             onClose = { createCardGameThemeId = null },
             onCreateCardSuccess = {
-                currentScreen = Screen.ViewCards
+                currentScreen = Screen.MyCards
             }
         )
     } else {
@@ -84,8 +84,8 @@ fun AppScaffold(viewModel: AppScaffoldViewModel = LocalAppComponent.current.appS
                                 style = MaterialTheme.typography.bodySmall
                             )
                         },
-                        selected = currentScreen is Screen.ViewCards,
-                        onClick = { currentScreen = Screen.ViewCards }
+                        selected = currentScreen is Screen.MyCards,
+                        onClick = { currentScreen = Screen.MyCards }
                     )
                     NavigationBarItem(
                         icon = { Icon(Icons.Default.EmojiEvents, null) },
@@ -116,7 +116,7 @@ fun AppScaffold(viewModel: AppScaffoldViewModel = LocalAppComponent.current.appS
                         onGameThemeSelected = { id -> createCardGameThemeId = id }
                     )
 
-                    Screen.ViewCards -> ViewCardsScreen()
+                    Screen.MyCards -> MyCardsScreen()
                     Screen.Leaderboard -> LeaderboardScreen()
                 }
             }
