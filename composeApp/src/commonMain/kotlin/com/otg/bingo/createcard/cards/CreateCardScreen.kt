@@ -49,6 +49,7 @@ import com.otg.bingo.views.ThemedText
 import com.otg.bingo.views.UiState
 import com.otg.bingo.views.toUIState
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -56,6 +57,7 @@ import kotlinx.coroutines.launch
 fun CreateCardScreen(
     gameThemeId: Int,
     onClose: () -> Unit,
+    onCreateCardSuccess: () -> Unit,
     createCardViewModel: CreateCardViewModel = LocalAppComponent.current.createCardViewModel
 ) {
 
@@ -85,8 +87,15 @@ fun CreateCardScreen(
         LaunchedEffect(createCardViewModel) {
             createCardViewModel.events.collect { event ->
                 when (event) {
-                    is CreateCardViewModel.CreateCardUiEvent.ShowSuccessMessage ->
-                        snackbarHostState.showSnackbar(event.message)
+                    is CreateCardViewModel.CreateCardUiEvent.ShowSuccessMessage -> {
+                        launch {
+                            withTimeoutOrNull(1000) {
+                                snackbarHostState.showSnackbar(event.message)
+                            }
+                            onCreateCardSuccess()
+                            onClose()
+                        }
+                    }
 
                     is CreateCardViewModel.CreateCardUiEvent.ShowErrorMessage ->
                         snackbarHostState.showSnackbar(event.message)

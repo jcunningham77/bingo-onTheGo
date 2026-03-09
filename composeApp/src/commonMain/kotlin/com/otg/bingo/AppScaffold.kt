@@ -53,9 +53,13 @@ fun AppScaffold(viewModel: AppScaffoldViewModel = LocalAppComponent.current.appS
             onSignedOut = { signedOut = true }
         )
     } else if (createCardGameThemeId != null) {
-        CreateCardScreen(gameThemeId = createCardGameThemeId!!, onClose = {
-            createCardGameThemeId = null
-        })
+        CreateCardScreen(
+            gameThemeId = createCardGameThemeId!!,
+            onClose = { createCardGameThemeId = null },
+            onCreateCardSuccess = {
+                currentScreen = Screen.ViewCards
+            }
+        )
     } else {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
