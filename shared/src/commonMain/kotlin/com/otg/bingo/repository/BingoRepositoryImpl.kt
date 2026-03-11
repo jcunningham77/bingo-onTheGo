@@ -14,7 +14,7 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 
-class BingoRepositoryImpl(val httpClient: HttpClient) : BingoRepository {
+class BingoRepositoryImpl(val httpClient: HttpClient, val authRepository: AuthRepository) : BingoRepository {
 
     override suspend fun getGameThemes(): Result<List<GameTheme>> {
         val themesHttpResponse = httpClient.get("${SUPABASE_HOST}/rest/v1/GameTheme")

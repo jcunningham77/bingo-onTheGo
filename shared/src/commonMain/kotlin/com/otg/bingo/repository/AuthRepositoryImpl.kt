@@ -55,7 +55,15 @@ class AuthRepositoryImpl(
 
         if (response.status.isSuccess()) {
             // TODO save supabase UUID in authTokenStore so we can select by own records
+            val supabaseSession = response.body<SupabaseSession>()
+            loggi("persisting user id as = ${supabaseSession.user.userId}")
             authTokenStore.saveSession(response.body<SupabaseSession>().toPersistedSession())
+            val userProfile = UserProfile(
+                supabaseSession.user.userMetadata.name,
+                supabaseSession.user.userMetadata.avatarUrl,
+                supabaseSession.user.userId
+            )
+            setCurrentUser(userProfile)
             return Result.success(Unit)
         } else {
             loggi(" error signing into Supabase ${response.status}")
@@ -92,14 +100,15 @@ class AuthRepositoryImpl(
 
     private val _currentUser = MutableStateFlow<UserProfile?>(null)
 
-    override fun currentUser(): Flow<UserProfile?> {
-        return _currentUser.asStateFlow()
-    }
-
-    override suspend fun setCurrentUser(userProfile: UserProfile) {
+    // TODO does this need to be suspend?
+    private suspend fun setCurrentUser(userProfile: UserProfile) {
         loggi("setUser: $userProfile")
         userProfileStore.setUserProfile(userProfile)
         _currentUser.value = userProfile
+    }
+
+    override fun currentUser(): Flow<UserProfile?> {
+        return _currentUser.asStateFlow()
     }
 
     override suspend fun signOut(): Result<Unit> {

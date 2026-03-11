@@ -25,7 +25,6 @@ class AppComponentImpl : AppComponent {
     private val httpClient: HttpClient = HttpClientFactory.build(authTokenStore)
     private val repoCoroutineScope = CoroutineScope(Dispatchers.Default)
 
-    override val bingoRepository: BingoRepository by lazy { BingoRepositoryImpl(httpClient) }
     override val authRepository: AuthRepository by lazy {
         AuthRepositoryImpl(
             httpClient,
@@ -34,6 +33,7 @@ class AppComponentImpl : AppComponent {
             repoCoroutineScope
         )
     }
+    override val bingoRepository: BingoRepository by lazy { BingoRepositoryImpl(httpClient, authRepository) }
 
     override val appScaffoldViewModel: AppScaffoldViewModel by lazy { AppScaffoldViewModel(authRepository) }
     override val createCardViewModel: CreateCardViewModel by lazy { CreateCardViewModel(bingoRepository) }

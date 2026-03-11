@@ -15,7 +15,16 @@ data class SupabaseSession(
 )
 
 @Serializable
-data class User(@SerialName("id") val userId: String)
+data class User(
+    @SerialName("id") val userId: String,
+    @SerialName("user_metadata") val userMetadata: UserMetadata,
+)
+
+@Serializable
+data class UserMetadata(
+    @SerialName("avatar_url") val avatarUrl: String,
+    @SerialName("name") val name: String,
+)
 @OptIn(ExperimentalTime::class)
 fun SupabaseSession.toPersistedSession(): PersistedSession{
     return PersistedSession(

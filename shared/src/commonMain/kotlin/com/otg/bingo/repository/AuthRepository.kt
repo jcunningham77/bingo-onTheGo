@@ -10,7 +10,6 @@ interface AuthRepository {
 
     suspend fun tryRestoreSession(): Boolean
 
-    suspend fun setCurrentUser(userProfile: UserProfile)
 
     suspend fun signOut(): Result<Unit>
 

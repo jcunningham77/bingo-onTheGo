@@ -68,7 +68,7 @@ class MainActivity : ComponentActivity() {
                     val authResult = authRepository.signInWithOauthToken(OAuthData(idToken, OauthProvider.GOOGLE))
                     if (authResult.isSuccess) {
                         val userProfile = UserProfile(googleOAuthResult.displayName, googleOAuthResult.photoUri)
-                        authRepository.setCurrentUser(userProfile)
+//                        authRepository.setCurrentUser(userProfile)
                         setContent {
                             App((application as AndroidApp).appComponent)
                         }
