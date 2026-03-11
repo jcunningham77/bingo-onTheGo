@@ -1,6 +1,4 @@
-import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.implementation
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -56,6 +54,7 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.runtime)
             implementation(libs.ktor.client.core)
+            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0")
         }
 
         commonTest.dependencies {

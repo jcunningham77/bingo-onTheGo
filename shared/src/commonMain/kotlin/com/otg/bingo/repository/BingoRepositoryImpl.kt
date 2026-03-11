@@ -2,6 +2,7 @@ package com.otg.bingo.repository
 
 import com.otg.bingo.model.CardTile
 import com.otg.bingo.model.GameTheme
+import com.otg.bingo.model.SavedCard
 import com.otg.bingo.repository.internal.SUPABASE_HOST
 import com.otg.bingo.repository.internal.isSuccess
 import com.otg.bingo.util.loggi
@@ -13,6 +14,11 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 
 class BingoRepositoryImpl(val httpClient: HttpClient, val authRepository: AuthRepository) : BingoRepository {
 
@@ -52,11 +58,31 @@ class BingoRepositoryImpl(val httpClient: HttpClient, val authRepository: AuthRe
         }
     }
 
-//    override fun myCards(): Flow<Result<List<SavedCard>>> {
-//
-////        val savedGamesResponse = httpClient.get(urlString = "$SUPABASE_HOST/SavedGames?user_id=eq.<myUserId>")
-//        return fl
-//    }
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun myCards(): Flow<Result<List<SavedCard>>> {
+
+        // FIXME we get infinite retry on 400
+        return authRepository.currentUser()
+            .flatMapLatest { userProfile ->
+                if (userProfile == null) {
+                    flowOf(Result.failure(Exception("No user logged in")))
+                } else {
+                    flow {
+                        val response = httpClient.get(
+                            urlString = "$SUPABASE_HOST/rest/v1/SavedGames?select=id,created_at,GameTheme(*)&user_id=eq.${userProfile.userId}"
+                        )
+                        emit(
+                            if (response.isSuccess()) {
+                                val body = response.body<List<SavedCard>>()
+                                Result.success(body)
+                            } else {
+                                Result.failure(Exception("GET my cards failed"))
+                            }
+                        )
+                    }
+                }
+            }
+    }
 
 
 }

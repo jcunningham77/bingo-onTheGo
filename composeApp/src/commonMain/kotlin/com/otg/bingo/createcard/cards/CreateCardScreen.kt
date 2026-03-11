@@ -152,7 +152,7 @@ fun CreateCardScreen(
                 }
             }
         }
-        // endregion state
+
     }
 }
 

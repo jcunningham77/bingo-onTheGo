@@ -54,7 +54,6 @@ class AuthRepositoryImpl(
         }
 
         if (response.status.isSuccess()) {
-            // TODO save supabase UUID in authTokenStore so we can select by own records
             val supabaseSession = response.body<SupabaseSession>()
             loggi("persisting user id as = ${supabaseSession.user.userId}")
             authTokenStore.saveSession(response.body<SupabaseSession>().toPersistedSession())

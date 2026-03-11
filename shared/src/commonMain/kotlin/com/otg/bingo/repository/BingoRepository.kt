@@ -2,6 +2,8 @@ package com.otg.bingo.repository
 
 import com.otg.bingo.model.CardTile
 import com.otg.bingo.model.GameTheme
+import com.otg.bingo.model.SavedCard
+import kotlinx.coroutines.flow.Flow
 
 interface BingoRepository {
     suspend fun getGameThemes(): Result<List<GameTheme>>
@@ -10,5 +12,5 @@ interface BingoRepository {
 
     suspend fun playCard(gameThemeId:Int): Result<Unit>
 
-//    fun myCards(): Flow<Result<List<SavedCard>>>
+    fun myCards(): Flow<Result<List<SavedCard>>>
 }
