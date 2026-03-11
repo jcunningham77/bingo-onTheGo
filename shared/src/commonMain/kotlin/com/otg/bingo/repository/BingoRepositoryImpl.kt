@@ -2,8 +2,8 @@ package com.otg.bingo.repository
 
 import com.otg.bingo.model.CardTile
 import com.otg.bingo.model.GameTheme
-import com.otg.bingo.model.SavedCard
 import com.otg.bingo.repository.internal.SUPABASE_HOST
+import com.otg.bingo.repository.internal.isSuccess
 import com.otg.bingo.util.loggi
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -11,10 +11,8 @@ import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
-import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
-import kotlinx.coroutines.flow.Flow
 
 class BingoRepositoryImpl(val httpClient: HttpClient) : BingoRepository {
 
@@ -60,7 +58,5 @@ class BingoRepositoryImpl(val httpClient: HttpClient) : BingoRepository {
 //        return fl
 //    }
 
-    private fun HttpResponse.isSuccess(): Boolean {
-        return this.status.value in 200..299
-    }
+
 }

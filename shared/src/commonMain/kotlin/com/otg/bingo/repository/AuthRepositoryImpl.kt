@@ -16,8 +16,8 @@ import io.ktor.client.call.body
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
-import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
+import io.ktor.http.isSuccess
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,7 +39,7 @@ class AuthRepositoryImpl(
         }
     }
 
-    override suspend fun signInWithOauthToken(oAuthData: OAuthData): SupabaseSession {
+    override suspend fun signInWithOauthToken(oAuthData: OAuthData): Result<Unit> {
         loggi("signInWithOauthToken = ${oAuthData.token}")
         val url = "${SUPABASE_HOST}/auth/v1/token?grant_type=id_token"
 
@@ -53,14 +53,14 @@ class AuthRepositoryImpl(
             )
         }
 
-        if (response.status == HttpStatusCode.OK) {
+        if (response.status.isSuccess()) {
             // TODO save supabase UUID in authTokenStore so we can select by own records
             authTokenStore.saveSession(response.body<SupabaseSession>().toPersistedSession())
+            return Result.success(Unit)
         } else {
             loggi(" error signing into Supabase ${response.status}")
+            return Result.failure(Exception("error signing into Supabase ${response.status}"))
         }
-        // TODO implement error handling
-        return response.body()
     }
 
     @OptIn(ExperimentalTime::class)
@@ -83,7 +83,7 @@ class AuthRepositoryImpl(
             )
         }
 
-        if (response.status == HttpStatusCode.OK) {
+        if (response.status.isSuccess()) {
             authTokenStore.saveSession(response.body<PersistedSession>())
         } else {
             throw Exception("refresh token failed")
@@ -91,6 +91,10 @@ class AuthRepositoryImpl(
     }
 
     private val _currentUser = MutableStateFlow<UserProfile?>(null)
+
+    override fun currentUser(): Flow<UserProfile?> {
+        return _currentUser.asStateFlow()
+    }
 
     override suspend fun setCurrentUser(userProfile: UserProfile) {
         loggi("setUser: $userProfile")
@@ -104,9 +108,5 @@ class AuthRepositoryImpl(
         userProfileStore.setUserProfile(null)
         authTokenStore.clear()
         return Result.success(Unit)
-    }
-
-    override fun currentUser(): Flow<UserProfile?> {
-        return _currentUser.asStateFlow()
     }
 }

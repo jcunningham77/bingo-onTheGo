@@ -3,6 +3,8 @@ package com.otg.bingo.auth
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.widget.Toast
+import android.widget.Toast.LENGTH_SHORT
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -63,12 +65,20 @@ class MainActivity : ComponentActivity() {
             lifecycleScope.launch {
                 try {
                     val authRepository = (application as AndroidApp).appComponent.authRepository
-                    val supabaseSession = authRepository.signInWithOauthToken(OAuthData(idToken, OauthProvider.GOOGLE))
-                    val userProfile = UserProfile(googleOAuthResult.displayName, googleOAuthResult.photoUri)
-                    authRepository.setCurrentUser(userProfile)
-                    loggi(" Supabase session: $supabaseSession")
-                    setContent {
-                        App((application as AndroidApp).appComponent)
+                    val authResult = authRepository.signInWithOauthToken(OAuthData(idToken, OauthProvider.GOOGLE))
+                    if (authResult.isSuccess) {
+                        val userProfile = UserProfile(googleOAuthResult.displayName, googleOAuthResult.photoUri)
+                        authRepository.setCurrentUser(userProfile)
+                        setContent {
+                            App((application as AndroidApp).appComponent)
+                        }
+                    } else {
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Error signing in: ${authResult.exceptionOrNull()?.message}",
+                            LENGTH_SHORT
+                        )
+                        showSignInScreen()
                     }
                 } catch (throwable: Throwable) {
                     loggi(" error signing in w supabase: $throwable")
