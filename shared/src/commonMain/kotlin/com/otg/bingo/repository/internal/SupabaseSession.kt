@@ -10,9 +10,12 @@ data class SupabaseSession(
     @SerialName("access_token") val accessToken: String,
     @SerialName("token_type") val tokenType: String,
     @SerialName("expires_in") val expiresIn: Long,
-    @SerialName("refresh_token") val refreshToken: String? = null
+    @SerialName("refresh_token") val refreshToken: String? = null,
+    @SerialName("user") val user:User
 )
 
+@Serializable
+data class User(@SerialName("id") val userId: String)
 @OptIn(ExperimentalTime::class)
 fun SupabaseSession.toPersistedSession(): PersistedSession{
     return PersistedSession(
@@ -20,6 +23,7 @@ fun SupabaseSession.toPersistedSession(): PersistedSession{
         this.tokenType,
         this.expiresIn,
         this.refreshToken,
-        Clock.System.now().epochSeconds
+        Clock.System.now().epochSeconds,
+        this.user.userId
     )
 }
