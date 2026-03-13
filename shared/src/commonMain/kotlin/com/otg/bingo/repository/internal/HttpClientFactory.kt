@@ -14,10 +14,11 @@ object HttpClientFactory {
     fun build(tokenStore: AuthTokenStore): HttpClient {
         client =
             HttpClient {
-                charlesUrl()?.let {
-                    loggi("charles proxy URL is configured: $it")
-                    engine { proxy = ProxyBuilder.http(it) }
-                }
+                charlesUrl()?.takeIf { isReachable(it) }
+                    ?.let {
+                        loggi("charles proxy is reachable, configuring: $it")
+                        engine { proxy = ProxyBuilder.http(it) }
+                    } ?: loggi("charles proxy not configured or unreachable, skipping")
                 install(ContentNegotiation) {
                     json(
                         Json {
@@ -32,6 +33,9 @@ object HttpClientFactory {
             }
         return client
     }
+
+
 }
 
 expect fun charlesUrl(): Url?
+expect fun isReachable(url: Url, timeoutMs: Int = 1000): Boolean
