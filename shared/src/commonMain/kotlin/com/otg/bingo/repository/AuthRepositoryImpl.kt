@@ -37,7 +37,7 @@ class AuthRepositoryImpl(
         }
     }
 
-    override suspend fun signInWithOauthToken(oAuthData: OAuthData): Result<Unit> {
+    override suspend fun signIn(oAuthData: OAuthData): Result<Unit> {
         loggi("signInWithOauthToken = ${oAuthData.token}")
         val url = "${SUPABASE_HOST}/auth/v1/token?grant_type=id_token"
 

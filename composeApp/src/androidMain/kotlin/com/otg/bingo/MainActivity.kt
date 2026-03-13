@@ -1,10 +1,9 @@
-package com.otg.bingo.auth
+package com.otg.bingo
 
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
-import android.widget.Toast.LENGTH_SHORT
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -28,10 +27,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
-import com.otg.bingo.AndroidApp
-import com.otg.bingo.App
-import com.otg.bingo.R
-import com.otg.bingo.model.UserProfile
+import com.otg.bingo.auth.GoogleIdTokenAndroid
 import com.otg.bingo.navigation.BrandingTopBar
 import com.otg.bingo.repository.internal.OAuthData
 import com.otg.bingo.repository.internal.OauthProvider
@@ -64,10 +60,8 @@ class MainActivity : ComponentActivity() {
             lifecycleScope.launch {
                 try {
                     val authRepository = (application as AndroidApp).appComponent.authRepository
-                    val authResult = authRepository.signInWithOauthToken(OAuthData(idToken, OauthProvider.GOOGLE))
+                    val authResult = authRepository.signIn(OAuthData(idToken, OauthProvider.GOOGLE))
                     if (authResult.isSuccess) {
-                        val userProfile = UserProfile(googleOAuthResult.displayName, googleOAuthResult.photoUri)
-//                        authRepository.setCurrentUser(userProfile)
                         setContent {
                             App((application as AndroidApp).appComponent)
                         }
@@ -75,7 +69,7 @@ class MainActivity : ComponentActivity() {
                         Toast.makeText(
                             this@MainActivity,
                             "Error signing in: ${authResult.exceptionOrNull()?.message}",
-                            LENGTH_SHORT,
+                            Toast.LENGTH_SHORT,
                         )
                         showSignInScreen()
                     }
