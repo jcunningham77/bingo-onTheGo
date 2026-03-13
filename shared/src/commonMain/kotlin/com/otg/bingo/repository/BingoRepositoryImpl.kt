@@ -20,8 +20,10 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 
-class BingoRepositoryImpl(val httpClient: HttpClient, val authRepository: AuthRepository) : BingoRepository {
-
+class BingoRepositoryImpl(
+    val httpClient: HttpClient,
+    val authRepository: AuthRepository,
+) : BingoRepository {
     override suspend fun getGameThemes(): Result<List<GameTheme>> {
         val themesHttpResponse = httpClient.get("${SUPABASE_HOST}/rest/v1/GameTheme")
 
@@ -43,12 +45,12 @@ class BingoRepositoryImpl(val httpClient: HttpClient, val authRepository: AuthRe
         }
     }
 
-    override suspend fun playCard(gameThemeId: Int): Result<Unit>  {
-        val savedGameResponse = httpClient.post(urlString = "${SUPABASE_HOST}/rest/v1/SavedGames")
-        {
-            header(HttpHeaders.ContentType, ContentType.Application.Json)
-            setBody(mapOf("game_theme_id" to gameThemeId))
-        }
+    override suspend fun playCard(gameThemeId: Int): Result<Unit> {
+        val savedGameResponse =
+            httpClient.post(urlString = "${SUPABASE_HOST}/rest/v1/SavedGames") {
+                header(HttpHeaders.ContentType, ContentType.Application.Json)
+                setBody(mapOf("game_theme_id" to gameThemeId))
+            }
 
         loggi("result = $savedGameResponse")
         return if (savedGameResponse.isSuccess()) {
@@ -60,29 +62,28 @@ class BingoRepositoryImpl(val httpClient: HttpClient, val authRepository: AuthRe
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun myCards(): Flow<Result<List<SavedCard>>> {
-
         // FIXME we get infinite retry on 400
-        return authRepository.currentUser()
+        return authRepository
+            .currentUser()
             .flatMapLatest { userProfile ->
                 if (userProfile == null) {
                     flowOf(Result.failure(Exception("No user logged in")))
                 } else {
                     flow {
-                        val response = httpClient.get(
-                            urlString = "$SUPABASE_HOST/rest/v1/SavedGames?select=id,created_at,GameTheme(*)&user_id=eq.${userProfile.userId}&order=created_at.desc"
-                        )
+                        val response =
+                            httpClient.get(
+                                urlString = "$SUPABASE_HOST/rest/v1/SavedGames?select=id,created_at,GameTheme(*)&user_id=eq.${userProfile.userId}&order=created_at.desc",
+                            )
                         emit(
                             if (response.isSuccess()) {
                                 val body = response.body<List<SavedCard>>()
                                 Result.success(body)
                             } else {
                                 Result.failure(Exception("GET my cards failed"))
-                            }
+                            },
                         )
                     }
                 }
             }
     }
-
-
 }

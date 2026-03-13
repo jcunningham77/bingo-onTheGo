@@ -12,22 +12,24 @@ object HttpClientFactory {
     private lateinit var client: HttpClient
 
     fun build(tokenStore: AuthTokenStore): HttpClient {
-        client = HttpClient {
-            charlesUrl()?.let {
-                loggi("charles proxy URL is configured: $it")
-                engine { proxy = ProxyBuilder.http(it) }
+        client =
+            HttpClient {
+                charlesUrl()?.let {
+                    loggi("charles proxy URL is configured: $it")
+                    engine { proxy = ProxyBuilder.http(it) }
+                }
+                install(ContentNegotiation) {
+                    json(
+                        Json {
+                            ignoreUnknownKeys = true
+                            isLenient = true
+                        },
+                    )
+                }
+                install(SupabaseAuthPlugin) {
+                    tokenProvider = { tokenStore.getAuthToken() }
+                }
             }
-            install(ContentNegotiation) {
-                json(Json {
-                    ignoreUnknownKeys = true
-                    isLenient = true
-                })
-            }
-            install(SupabaseAuthPlugin) {
-                tokenProvider = { tokenStore.getAuthToken() }
-            }
-
-        }
         return client
     }
 }

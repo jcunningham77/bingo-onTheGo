@@ -5,9 +5,12 @@ import kotlinx.serialization.json.Json
 
 class AuthTokenStoreImpl(
     private val secureSettings: SecureSettings = getSecureSettings(),
-    private val json: Json = Json { ignoreUnknownKeys = true; explicitNulls = false }
+    private val json: Json =
+        Json {
+            ignoreUnknownKeys = true
+            explicitNulls = false
+        },
 ) : AuthTokenStore {
-
     private val key = "supabase.session.v1"
 
     override suspend fun saveSession(session: PersistedSession) {
@@ -24,7 +27,5 @@ class AuthTokenStoreImpl(
         secureSettings.remove(key)
     }
 
-    override fun getAuthToken(): String? {
-        return loadSession()?.accessToken
-    }
+    override fun getAuthToken(): String? = loadSession()?.accessToken
 }

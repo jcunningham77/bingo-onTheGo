@@ -9,5 +9,5 @@ data class PersistedSession(
     val expiresInSeconds: Long,
     val refreshToken: String? = null,
     val obtainedAtEpochSeconds: Long,
-    val userId:String,
+    val userId: String,
 )

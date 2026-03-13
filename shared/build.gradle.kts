@@ -12,10 +12,10 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosArm64(),
-        iosSimulatorArm64()
+        iosSimulatorArm64(),
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "Shared"
@@ -26,7 +26,7 @@ kotlin {
     compilerOptions {
         freeCompilerArgs.add("-Xopt-in=kotlin.time.ExperimentalTime")
     }
-    
+
     sourceSets {
         commonMain.dependencies {
 
@@ -51,7 +51,10 @@ kotlin {
 
 android {
     namespace = "com.otg.bingo.shared"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+    compileSdk =
+        libs.versions.android.compileSdk
+            .get()
+            .toInt()
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -65,7 +68,10 @@ android {
     val charlesPort = (findProperty("charles.port") as String?)?.toIntOrNull() ?: 0
 
     defaultConfig {
-        minSdk = libs.versions.android.minSdk.get().toInt()
+        minSdk =
+            libs.versions.android.minSdk
+                .get()
+                .toInt()
         buildConfigField("String", "CHARLES_HOST", "\"$charlesHost\"")
         buildConfigField("int", "CHARLES_PORT", "$charlesPort")
     }

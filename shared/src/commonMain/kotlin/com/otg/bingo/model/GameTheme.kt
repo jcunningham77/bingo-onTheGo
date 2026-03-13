@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
 data class GameTheme(
     @SerialName("id") val id: Int,
     @SerialName("name") val name: String,
-    @SerialName("imgUrl") val imgUrl: String
+    @SerialName("imgUrl") val imgUrl: String,
 )

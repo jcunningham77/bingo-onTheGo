@@ -5,11 +5,9 @@ import com.otg.bingo.repository.internal.OAuthData
 import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
-
     suspend fun signInWithOauthToken(oAuthData: OAuthData): Result<Unit>
 
     suspend fun tryRestoreSession(): Boolean
-
 
     suspend fun signOut(): Result<Unit>
 
