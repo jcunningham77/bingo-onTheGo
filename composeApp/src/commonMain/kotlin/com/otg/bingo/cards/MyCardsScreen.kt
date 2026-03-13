@@ -68,7 +68,7 @@ fun MyCardsScreen(
             is UiState.Content -> Box(Modifier.fillMaxSize()) {
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
                     items(state.items) { savedCard ->
-                        SavedCardItem(savedCard as? SavedCard)
+                        SavedCardItem(savedCard as SavedCard)
                     }
                 }
             }
@@ -78,7 +78,7 @@ fun MyCardsScreen(
 
 @OptIn(ExperimentalTime::class)
 @Composable
-fun SavedCardItem(savedCard: SavedCard?) {
+fun SavedCardItem(savedCard: SavedCard) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -93,8 +93,8 @@ fun SavedCardItem(savedCard: SavedCard?) {
 
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
-        val createdAt = savedCard?.createdAt?.toLocalDateTime(TimeZone.currentSystemDefault())
-        val text = "${savedCard?.gameTheme?.name} card created at $createdAt"
+        val createdAt = savedCard.createdAt.toLocalDateTime(TimeZone.currentSystemDefault())
+        val text = "${savedCard.gameTheme.name} card created at $createdAt"
         ThemedText(text = text)
     }
 }
