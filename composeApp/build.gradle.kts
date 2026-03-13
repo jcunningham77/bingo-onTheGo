@@ -54,7 +54,7 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.runtime)
             implementation(libs.ktor.client.core)
-            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0")
+            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
         }
 
         commonTest.dependencies {

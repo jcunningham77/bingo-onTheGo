@@ -31,7 +31,7 @@ kotlin {
             implementation("io.ktor:ktor-client-core:$ktorVersion")
             implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
             implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0")
+            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
         }
         androidMain.dependencies {
             implementation("io.ktor:ktor-client-okhttp:$ktorVersion")

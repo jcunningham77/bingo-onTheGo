@@ -97,8 +97,7 @@ fun Avatar(avatarUrl: String?, onClick: () -> Unit = {}) {
                 .border(1.dp, Color.Black, RoundedCornerShape(16.dp))
                 .clip(CircleShape),
             model = avatarUrl,
-            contentDescription = "User avatar"
-
+            contentDescription = "User avatar",
         )
     }
 
