@@ -69,7 +69,7 @@ class BingoRepositoryImpl(val httpClient: HttpClient, val authRepository: AuthRe
                 } else {
                     flow {
                         val response = httpClient.get(
-                            urlString = "$SUPABASE_HOST/rest/v1/SavedGames?select=id,created_at,GameTheme(*)&user_id=eq.${userProfile.userId}"
+                            urlString = "$SUPABASE_HOST/rest/v1/SavedGames?select=id,created_at,GameTheme(*)&user_id=eq.${userProfile.userId}&order=created_at.desc"
                         )
                         emit(
                             if (response.isSuccess()) {
