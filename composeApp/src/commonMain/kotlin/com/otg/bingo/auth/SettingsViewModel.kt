@@ -5,8 +5,9 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 
-class SettingsViewModel(val repository: AuthRepository) {
-
+class SettingsViewModel(
+    val repository: AuthRepository,
+) {
     private val _events = MutableSharedFlow<SettingsUiEvent>(extraBufferCapacity = 1)
     val events: SharedFlow<SettingsUiEvent> = _events.asSharedFlow()
 
@@ -16,7 +17,12 @@ class SettingsViewModel(val repository: AuthRepository) {
     }
 
     sealed interface SettingsUiEvent {
-        data class SignOutSuccessMessage(val message: String) : SettingsUiEvent
-        data class ShowErrorMessage(val message: String) : SettingsUiEvent
+        data class SignOutSuccessMessage(
+            val message: String,
+        ) : SettingsUiEvent
+
+        data class ShowErrorMessage(
+            val message: String,
+        ) : SettingsUiEvent
     }
 }

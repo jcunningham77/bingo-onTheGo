@@ -7,15 +7,14 @@ data class OAuthAccountData(
     val photoUri: String?,
     val displayName: String?,
     val email: String,
-    val oAuthProvider: OauthProvider
+    val oAuthProvider: OauthProvider,
 ) {
-    override fun toString(): String {
-        return """
-            idToken: $idToken
-            photoUri: $photoUri
-            displayName: $displayName
-            email: $email
-            oAuthProvider: $oAuthProvider
+    override fun toString(): String =
+        """
+        idToken: $idToken
+        photoUri: $photoUri
+        displayName: $displayName
+        email: $email
+        oAuthProvider: $oAuthProvider
         """.trimIndent()
-    }
 }

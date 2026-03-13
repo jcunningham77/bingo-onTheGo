@@ -6,16 +6,21 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 
-class CreateCardViewModel(val repository: BingoRepository) {
-
+class CreateCardViewModel(
+    val repository: BingoRepository,
+) {
     private val _events = MutableSharedFlow<CreateCardUiEvent>(extraBufferCapacity = 1)
     val events: SharedFlow<CreateCardUiEvent> = _events.asSharedFlow()
 
     sealed interface CreateCardUiEvent {
-        data class ShowSuccessMessage(val message: String) : CreateCardUiEvent
-        data class ShowErrorMessage(val message: String) : CreateCardUiEvent
-    }
+        data class ShowSuccessMessage(
+            val message: String,
+        ) : CreateCardUiEvent
 
+        data class ShowErrorMessage(
+            val message: String,
+        ) : CreateCardUiEvent
+    }
 
     suspend fun cardTiles(gameThemeId: Int): Result<List<CardTile>> = repository.getCardTiles(gameThemeId)
 

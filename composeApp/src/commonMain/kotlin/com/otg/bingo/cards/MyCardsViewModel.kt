@@ -4,7 +4,8 @@ import com.otg.bingo.model.SavedCard
 import com.otg.bingo.repository.BingoRepository
 import kotlinx.coroutines.flow.Flow
 
-class MyCardsViewModel(val repository: BingoRepository) {
-
+class MyCardsViewModel(
+    val repository: BingoRepository,
+) {
     fun myCards(): Flow<Result<List<SavedCard>>> = repository.myCards()
 }

@@ -30,7 +30,7 @@ class AppComponentImpl : AppComponent {
             httpClient,
             authTokenStore,
             userProfileStore,
-            repoCoroutineScope
+            repoCoroutineScope,
         )
     }
     override val bingoRepository: BingoRepository by lazy { BingoRepositoryImpl(httpClient, authRepository) }
@@ -40,5 +40,4 @@ class AppComponentImpl : AppComponent {
     override val myCardsViewModel: MyCardsViewModel by lazy { MyCardsViewModel(bingoRepository) }
     override val gameThemesViewModel: GameThemesViewModel by lazy { GameThemesViewModel(bingoRepository) }
     override val settingsViewModel: SettingsViewModel by lazy { SettingsViewModel(authRepository) }
-
 }

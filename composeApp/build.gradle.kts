@@ -23,7 +23,7 @@ kotlin {
     // Add these iOS targets
     listOf(
         iosArm64(),
-        iosSimulatorArm64()
+        iosSimulatorArm64(),
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
@@ -71,26 +71,34 @@ tasks.named("embedAndSignAppleFrameworkForXcode") {
     val configuration = System.getenv("CONFIGURATION")?.uppercase() ?: "DEBUG"
     val platformName = System.getenv("PLATFORM_NAME") ?: "iphonesimulator"
 
-    val buildTaskName = when {
-        platformName == "iphonesimulator" -> "linkDebugFrameworkIosSimulatorArm64"
-        configuration == "RELEASE" -> "linkReleaseFrameworkIosArm64"
-        else -> "linkDebugFrameworkIosArm64"
-    }
+    val buildTaskName =
+        when {
+            platformName == "iphonesimulator" -> "linkDebugFrameworkIosSimulatorArm64"
+            configuration == "RELEASE" -> "linkReleaseFrameworkIosArm64"
+            else -> "linkDebugFrameworkIosArm64"
+        }
 
     logger.lifecycle("Depending on build task: $buildTaskName")
     dependsOn(buildTaskName)
 }
 
-
-
 android {
     namespace = "com.otg.bingo"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+    compileSdk =
+        libs.versions.android.compileSdk
+            .get()
+            .toInt()
 
     defaultConfig {
         applicationId = "com.otg.bingo"
-        minSdk = libs.versions.android.minSdk.get().toInt()
-        targetSdk = libs.versions.android.targetSdk.get().toInt()
+        minSdk =
+            libs.versions.android.minSdk
+                .get()
+                .toInt()
+        targetSdk =
+            libs.versions.android.targetSdk
+                .get()
+                .toInt()
         versionCode = 1
         versionName = "1.0"
     }
@@ -113,4 +121,3 @@ android {
 dependencies {
     debugImplementation(compose.uiTooling)
 }
-

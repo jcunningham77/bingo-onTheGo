@@ -51,31 +51,29 @@ import com.otg.bingo.views.toUIState
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 
-
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CreateCardScreen(
     gameThemeId: Int,
     onClose: () -> Unit,
     onCreateCardSuccess: () -> Unit,
-    createCardViewModel: CreateCardViewModel = LocalAppComponent.current.createCardViewModel
+    createCardViewModel: CreateCardViewModel = LocalAppComponent.current.createCardViewModel,
 ) {
-
     val snackbarHostState = remember { SnackbarHostState() }
     val playCardScope = rememberCoroutineScope()
-
 
     SystemBackHandler(onBack = onClose)
 
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier =
+            Modifier
+                .fillMaxSize(),
         topBar = {
             BrandingTopBar {
                 IconButton(onClick = onClose) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back"
+                        contentDescription = "Back",
                     )
                 }
             }
@@ -107,65 +105,66 @@ fun CreateCardScreen(
         // region state
         var cardTilesResult by remember { mutableStateOf<Result<List<CardTile>>>(Result.success(emptyList())) }
 
-        LaunchedEffect(Unit){
+        LaunchedEffect(Unit) {
             cardTilesResult = createCardViewModel.cardTiles(gameThemeId)
         }
 
         val uiState: UiState = cardTilesResult.toUIState()
 
         AnimatedContent(
-            targetState = uiState, transitionSpec = {
-                    (fadeIn(tween(220)) + scaleIn(initialScale = 0.98f)) togetherWith fadeOut(tween(180))
+            targetState = uiState,
+            transitionSpec = {
+                (fadeIn(tween(220)) + scaleIn(initialScale = 0.98f)) togetherWith fadeOut(tween(180))
             },
-            label = "loading-to-content"
+            label = "loading-to-content",
         ) { state ->
             when (state) {
-
-                UiState.Loading -> Box(Modifier.fillMaxSize().padding(paddingValues)) {
-                    ThemedText(
-                        modifier = Modifier.align(Alignment.Center),
-                        text = "Loading...",
-                    )
-                }
-
-                UiState.Error -> Box(Modifier.fillMaxSize().padding(paddingValues)) {
-                    ThemedText(
-                        "Error loading data...",
-                    )
-                }
-
-                is UiState.Content -> Box(Modifier.fillMaxSize().padding(paddingValues)) {
-                    Column(modifier = Modifier.fillMaxSize()) {
-                        CardTileGrid(state.items.filterIsInstance<CardTile>())
-                        Button(
-                            modifier = Modifier.align(Alignment.CenterHorizontally),
-                            onClick = {
-                                playCardScope.launch {
-                                    createCardViewModel.playCard(gameThemeId)
-                                }
-                            }
-                        ) {
-                            Text("Play card!")
-                        }
+                UiState.Loading ->
+                    Box(Modifier.fillMaxSize().padding(paddingValues)) {
+                        ThemedText(
+                            modifier = Modifier.align(Alignment.Center),
+                            text = "Loading...",
+                        )
                     }
 
-                }
+                UiState.Error ->
+                    Box(Modifier.fillMaxSize().padding(paddingValues)) {
+                        ThemedText(
+                            "Error loading data...",
+                        )
+                    }
+
+                is UiState.Content ->
+                    Box(Modifier.fillMaxSize().padding(paddingValues)) {
+                        Column(modifier = Modifier.fillMaxSize()) {
+                            CardTileGrid(state.items.filterIsInstance<CardTile>())
+                            Button(
+                                modifier = Modifier.align(Alignment.CenterHorizontally),
+                                onClick = {
+                                    playCardScope.launch {
+                                        createCardViewModel.playCard(gameThemeId)
+                                    }
+                                },
+                            ) {
+                                Text("Play card!")
+                            }
+                        }
+                    }
             }
         }
-
     }
 }
 
 @Composable
 fun CardTileGrid(
     tiles: List<CardTile>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
         contentPadding = PaddingValues(16.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         items(tiles.take(9)) { tile ->
             CardTileItem(tile = tile)
@@ -176,13 +175,14 @@ fun CardTileGrid(
 @Composable
 fun CardTileItem(tile: CardTile) {
     Column(
-        modifier = Modifier
-            .aspectRatio(1f) // Makes it square
-            .border(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.outline,
-                shape = MaterialTheme.shapes.medium
-            ),
+        modifier =
+            Modifier
+                .aspectRatio(1f) // Makes it square
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.outline,
+                    shape = MaterialTheme.shapes.medium,
+                ),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         content = {
@@ -195,8 +195,8 @@ fun CardTileItem(tile: CardTile) {
             Text(
                 text = tile.tileName,
                 style = MaterialTheme.typography.labelMedium,
-                modifier = Modifier.padding(top = 8.dp)
+                modifier = Modifier.padding(top = 8.dp),
             )
-        }
+        },
     )
 }

@@ -51,77 +51,72 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 
-
 @Composable
-fun MyCardsScreen(
-    myCardsViewModel: MyCardsViewModel = LocalAppComponent.current.myCardsViewModel
-) {
-
-    //TODO handle 401 from API (signout)
+fun MyCardsScreen(myCardsViewModel: MyCardsViewModel = LocalAppComponent.current.myCardsViewModel) {
+    // TODO handle 401 from API (signout)
     val myCardsResult by myCardsViewModel.myCards().collectAsState(
-        initial = Result.success(emptyList())
+        initial = Result.success(emptyList()),
     )
 
     val uiState = myCardsResult.toUIState()
 
     AnimatedContent(
-        targetState = uiState, transitionSpec = {
+        targetState = uiState,
+        transitionSpec = {
             (fadeIn(tween(220)) + scaleIn(initialScale = 0.98f)) togetherWith fadeOut(tween(180))
         },
-        label = "loading-to-content"
+        label = "loading-to-content",
     ) { state ->
         when (state) {
+            UiState.Loading ->
+                Box(Modifier.fillMaxSize()) {
+                    ThemedText(
+                        modifier = Modifier.align(Alignment.Center),
+                        text = "Loading...",
+                    )
+                }
 
-            UiState.Loading -> Box(Modifier.fillMaxSize()) {
-                ThemedText(
-                    modifier = Modifier.align(Alignment.Center),
-                    text = "Loading...",
-                )
-            }
+            UiState.Error ->
+                Box(Modifier.fillMaxSize()) {
+                    ThemedText(
+                        "Error loading data...",
+                    )
+                }
 
-            UiState.Error -> Box(Modifier.fillMaxSize()) {
-                ThemedText(
-                    "Error loading data...",
-                )
-            }
-
-            is UiState.Content -> Box(Modifier.fillMaxSize()) {
-                LazyColumn(modifier = Modifier.fillMaxSize()) {
-                    items(state.items) { savedCard ->
-                        SavedCardItem(savedCard as SavedCard)
+            is UiState.Content ->
+                Box(Modifier.fillMaxSize()) {
+                    LazyColumn(modifier = Modifier.fillMaxSize()) {
+                        items(state.items) { savedCard ->
+                            SavedCardItem(savedCard as SavedCard)
+                        }
                     }
                 }
-            }
         }
     }
 }
 
-
-
 @Composable
 fun SavedCardItem(savedCard: SavedCard) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .drawBehind {
-                drawLine(
-                    color = Color.LightGray.copy(alpha = 0.4f),
-                    start = Offset(0f,size.height),
-                    end = Offset(size.width, size.height),
-                    strokeWidth = 1.dp.toPx()
-                )
-            }
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .drawBehind {
+                    drawLine(
+                        color = Color.LightGray.copy(alpha = 0.4f),
+                        start = Offset(0f, size.height),
+                        end = Offset(size.width, size.height),
+                        strokeWidth = 1.dp.toPx(),
+                    )
+                }.padding(horizontal = 16.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-
-
         AsyncImage(
-            modifier = Modifier
-                .size(30.dp)
-                .border(1.dp, Color.Black, RoundedCornerShape(16.dp))
-                .clip(CircleShape),
-
+            modifier =
+                Modifier
+                    .size(30.dp)
+                    .border(1.dp, Color.Black, RoundedCornerShape(16.dp))
+                    .clip(CircleShape),
             model = savedCard.gameTheme.imgUrl,
             contentDescription = "Theme URI",
         )
@@ -130,7 +125,7 @@ fun SavedCardItem(savedCard: SavedCard) {
             modifier = Modifier.weight(1f),
             text = "${savedCard.gameTheme.name} card",
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         TimeAgoText(
             savedCard.createdAt,
@@ -138,8 +133,6 @@ fun SavedCardItem(savedCard: SavedCard) {
         )
     }
 }
-
-
 
 @Composable
 fun rememberNow(interval: Duration): Instant {
@@ -155,7 +148,6 @@ fun rememberNow(interval: Duration): Instant {
     return now
 }
 
-
 fun Instant.timeAgo(now: Instant): String {
     val diff = now - this
 
@@ -166,20 +158,29 @@ fun Instant.timeAgo(now: Instant): String {
 
     val local = this.toLocalDateTime(TimeZone.currentSystemDefault())
 
-
     if (diff < 7.days) {
-        val weekdays = listOf("Mon","Tue","Wed","Thu","Fri","Sat","Sun")
+        val weekdays = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
         return weekdays[local.dayOfWeek.ordinal]
     }
 
-    val months = listOf(
-        "Jan","Feb","Mar","Apr","May","Jun",
-        "Jul","Aug","Sep","Oct","Nov","Dec"
-    )
+    val months =
+        listOf(
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
+        )
 
     return "${months[local.monthNumber - 1]} ${local.dayOfMonth}"
 }
-
 
 fun Instant.refreshInterval(now: Instant): Duration {
     val diff = now - this
@@ -193,23 +194,25 @@ fun Instant.refreshInterval(now: Instant): Duration {
     }
 }
 
-
 @Composable
-fun TimeAgoText(createdAt: Instant, modifier: Modifier) {
-
+fun TimeAgoText(
+    createdAt: Instant,
+    modifier: Modifier,
+) {
     val firstNow = Clock.System.now()
     val interval = createdAt.refreshInterval(firstNow)
 
-    val now = if (interval.isInfinite()) {
-        firstNow
-    } else {
-        rememberNow(interval)
-    }
+    val now =
+        if (interval.isInfinite()) {
+            firstNow
+        } else {
+            rememberNow(interval)
+        }
 
     ThemedText(
         modifier = modifier,
         text = createdAt.timeAgo(now),
         style = MaterialTheme.typography.labelSmall,
-        color = MaterialTheme.colorScheme.onSurfaceVariant
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
     )
 }

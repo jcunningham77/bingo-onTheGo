@@ -13,31 +13,33 @@ import com.otg.bingo.repository.internal.OauthProvider
 
 class GoogleIdTokenAndroid(
     activity: Activity,
-    private val webClientId: String
+    private val webClientId: String,
 ) {
     private val oneTapClient: SignInClient = Identity.getSignInClient(activity)
 
     fun beginSignIn(
         launcher: ActivityResultLauncher<IntentSenderRequest>,
-        onError: (Throwable) -> Unit
+        onError: (Throwable) -> Unit,
     ) {
-        val request = BeginSignInRequest.builder()
-            .setGoogleIdTokenRequestOptions(
-                BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
-                    .setSupported(true)
-                    .setServerClientId(webClientId)
-                    .setFilterByAuthorizedAccounts(false)
-                    .build()
-            )
-            .setAutoSelectEnabled(false)
-            .build()
+        val request =
+            BeginSignInRequest
+                .builder()
+                .setGoogleIdTokenRequestOptions(
+                    BeginSignInRequest.GoogleIdTokenRequestOptions
+                        .builder()
+                        .setSupported(true)
+                        .setServerClientId(webClientId)
+                        .setFilterByAuthorizedAccounts(false)
+                        .build(),
+                ).setAutoSelectEnabled(false)
+                .build()
 
-        oneTapClient.beginSignIn(request)
+        oneTapClient
+            .beginSignIn(request)
             .addOnSuccessListener { result ->
                 val intentSender: IntentSender = result.pendingIntent.intentSender
                 launcher.launch(IntentSenderRequest.Builder(intentSender).build())
-            }
-            .addOnFailureListener { onError(it) }
+            }.addOnFailureListener { onError(it) }
     }
 
     fun extractOauthAccountData(data: Intent?): OAuthAccountData {

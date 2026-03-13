@@ -6,10 +6,10 @@ import com.otg.bingo.di.LocalAppComponent
 @Composable
 fun GameThemeScreen(
     viewModel: GameThemesViewModel = LocalAppComponent.current.gameThemesViewModel,
-    onGameThemeSelected: (Int) -> Unit
+    onGameThemeSelected: (Int) -> Unit,
 ) {
     GameThemesPager(
         loadGameThemes = { viewModel.gameThemes() },
-        onGameThemeSelected = onGameThemeSelected
+        onGameThemeSelected = onGameThemeSelected,
     )
 }

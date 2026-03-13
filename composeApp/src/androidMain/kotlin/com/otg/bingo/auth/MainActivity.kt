@@ -39,7 +39,6 @@ import com.otg.bingo.util.loggi
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
-
     private val webClientId: String = "783933800390-hd9crn8jsrdpv8jcsqhike595qhhp22u.apps.googleusercontent.com"
 
     private val googleIdToken by lazy { GoogleIdTokenAndroid(this, webClientId) }
@@ -56,7 +55,7 @@ class MainActivity : ComponentActivity() {
                     Box(
                         Modifier
                             .fillMaxSize()
-                            .padding(paddingValues)
+                            .padding(paddingValues),
                     ) {
                         CircularProgressIndicator(Modifier.align(Alignment.Center))
                     }
@@ -76,7 +75,7 @@ class MainActivity : ComponentActivity() {
                         Toast.makeText(
                             this@MainActivity,
                             "Error signing in: ${authResult.exceptionOrNull()?.message}",
-                            LENGTH_SHORT
+                            LENGTH_SHORT,
                         )
                         showSignInScreen()
                     }
@@ -117,22 +116,25 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier.fillMaxSize(),
                 topBar = {
                     BrandingTopBar()
-                }
+                },
             ) { paddingValues ->
                 Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues),
                 ) {
                     GoogleSignInButton(
                         onClick = {
                             googleIdToken.beginSignIn(
                                 launcher = oneTapLauncher,
-                                onError = { error -> loggi(" google sign in error: $error") }
+                                onError = { error -> loggi(" google sign in error: $error") },
                             )
-                        }, modifier = Modifier
-                            .align(Alignment.Center)
-                            .size(width = 175.dp, height = 40.dp)
+                        },
+                        modifier =
+                            Modifier
+                                .align(Alignment.Center)
+                                .size(width = 175.dp, height = 40.dp),
                     )
                 }
             }
@@ -145,13 +147,16 @@ class MainActivity : ComponentActivity() {
         modifier: Modifier = Modifier,
     ) {
         Button(
-            onClick = onClick, modifier = modifier,
+            onClick = onClick,
+            modifier = modifier,
             contentPadding = PaddingValues(0.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.White,
-                contentColor = Color(0xFF1F1F1F),
-            ),
-            elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp), shape = RectangleShape
+            colors =
+                ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = Color(0xFF1F1F1F),
+                ),
+            elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp),
+            shape = RectangleShape,
         ) {
             Icon(
                 painter = painterResource(R.drawable.sign_in_w_google_light),

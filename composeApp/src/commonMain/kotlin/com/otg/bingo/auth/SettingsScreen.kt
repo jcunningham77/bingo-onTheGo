@@ -29,9 +29,8 @@ import kotlinx.coroutines.withTimeoutOrNull
 fun SettingsScreen(
     settingsViewModel: SettingsViewModel = LocalAppComponent.current.settingsViewModel,
     onClose: () -> Unit,
-    onSignedOut: () -> Unit
+    onSignedOut: () -> Unit,
 ) {
-
     val snackbarHostState = remember { SnackbarHostState() }
     val signOutScope = rememberCoroutineScope()
 
@@ -56,28 +55,29 @@ fun SettingsScreen(
     SystemBackHandler(onBack = onClose)
 
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier =
+            Modifier
+                .fillMaxSize(),
         topBar = {
             BrandingTopBar {
                 IconButton(onClick = onClose) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back"
+                        contentDescription = "Back",
                     )
                 }
             }
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-        ) { paddingValues ->
+    ) { paddingValues ->
         Box(Modifier.fillMaxSize().padding(paddingValues)) {
-            Box(Modifier.fillMaxSize().padding(16.dp)){
+            Box(Modifier.fillMaxSize().padding(16.dp)) {
                 TextButton(
                     onClick = {
                         signOutScope.launch {
                             settingsViewModel.signOut()
                         }
-                    }
+                    },
                 ) {
                     Text("Sign out")
                 }
@@ -85,4 +85,3 @@ fun SettingsScreen(
         }
     }
 }
-
