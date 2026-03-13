@@ -4,7 +4,6 @@ android-compileSdk = "36"
 android-minSdk = "24"
 android-targetSdk = "36"
 androidx-activity = "1.11.0"
-androidx-lifecycle = "2.9.5"
 androidx-splash = "1.0.1"
 composeMultiplatform = "1.9.2"
 kotlin = "2.2.20"
@@ -27,8 +26,6 @@ ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "kto
 
 google-auth = {group = "com.google.android.gms", name="play-services-auth", version.ref = "play-services-auth"}
 
-androidx-lifecycle-viewmodelCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
-androidx-lifecycle-runtimeCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
