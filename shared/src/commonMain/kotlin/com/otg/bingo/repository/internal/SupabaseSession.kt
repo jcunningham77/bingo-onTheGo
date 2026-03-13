@@ -25,7 +25,7 @@ data class UserMetadata(
     @SerialName("avatar_url") val avatarUrl: String,
     @SerialName("name") val name: String,
 )
-@OptIn(ExperimentalTime::class)
+
 fun SupabaseSession.toPersistedSession(): PersistedSession{
     return PersistedSession(
         this.accessToken,

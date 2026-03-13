@@ -11,7 +11,7 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
 @Serializable
-@OptIn(ExperimentalTime::class)
+
 data class SavedCard  constructor(
     @SerialName("id") val id:Int,
     @SerialName("created_at") @Serializable(with = InstantSerializer::class) val createdAt: Instant,
@@ -20,7 +20,7 @@ data class SavedCard  constructor(
     val isComplete: Boolean = false,
     )
 
-@OptIn(ExperimentalTime::class)
+
 object InstantSerializer : KSerializer<Instant> {
     override val descriptor = PrimitiveSerialDescriptor("Instant", PrimitiveKind.STRING)
     override fun serialize(encoder: Encoder, value: Instant) = encoder.encodeString(value.toString())

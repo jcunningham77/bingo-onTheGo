@@ -31,6 +31,10 @@ kotlin {
         }
     }
 
+    compilerOptions {
+        freeCompilerArgs.add("-Xopt-in=kotlin.time.ExperimentalTime")
+    }
+
     sourceSets {
         androidMain.dependencies {
             implementation(compose.preview)

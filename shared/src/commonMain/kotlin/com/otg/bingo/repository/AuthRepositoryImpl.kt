@@ -70,7 +70,7 @@ class AuthRepositoryImpl(
         }
     }
 
-    @OptIn(ExperimentalTime::class)
+    
     override suspend fun tryRestoreSession(): Boolean {
         val session = authTokenStore.loadSession() ?: return false
         val now = Clock.System.now().epochSeconds

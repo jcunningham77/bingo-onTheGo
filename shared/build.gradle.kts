@@ -23,6 +23,10 @@ kotlin {
         }
     }
 
+    compilerOptions {
+        freeCompilerArgs.add("-Xopt-in=kotlin.time.ExperimentalTime")
+    }
+
     val ktorVersion = "3.0.2"
     sourceSets {
         commonMain.dependencies {

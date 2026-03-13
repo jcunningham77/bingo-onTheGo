@@ -34,9 +34,9 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import com.otg.bingo.di.LocalAppComponent
 import com.otg.bingo.model.SavedCard
-import com.otg.bingo.util.loggi
 import com.otg.bingo.views.ThemedText
 import com.otg.bingo.views.UiState
 import com.otg.bingo.views.toUIState
@@ -49,7 +49,6 @@ import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
-import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
 
@@ -64,7 +63,6 @@ fun MyCardsScreen(
     )
 
     val uiState = myCardsResult.toUIState()
-
 
     AnimatedContent(
         targetState = uiState, transitionSpec = {
@@ -99,7 +97,7 @@ fun MyCardsScreen(
 }
 
 
-@OptIn(ExperimentalTime::class)
+
 @Composable
 fun SavedCardItem(savedCard: SavedCard) {
     Row(
@@ -118,7 +116,7 @@ fun SavedCardItem(savedCard: SavedCard) {
     ) {
 
 
-        coil3.compose.AsyncImage(
+        AsyncImage(
             modifier = Modifier
                 .size(30.dp)
                 .border(1.dp, Color.Black, RoundedCornerShape(16.dp))
@@ -142,7 +140,7 @@ fun SavedCardItem(savedCard: SavedCard) {
 }
 
 
-@OptIn(ExperimentalTime::class)
+
 @Composable
 fun rememberNow(interval: Duration): Instant {
     var now by remember { mutableStateOf(Clock.System.now()) }
@@ -157,7 +155,7 @@ fun rememberNow(interval: Duration): Instant {
     return now
 }
 
-@OptIn(ExperimentalTime::class)
+
 fun Instant.timeAgo(now: Instant): String {
     val diff = now - this
 
@@ -182,39 +180,20 @@ fun Instant.timeAgo(now: Instant): String {
     return "${months[local.monthNumber - 1]} ${local.dayOfMonth}"
 }
 
-@OptIn(ExperimentalTime::class)
+
 fun Instant.refreshInterval(now: Instant): Duration {
     val diff = now - this
 
     return when {
-        diff < 30.seconds -> {
-            loggi("diff: ${diff}, returning 30 seconds")
-            30.seconds
-        }
-
-        diff < 1.minutes -> {
-            loggi("diff: ${diff}, returning 1 seconds")
-            1.seconds
-        }
-
-        diff < 1.hours -> {
-            loggi("diff: ${diff}, returning 1 minutes")
-            1.minutes
-        }
-
-        diff < 1.days -> {
-            loggi("diff: ${diff}, returning 1 hours")
-            1.hours
-        }
-
-        else -> {
-            loggi("diff: ${diff}, returning INFINITE")
-            Duration.INFINITE
-        }
+        diff < 30.seconds -> 30.seconds
+        diff < 1.minutes -> 1.seconds
+        diff < 1.hours -> 1.minutes
+        diff < 1.days -> 1.hours
+        else -> Duration.INFINITE
     }
 }
 
-@OptIn(ExperimentalTime::class)
+
 @Composable
 fun TimeAgoText(createdAt: Instant, modifier: Modifier) {
 
