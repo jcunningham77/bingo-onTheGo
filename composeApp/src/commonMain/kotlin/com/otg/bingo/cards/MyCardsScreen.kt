@@ -21,8 +21,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,17 +36,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.otg.bingo.di.LocalAppComponent
 import com.otg.bingo.model.SavedCard
+import com.otg.bingo.util.loggi
 import com.otg.bingo.views.ThemedText
 import com.otg.bingo.views.UiState
 import com.otg.bingo.views.toUIState
-import kotlin.time.Instant
+import kotlinx.coroutines.delay
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 
 @Composable
@@ -90,6 +98,7 @@ fun MyCardsScreen(
     }
 }
 
+
 @OptIn(ExperimentalTime::class)
 @Composable
 fun SavedCardItem(savedCard: SavedCard) {
@@ -125,68 +134,40 @@ fun SavedCardItem(savedCard: SavedCard) {
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-        ThemedText(
+        TimeAgoText(
+            savedCard.createdAt,
             modifier = Modifier.align(Alignment.Top),
-            text = savedCard.createdAt.timeAgo(),
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }
 
+
 @OptIn(ExperimentalTime::class)
-fun Instant.formatPretty(): String {
-    val dt = toLocalDateTime(TimeZone.currentSystemDefault())
+@Composable
+fun rememberNow(interval: Duration): Instant {
+    var now by remember { mutableStateOf(Clock.System.now()) }
 
-    val weekday = dt.dayOfWeek.name.lowercase()
-        .replaceFirstChar { it.uppercase() }
-        .take(3)
-
-    val month = dt.month.name.lowercase()
-        .replaceFirstChar { it.uppercase() }
-        .take(3)
-
-    val day = dt.dayOfMonth
-
-    val suffix = when {
-        day in 11..13 -> "th"
-        day % 10 == 1 -> "st"
-        day % 10 == 2 -> "nd"
-        day % 10 == 3 -> "rd"
-        else -> "th"
+    LaunchedEffect(interval) {
+        while (true) {
+            delay(interval)
+            now = Clock.System.now()
+        }
     }
 
-    val hour12 = when {
-        dt.hour == 0 -> 12
-        dt.hour > 12 -> dt.hour - 12
-        else -> dt.hour
-    }
-
-    val minute = dt.minute.toString().padStart(2, '0')
-    val ampm = if (dt.hour < 12) "am" else "pm"
-
-    return "$weekday $month $day$suffix, $hour12:$minute$ampm"
+    return now
 }
 
 @OptIn(ExperimentalTime::class)
-fun Instant.timeAgo(): String {
-    val now: Instant = Clock.System.now()
+fun Instant.timeAgo(now: Instant): String {
     val diff = now - this
 
-    if (diff < 1.minutes) {
-        return "Just now"
-    }
-
-    if (diff < 1.hours) {
-        return "${diff.inWholeMinutes}m"
-    }
-
-    if (diff < 1.days) {
-        return "${diff.inWholeHours}h"
-    }
+    if (diff < 30.seconds) return "Just now"
+    if (diff < 1.minutes) return "${diff.inWholeSeconds}s"
+    if (diff < 1.hours) return "${diff.inWholeMinutes}m"
+    if (diff < 1.days) return "${diff.inWholeHours}h"
 
     val local = this.toLocalDateTime(TimeZone.currentSystemDefault())
-    val nowLocal = now.toLocalDateTime(TimeZone.currentSystemDefault())
+
 
     if (diff < 7.days) {
         val weekdays = listOf("Mon","Tue","Wed","Thu","Fri","Sat","Sun")
@@ -199,4 +180,57 @@ fun Instant.timeAgo(): String {
     )
 
     return "${months[local.monthNumber - 1]} ${local.dayOfMonth}"
+}
+
+@OptIn(ExperimentalTime::class)
+fun Instant.refreshInterval(now: Instant): Duration {
+    val diff = now - this
+
+    return when {
+        diff < 30.seconds -> {
+            loggi("diff: ${diff}, returning 30 seconds")
+            30.seconds
+        }
+
+        diff < 1.minutes -> {
+            loggi("diff: ${diff}, returning 1 seconds")
+            1.seconds
+        }
+
+        diff < 1.hours -> {
+            loggi("diff: ${diff}, returning 1 minutes")
+            1.minutes
+        }
+
+        diff < 1.days -> {
+            loggi("diff: ${diff}, returning 1 hours")
+            1.hours
+        }
+
+        else -> {
+            loggi("diff: ${diff}, returning INFINITE")
+            Duration.INFINITE
+        }
+    }
+}
+
+@OptIn(ExperimentalTime::class)
+@Composable
+fun TimeAgoText(createdAt: Instant, modifier: Modifier) {
+
+    val firstNow = Clock.System.now()
+    val interval = createdAt.refreshInterval(firstNow)
+
+    val now = if (interval.isInfinite()) {
+        firstNow
+    } else {
+        rememberNow(interval)
+    }
+
+    ThemedText(
+        modifier = modifier,
+        text = createdAt.timeAgo(now),
+        style = MaterialTheme.typography.labelSmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant
+    )
 }
