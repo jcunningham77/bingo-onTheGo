@@ -20,7 +20,6 @@ kotlin {
         }
     }
 
-    // Add these iOS targets
     listOf(
         iosArm64(),
         iosSimulatorArm64(),
@@ -58,7 +57,7 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.runtime)
             implementation(libs.ktor.client.core)
-            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
+            implementation(libs.kotlinx.datetime)
         }
 
         commonTest.dependencies {
