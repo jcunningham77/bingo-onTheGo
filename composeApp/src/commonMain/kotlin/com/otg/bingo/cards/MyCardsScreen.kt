@@ -6,8 +6,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,8 +18,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.otg.bingo.di.LocalAppComponent
@@ -84,15 +82,15 @@ fun SavedCardItem(savedCard: SavedCard?) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .border(
-                border = BorderStroke(
-                    2.dp, Brush.linearGradient(
-                        listOf(Color.Red, Color.Green, Color.Blue),
-                        start = Offset(0.0f, 50.0f),
-                        end = Offset(0.0f, 100.0f)
-                    )
+            .drawBehind {
+                drawLine(
+                    color = Color.LightGray.copy(alpha = 0.4f),
+                    start = Offset(0f,size.height),
+                    end = Offset(size.width, size.height),
+                    strokeWidth = 1.dp.toPx()
                 )
-            )
+            }
+
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
         val createdAt = savedCard?.createdAt?.toLocalDateTime(TimeZone.currentSystemDefault())
