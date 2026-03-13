@@ -1,43 +1,52 @@
 [versions]
+#Shared
+composeMultiplatform = "1.9.2"
+kotlin = "2.2.20"
+kotlin-coroutines = "1.10.2"
+coil = "3.0.0-rc01"
+ktor = "3.4.1"
+ktlint = "12.2.0"
+kotlinxDatetime = "0.7.1"
+
+#Android
 agp = "8.13.0"
 android-compileSdk = "36"
 android-minSdk = "24"
 android-targetSdk = "36"
 androidx-activity = "1.11.0"
 androidx-splash = "1.0.1"
-composeMultiplatform = "1.9.2"
-kotlin = "2.2.20"
-kotlin-coroutines = "1.10.2"
-coil = "3.0.0-rc01"
-kotlinxDatetime = "0.7.1"
-ktor = "3.4.1"
 play-services-auth = "21.5.0"
-ktlint = "12.2.0"
 securityCrypto = "1.1.0"
 
 [libraries]
-androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
+#Shared
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlin-coroutines" }
-androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
-androidx-splash = { module = "androidx.core:core-splashscreen", version.ref = "androidx-splash" }
-coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
-coil-network = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
-ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
-ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
-
-google-auth = {group = "com.google.android.gms", name="play-services-auth", version.ref = "play-services-auth"}
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
+coil-network = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
+#Android
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
+androidx-splash = { module = "androidx.core:core-splashscreen", version.ref = "androidx-splash" }
+google-auth = {group = "com.google.android.gms", name="play-services-auth", version.ref = "play-services-auth"}
+
+#iOS
+ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
 
 [plugins]
-androidApplication = { id = "com.android.application", version.ref = "agp" }
-androidLibrary = { id = "com.android.library", version.ref = "agp" }
+#Shared
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
+
+#Android
+androidApplication = { id = "com.android.application", version.ref = "agp" }
+androidLibrary = { id = "com.android.library", version.ref = "agp" }
