@@ -5,5 +5,5 @@ import platform.UIKit.UIViewController
 
 fun MainViewController(): UIViewController =
     ComposeUIViewController {
-        App()
+        App(IosApp.appComponent)
     }
