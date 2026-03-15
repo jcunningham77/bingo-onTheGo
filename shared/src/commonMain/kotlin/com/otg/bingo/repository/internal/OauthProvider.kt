@@ -4,4 +4,5 @@ enum class OauthProvider(
     val apiValue: String,
 ) {
     GOOGLE("google"),
+    APPLE("apple"),
 }
