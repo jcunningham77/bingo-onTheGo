@@ -4,17 +4,11 @@ import com.otg.bingo.repository.internal.OauthProvider
 
 data class OAuthAccountData(
     val idToken: String?,
-    val photoUri: String?,
-    val displayName: String?,
-    val email: String,
     val oAuthProvider: OauthProvider,
 ) {
     override fun toString(): String =
         """
         idToken: $idToken
-        photoUri: $photoUri
-        displayName: $displayName
-        email: $email
         oAuthProvider: $oAuthProvider
         """.trimIndent()
 }

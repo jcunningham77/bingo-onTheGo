@@ -3,7 +3,6 @@ package com.otg.bingo.auth
 import android.app.Activity
 import android.content.Intent
 import android.content.IntentSender
-import android.net.Uri
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
@@ -44,13 +43,8 @@ class GoogleIdTokenAndroid(
 
     fun extractOauthAccountData(data: Intent?): OAuthAccountData {
         val credential = oneTapClient.getSignInCredentialFromIntent(data)
-        val photoUri: Uri? = credential.profilePictureUri
-
         return OAuthAccountData(
             idToken = credential.googleIdToken,
-            photoUri = photoUri.toString(),
-            displayName = credential.displayName,
-            email = credential.id,
             OauthProvider.GOOGLE,
         )
     }
