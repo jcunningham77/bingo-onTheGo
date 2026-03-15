@@ -38,12 +38,12 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(compose.uiTooling)
-            implementation(libs.ktor.client.okhttp)
             implementation(libs.androidx.splash)
             implementation(libs.androidx.activity.compose)
             implementation(libs.google.auth)
         }
         iosMain.dependencies {
+            // TODO we probably don't need this
             implementation(libs.ktor.client.darwin)
         }
         commonMain.dependencies {
@@ -56,7 +56,6 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation(compose.ui)
             implementation(compose.runtime)
-            implementation(libs.ktor.client.core)
             implementation(libs.kotlinx.datetime)
         }
 

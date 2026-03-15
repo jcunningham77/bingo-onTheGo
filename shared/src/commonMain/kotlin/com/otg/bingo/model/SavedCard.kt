@@ -10,7 +10,7 @@ import kotlinx.serialization.encoding.Encoder
 import kotlin.time.Instant
 
 @Serializable
-data class SavedCard constructor(
+data class SavedCard(
     @SerialName("id") val id: Int,
     @SerialName("created_at") @Serializable(with = InstantSerializer::class) val createdAt: Instant,
     @SerialName("GameTheme") val gameTheme: GameTheme,

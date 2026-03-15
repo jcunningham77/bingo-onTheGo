@@ -40,25 +40,6 @@ fun BrandingTopBar(navigationIcon: @Composable (() -> Unit) = {}) {
     )
 }
 
-// FIXME add a better way to specify Avatar besides String?
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun BrandingTopBar(avatarUrl: String?) {
-    loggi("BrandingTopBar: avatarUrl $avatarUrl")
-    avatarUrl?.let {
-        CenterAlignedTopAppBar(
-            modifier = Modifier.padding(top = 5.dp, start = 15.dp),
-            title = { BrandBanner() },
-            navigationIcon = { Avatar(avatarUrl) },
-        )
-    } ?: run {
-        CenterAlignedTopAppBar(
-            modifier = Modifier.padding(top = 5.dp),
-            title = { BrandBanner() },
-        )
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BrandingTopBarWithAvatar(

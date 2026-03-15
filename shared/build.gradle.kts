@@ -29,7 +29,6 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-
             implementation(libs.kotlin.coroutines.core)
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
