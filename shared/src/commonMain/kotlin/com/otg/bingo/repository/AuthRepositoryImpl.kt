@@ -31,6 +31,8 @@ class AuthRepositoryImpl(
     val userProfileStore: UserProfileStore,
     scope: CoroutineScope,
 ) : AuthRepository {
+    private val _currentUser = MutableStateFlow<UserProfile?>(null)
+
     init {
         scope.launch {
             _currentUser.value = userProfileStore.loadUserProfile()
@@ -96,8 +98,6 @@ class AuthRepositoryImpl(
             throw Exception("refresh token failed")
         }
     }
-
-    private val _currentUser = MutableStateFlow<UserProfile?>(null)
 
     // TODO does this need to be suspend?
     private suspend fun setCurrentUser(userProfile: UserProfile) {
