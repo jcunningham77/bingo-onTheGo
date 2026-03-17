@@ -1,7 +1,5 @@
 package com.otg.bingo.icons
 
-
-
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.painter.Painter
 import onthegobingo.composeapp.generated.resources.Res
@@ -29,5 +27,3 @@ actual fun CardIcon.toPainter(): Painter =
         CardIcon.PRIZE_BOOTH -> painterResource(Res.drawable.ic_prize_booth)
         CardIcon.RING_TOSS -> painterResource(Res.drawable.ic_ring_toss)
     }
-
-

@@ -10,6 +10,4 @@ fun initSecureSettings(context: Context) {
     SecureSettingsContextHolder.appContext = context.applicationContext
 }
 
-actual fun getSecureSettings(): SecureSettings {
-    return SecureSettings(SecureSettingsContextHolder.appContext)
-}
+actual fun getSecureSettings(): SecureSettings = SecureSettings(SecureSettingsContextHolder.appContext)

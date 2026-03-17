@@ -53,9 +53,8 @@ import com.otg.bingo.views.toUIState
 @Composable
 fun GameThemesPager(
     loadGameThemes: suspend () -> Result<List<GameTheme>>,
-    onGameThemeSelected: (Int) -> Unit
+    onGameThemeSelected: (Int) -> Unit,
 ) {
-
     var gameThemesResult by remember { mutableStateOf<Result<List<GameTheme>>>(Result.success(emptyList())) }
 
     LaunchedEffect(Unit) {
@@ -64,10 +63,11 @@ fun GameThemesPager(
 
     val uiState = gameThemesResult.toUIState()
     AnimatedContent(
-        targetState = uiState, transitionSpec = {
+        targetState = uiState,
+        transitionSpec = {
             (fadeIn(tween(220)) + scaleIn(initialScale = 0.98f)) togetherWith fadeOut(tween(180))
         },
-        label = "loading-to-content"
+        label = "loading-to-content",
     ) { state ->
 
         when (state) {
@@ -88,29 +88,29 @@ fun GameThemesPager(
             }
 
             is UiState.Content -> {
-
                 state.items.filterIsInstance<GameTheme>().let { gameThemes ->
 
                     val pagerState = rememberPagerState(pageCount = { gameThemes.size })
                     Column(
-                        modifier = Modifier
-                            .fillMaxSize()
+                        modifier =
+                            Modifier
+                                .fillMaxSize(),
                     ) {
                         HorizontalPager(
                             state = pagerState,
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier.weight(1f),
                         ) { page ->
 
                             loggi(" current game theme id = ${gameThemes[page].id}")
 
-
                             Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp)
-                                    .clickable { onGameThemeSelected(gameThemes[page].id) },
+                                modifier =
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 16.dp)
+                                        .clickable { onGameThemeSelected(gameThemes[page].id) },
                                 horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
+                                verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 if (pagerState.currentPage > 0) {
                                     Icon(
@@ -123,16 +123,16 @@ fun GameThemesPager(
                                 }
                                 Box(
                                     modifier =
-                                        Modifier.weight(1f)
+                                        Modifier
+                                            .weight(1f)
                                             .fillMaxSize()
                                             .padding(horizontal = 10.dp, vertical = 20.dp)
                                             .border(
                                                 width = 2.dp,
                                                 color = MaterialTheme.colorScheme.onSurface,
-                                                shape = MaterialTheme.shapes.medium
-                                            )
-                                            .clip(MaterialTheme.shapes.medium),
-                                    contentAlignment = Alignment.Center
+                                                shape = MaterialTheme.shapes.medium,
+                                            ).clip(MaterialTheme.shapes.medium),
+                                    contentAlignment = Alignment.Center,
                                 ) {
                                     AsyncImage(
                                         model = gameThemes[page].imgUrl,
@@ -142,33 +142,38 @@ fun GameThemesPager(
                                         onLoading = { loggi(" Loading image...") },
                                         onSuccess = { loggi(" Image loaded successfully") },
                                         onError = { error ->
-                                            loggi(" Error loading image: ${error}")
-                                        }
+                                            loggi(" Error loading image: $error")
+                                        },
                                     )
                                     Box(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .height(120.dp)
-                                            .align(Alignment.BottomCenter)
-                                            .background(
-                                                brush = Brush.verticalGradient(
-                                                    colors = listOf(
-                                                        Color.Transparent,
-                                                        Color.Black.copy(alpha = 0.7f)
-                                                    ),
-                                                    startY = 0f,
-                                                    endY = Float.POSITIVE_INFINITY
-                                                )
-                                            )
+                                        modifier =
+                                            Modifier
+                                                .fillMaxWidth()
+                                                .height(120.dp)
+                                                .align(Alignment.BottomCenter)
+                                                .background(
+                                                    brush =
+                                                        Brush.verticalGradient(
+                                                            colors =
+                                                                listOf(
+                                                                    Color.Transparent,
+                                                                    Color.Black.copy(alpha = 0.7f),
+                                                                ),
+                                                            startY = 0f,
+                                                            endY = Float.POSITIVE_INFINITY,
+                                                        ),
+                                                ),
                                     )
                                     Text(
-                                        modifier = Modifier.align(Alignment.BottomStart)
-                                            .padding(16.dp)
-                                            .padding(horizontal = 8.dp, vertical = 4.dp),
+                                        modifier =
+                                            Modifier
+                                                .align(Alignment.BottomStart)
+                                                .padding(16.dp)
+                                                .padding(horizontal = 8.dp, vertical = 4.dp),
                                         text = gameThemes[page].name,
                                         textAlign = TextAlign.Start,
                                         style = MaterialTheme.typography.headlineMedium,
-                                        color = MaterialTheme.colorScheme.surface
+                                        color = MaterialTheme.colorScheme.surface,
                                     )
                                 }
 
@@ -184,23 +189,25 @@ fun GameThemesPager(
                             }
                         }
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
                             horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
                             repeat(gameThemes.size) { index ->
                                 val isSelected = pagerState.currentPage == index
                                 Box(
-                                    modifier = Modifier
-                                        .padding(horizontal = 4.dp)
-                                        .size(if (isSelected) 10.dp else 8.dp)
-                                        .alpha(if (isSelected) 1f else 0.4f)
-                                        .background(
-                                            color = MaterialTheme.colorScheme.onSurface,
-                                            shape = CircleShape
-                                        )
+                                    modifier =
+                                        Modifier
+                                            .padding(horizontal = 4.dp)
+                                            .size(if (isSelected) 10.dp else 8.dp)
+                                            .alpha(if (isSelected) 1f else 0.4f)
+                                            .background(
+                                                color = MaterialTheme.colorScheme.onSurface,
+                                                shape = CircleShape,
+                                            ),
                                 )
                             }
                         }

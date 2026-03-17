@@ -13,26 +13,26 @@ private const val AUTHORIZATION_VALUE = "Bearer"
 
 private fun supabaseHostOf(url: String): String = Url(url).host
 
-private fun HttpRequestBuilder.isSupabaseRequest(supabaseHost: String): Boolean =
-    url.host == supabaseHost
+private fun HttpRequestBuilder.isSupabaseRequest(supabaseHost: String): Boolean = url.host == supabaseHost
 
-val SupabaseAuthPlugin = createClientPlugin("SupabaseAuthPlugin", ::Config) {
-    val supabaseHost = pluginConfig.supabaseHost
-    val tokenProvider = pluginConfig.tokenProvider
+val SupabaseAuthPlugin =
+    createClientPlugin("SupabaseAuthPlugin", ::Config) {
+        val supabaseHost = pluginConfig.supabaseHost
+        val tokenProvider = pluginConfig.tokenProvider
 
-    onRequest { request, _ ->
-        if (!request.isSupabaseRequest(supabaseHost)) return@onRequest
+        onRequest { request, _ ->
+            if (!request.isSupabaseRequest(supabaseHost)) return@onRequest
 
-        // Always add API key for Supabase traffic
-        request.header(API_KEY_KEY, API_KEY_VALUE)
+            // Always add API key for Supabase traffic
+            request.header(API_KEY_KEY, API_KEY_VALUE)
 
-        // Add Authorization only if available
-        val token = tokenProvider()
-        if (!token.isNullOrBlank()) {
-            request.header(AUTHORIZATION_KEY, "$AUTHORIZATION_VALUE $token")
+            // Add Authorization only if available
+            val token = tokenProvider()
+            if (!token.isNullOrBlank()) {
+                request.header(AUTHORIZATION_KEY, "$AUTHORIZATION_VALUE $token")
+            }
         }
     }
-}
 
 class Config {
     var supabaseHost: String = supabaseHostOf(SUPABASE_HOST)

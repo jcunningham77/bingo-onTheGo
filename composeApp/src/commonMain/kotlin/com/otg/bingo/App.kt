@@ -15,17 +15,17 @@ import com.otg.bingo.di.LocalAppComponent
 
 @Composable
 fun App(appComponent: AppComponent) {
-
     CompositionLocalProvider(LocalAppComponent provides appComponent) {
         setSingletonImageLoaderFactory { context ->
-            ImageLoader.Builder(context)
+            ImageLoader
+                .Builder(context)
                 .crossfade(true)
                 .logger(DebugLogger())
                 .build()
         }
 
         MaterialTheme(
-            colorScheme = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()
+            colorScheme = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme(),
         ) {
             AppScaffold()
         }

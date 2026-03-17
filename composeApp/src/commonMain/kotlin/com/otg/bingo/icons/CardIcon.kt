@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.painter.Painter
 import com.otg.bingo.model.CardTile
 
-enum class CardIcon() {
+enum class CardIcon {
     FERRIS_WHEEL,
     COTTON_CANDY,
     BALLOON_DART,
@@ -15,7 +15,6 @@ enum class CardIcon() {
     PRIZE_BOOTH,
     RING_TOSS,
 }
-
 
 @Composable
 expect fun CardIcon.toPainter(): Painter

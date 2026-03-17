@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 @Composable
 actual fun SystemBackHandler(
     enabled: Boolean,
-    onBack: () -> Unit
+    onBack: () -> Unit,
 ) {
     // TODO implement iOS specific logic
 }

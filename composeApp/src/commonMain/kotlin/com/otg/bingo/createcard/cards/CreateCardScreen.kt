@@ -30,10 +30,11 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -48,30 +49,31 @@ import com.otg.bingo.views.ThemedText
 import com.otg.bingo.views.UiState
 import com.otg.bingo.views.toUIState
 import kotlinx.coroutines.launch
-
+import kotlinx.coroutines.withTimeoutOrNull
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CreateCardScreen(
     gameThemeId: Int,
     onClose: () -> Unit,
-    createCardViewModel: CreateCardViewModel = LocalAppComponent.current.createCardViewModel
+    onCreateCardSuccess: () -> Unit,
+    createCardViewModel: CreateCardViewModel = LocalAppComponent.current.createCardViewModel,
 ) {
-
     val snackbarHostState = remember { SnackbarHostState() }
     val playCardScope = rememberCoroutineScope()
 
     SystemBackHandler(onBack = onClose)
 
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier =
+            Modifier
+                .fillMaxSize(),
         topBar = {
             BrandingTopBar {
                 IconButton(onClick = onClose) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back"
+                        contentDescription = "Back",
                     )
                 }
             }
@@ -83,8 +85,15 @@ fun CreateCardScreen(
         LaunchedEffect(createCardViewModel) {
             createCardViewModel.events.collect { event ->
                 when (event) {
-                    is CreateCardViewModel.CreateCardUiEvent.ShowSuccessMessage ->
-                        snackbarHostState.showSnackbar(event.message)
+                    is CreateCardViewModel.CreateCardUiEvent.ShowSuccessMessage -> {
+                        launch {
+                            withTimeoutOrNull(1000) {
+                                snackbarHostState.showSnackbar(event.message)
+                            }
+                            onCreateCardSuccess()
+                            onClose()
+                        }
+                    }
 
                     is CreateCardViewModel.CreateCardUiEvent.ShowErrorMessage ->
                         snackbarHostState.showSnackbar(event.message)
@@ -94,64 +103,68 @@ fun CreateCardScreen(
         // endregion events
 
         // region state
-        val cardTilesResult by createCardViewModel.cardTiles(gameThemeId)
-            .collectAsState(initial = Result.success(emptyList()))
+        var cardTilesResult by remember { mutableStateOf<Result<List<CardTile>>>(Result.success(emptyList())) }
+
+        LaunchedEffect(Unit) {
+            cardTilesResult = createCardViewModel.cardTiles(gameThemeId)
+        }
 
         val uiState: UiState = cardTilesResult.toUIState()
 
         AnimatedContent(
-            targetState = uiState, transitionSpec = {
-                    (fadeIn(tween(220)) + scaleIn(initialScale = 0.98f)) togetherWith fadeOut(tween(180))
+            targetState = uiState,
+            transitionSpec = {
+                (fadeIn(tween(220)) + scaleIn(initialScale = 0.98f)) togetherWith fadeOut(tween(180))
             },
-            label = "loading-to-content"
+            label = "loading-to-content",
         ) { state ->
             when (state) {
-
-                UiState.Loading -> Box(Modifier.fillMaxSize().padding(paddingValues)) {
-                    ThemedText(
-                        modifier = Modifier.align(Alignment.Center),
-                        text = "Loading...",
-                    )
-                }
-
-                UiState.Error -> Box(Modifier.fillMaxSize().padding(paddingValues)) {
-                    ThemedText(
-                        "Error loading data...",
-                    )
-                }
-
-                is UiState.Content -> Box(Modifier.fillMaxSize().padding(paddingValues)) {
-                    Column(modifier = Modifier.fillMaxSize()) {
-                        CardTileGrid(state.items.filterIsInstance<CardTile>())
-                        Button(
-                            modifier = Modifier.align(Alignment.CenterHorizontally),
-                            onClick = {
-                                playCardScope.launch {
-                                    createCardViewModel.playCard(gameThemeId)
-                                }
-                            }
-                        ) {
-                            Text("Play card!")
-                        }
+                UiState.Loading ->
+                    Box(Modifier.fillMaxSize().padding(paddingValues)) {
+                        ThemedText(
+                            modifier = Modifier.align(Alignment.Center),
+                            text = "Loading...",
+                        )
                     }
 
-                }
+                UiState.Error ->
+                    Box(Modifier.fillMaxSize().padding(paddingValues)) {
+                        ThemedText(
+                            "Error loading data...",
+                        )
+                    }
+
+                is UiState.Content ->
+                    Box(Modifier.fillMaxSize().padding(paddingValues)) {
+                        Column(modifier = Modifier.fillMaxSize()) {
+                            CardTileGrid(state.items.filterIsInstance<CardTile>())
+                            Button(
+                                modifier = Modifier.align(Alignment.CenterHorizontally),
+                                onClick = {
+                                    playCardScope.launch {
+                                        createCardViewModel.playCard(gameThemeId)
+                                    }
+                                },
+                            ) {
+                                Text("Play card!")
+                            }
+                        }
+                    }
             }
         }
-        // endregion state
     }
 }
 
 @Composable
 fun CardTileGrid(
     tiles: List<CardTile>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
         contentPadding = PaddingValues(16.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         items(tiles.take(9)) { tile ->
             CardTileItem(tile = tile)
@@ -162,13 +175,14 @@ fun CardTileGrid(
 @Composable
 fun CardTileItem(tile: CardTile) {
     Column(
-        modifier = Modifier
-            .aspectRatio(1f) // Makes it square
-            .border(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.outline,
-                shape = MaterialTheme.shapes.medium
-            ),
+        modifier =
+            Modifier
+                .aspectRatio(1f) // Makes it square
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.outline,
+                    shape = MaterialTheme.shapes.medium,
+                ),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         content = {
@@ -181,8 +195,8 @@ fun CardTileItem(tile: CardTile) {
             Text(
                 text = tile.tileName,
                 style = MaterialTheme.typography.labelMedium,
-                modifier = Modifier.padding(top = 8.dp)
+                modifier = Modifier.padding(top = 8.dp),
             )
-        }
+        },
     )
 }

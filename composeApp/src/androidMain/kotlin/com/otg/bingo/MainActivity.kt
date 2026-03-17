@@ -1,8 +1,9 @@
-package com.otg.bingo.auth
+package com.otg.bingo
 
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -26,10 +27,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
-import com.otg.bingo.AndroidApp
-import com.otg.bingo.App
-import com.otg.bingo.R
-import com.otg.bingo.model.UserProfile
+import com.otg.bingo.auth.GoogleIdTokenAndroid
 import com.otg.bingo.navigation.BrandingTopBar
 import com.otg.bingo.repository.internal.OAuthData
 import com.otg.bingo.repository.internal.OauthProvider
@@ -37,7 +35,6 @@ import com.otg.bingo.util.loggi
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
-
     private val webClientId: String = "783933800390-hd9crn8jsrdpv8jcsqhike595qhhp22u.apps.googleusercontent.com"
 
     private val googleIdToken by lazy { GoogleIdTokenAndroid(this, webClientId) }
@@ -54,7 +51,7 @@ class MainActivity : ComponentActivity() {
                     Box(
                         Modifier
                             .fillMaxSize()
-                            .padding(paddingValues)
+                            .padding(paddingValues),
                     ) {
                         CircularProgressIndicator(Modifier.align(Alignment.Center))
                     }
@@ -63,12 +60,18 @@ class MainActivity : ComponentActivity() {
             lifecycleScope.launch {
                 try {
                     val authRepository = (application as AndroidApp).appComponent.authRepository
-                    val supabaseSession = authRepository.signInWithOauthToken(OAuthData(idToken, OauthProvider.GOOGLE))
-                    val userProfile = UserProfile(googleOAuthResult.displayName, googleOAuthResult.photoUri)
-                    authRepository.setCurrentUser(userProfile)
-                    loggi(" Supabase session: $supabaseSession")
-                    setContent {
-                        App((application as AndroidApp).appComponent)
+                    val authResult = authRepository.signIn(OAuthData(idToken, OauthProvider.GOOGLE))
+                    if (authResult.isSuccess) {
+                        setContent {
+                            App((application as AndroidApp).appComponent)
+                        }
+                    } else {
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Error signing in: ${authResult.exceptionOrNull()?.message}",
+                            Toast.LENGTH_SHORT,
+                        )
+                        showSignInScreen()
                     }
                 } catch (throwable: Throwable) {
                     loggi(" error signing in w supabase: $throwable")
@@ -107,22 +110,25 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier.fillMaxSize(),
                 topBar = {
                     BrandingTopBar()
-                }
+                },
             ) { paddingValues ->
                 Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues),
                 ) {
                     GoogleSignInButton(
                         onClick = {
                             googleIdToken.beginSignIn(
                                 launcher = oneTapLauncher,
-                                onError = { error -> loggi(" google sign in error: $error") }
+                                onError = { error -> loggi(" google sign in error: $error") },
                             )
-                        }, modifier = Modifier
-                            .align(Alignment.Center)
-                            .size(width = 175.dp, height = 40.dp)
+                        },
+                        modifier =
+                            Modifier
+                                .align(Alignment.Center)
+                                .size(width = 175.dp, height = 40.dp),
                     )
                 }
             }
@@ -135,13 +141,16 @@ class MainActivity : ComponentActivity() {
         modifier: Modifier = Modifier,
     ) {
         Button(
-            onClick = onClick, modifier = modifier,
+            onClick = onClick,
+            modifier = modifier,
             contentPadding = PaddingValues(0.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.White,
-                contentColor = Color(0xFF1F1F1F),
-            ),
-            elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp), shape = RectangleShape
+            colors =
+                ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = Color(0xFF1F1F1F),
+                ),
+            elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp),
+            shape = RectangleShape,
         ) {
             Icon(
                 painter = painterResource(R.drawable.sign_in_w_google_light),

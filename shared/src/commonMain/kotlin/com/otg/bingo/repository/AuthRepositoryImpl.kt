@@ -16,16 +16,14 @@ import io.ktor.client.call.body
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
-import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
+import io.ktor.http.isSuccess
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
 
 class AuthRepositoryImpl(
     val httpClient: HttpClient,
@@ -33,6 +31,7 @@ class AuthRepositoryImpl(
     val userProfileStore: UserProfileStore,
     scope: CoroutineScope,
 ) : AuthRepository {
+    private val _currentUser = MutableStateFlow<UserProfile?>(null)
 
     init {
         scope.launch {
@@ -40,30 +39,39 @@ class AuthRepositoryImpl(
         }
     }
 
-    override suspend fun signInWithOauthToken(oAuthData: OAuthData): SupabaseSession {
+    override suspend fun signIn(oAuthData: OAuthData): Result<Unit> {
         loggi("signInWithOauthToken = ${oAuthData.token}")
         val url = "${SUPABASE_HOST}/auth/v1/token?grant_type=id_token"
 
-        val response = httpClient.post(url) {
-            contentType(ContentType.Application.Json)
-            setBody(
-                IdTokenGrantRequest(
-                    provider = oAuthData.provider.apiValue,
-                    idToken = oAuthData.token
+        val response =
+            httpClient.post(url) {
+                contentType(ContentType.Application.Json)
+                setBody(
+                    IdTokenGrantRequest(
+                        provider = oAuthData.provider.apiValue,
+                        idToken = oAuthData.token,
+                    ),
                 )
-            )
-        }
+            }
 
-        if (response.status == HttpStatusCode.OK) {
+        if (response.status.isSuccess()) {
+            val supabaseSession = response.body<SupabaseSession>()
+            loggi("persisting user id as = ${supabaseSession.user.userId}")
             authTokenStore.saveSession(response.body<SupabaseSession>().toPersistedSession())
+            val userProfile =
+                UserProfile(
+                    supabaseSession.user.userMetadata.name,
+                    supabaseSession.user.userMetadata.avatarUrl,
+                    supabaseSession.user.userId,
+                )
+            setCurrentUser(userProfile)
+            return Result.success(Unit)
         } else {
             loggi(" error signing into Supabase ${response.status}")
+            return Result.failure(Exception("error signing into Supabase ${response.status}"))
         }
-        // TODO implement error handling
-        return response.body()
     }
 
-    @OptIn(ExperimentalTime::class)
     override suspend fun tryRestoreSession(): Boolean {
         val session = authTokenStore.loadSession() ?: return false
         val now = Clock.System.now().epochSeconds
@@ -76,37 +84,35 @@ class AuthRepositoryImpl(
     private suspend fun signInWithRefreshToken(refreshToken: String) {
         loggi("signInWithRefreshToken: $refreshToken")
         val url = "${SUPABASE_HOST}/auth/v1/token?grant_type=id_token"
-        val response = httpClient.post(url) {
-            contentType(ContentType.Application.Json)
-            setBody(
-                RefreshTokenRequest(refreshToken = refreshToken)
-            )
-        }
+        val response =
+            httpClient.post(url) {
+                contentType(ContentType.Application.Json)
+                setBody(
+                    RefreshTokenRequest(refreshToken = refreshToken),
+                )
+            }
 
-        if (response.status == HttpStatusCode.OK) {
+        if (response.status.isSuccess()) {
             authTokenStore.saveSession(response.body<PersistedSession>())
         } else {
             throw Exception("refresh token failed")
         }
     }
 
-    private val _currentUser = MutableStateFlow<UserProfile?>(null)
-
-    override suspend fun setCurrentUser(userProfile: UserProfile) {
+    // TODO does this need to be suspend?
+    private suspend fun setCurrentUser(userProfile: UserProfile) {
         loggi("setUser: $userProfile")
         userProfileStore.setUserProfile(userProfile)
         _currentUser.value = userProfile
     }
 
-    override suspend fun signOut() = flow {
+    override fun currentUser(): Flow<UserProfile?> = _currentUser.asStateFlow()
+
+    override suspend fun signOut(): Result<Unit> {
         loggi("sign out")
         _currentUser.value = null
         userProfileStore.setUserProfile(null)
         authTokenStore.clear()
-        emit(Result.success(Unit))
-    }
-
-    override fun currentUser(): Flow<UserProfile?> {
-        return _currentUser.asStateFlow()
+        return Result.success(Unit)
     }
 }

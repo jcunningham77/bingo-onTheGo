@@ -2,6 +2,7 @@ package com.otg.bingo.di
 
 import com.otg.bingo.AppScaffoldViewModel
 import com.otg.bingo.auth.SettingsViewModel
+import com.otg.bingo.cards.MyCardsViewModel
 import com.otg.bingo.createcard.cards.CreateCardViewModel
 import com.otg.bingo.createcard.gamethemes.GameThemesViewModel
 import com.otg.bingo.repository.AuthRepository
@@ -24,19 +25,19 @@ class AppComponentImpl : AppComponent {
     private val httpClient: HttpClient = HttpClientFactory.build(authTokenStore)
     private val repoCoroutineScope = CoroutineScope(Dispatchers.Default)
 
-    override val bingoRepository: BingoRepository by lazy { BingoRepositoryImpl(httpClient, authTokenStore) }
     override val authRepository: AuthRepository by lazy {
         AuthRepositoryImpl(
             httpClient,
             authTokenStore,
             userProfileStore,
-            repoCoroutineScope
+            repoCoroutineScope,
         )
     }
+    override val bingoRepository: BingoRepository by lazy { BingoRepositoryImpl(httpClient, authRepository) }
 
     override val appScaffoldViewModel: AppScaffoldViewModel by lazy { AppScaffoldViewModel(authRepository) }
     override val createCardViewModel: CreateCardViewModel by lazy { CreateCardViewModel(bingoRepository) }
+    override val myCardsViewModel: MyCardsViewModel by lazy { MyCardsViewModel(bingoRepository) }
     override val gameThemesViewModel: GameThemesViewModel by lazy { GameThemesViewModel(bingoRepository) }
     override val settingsViewModel: SettingsViewModel by lazy { SettingsViewModel(authRepository) }
-
 }

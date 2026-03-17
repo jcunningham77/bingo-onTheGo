@@ -3,13 +3,12 @@ package com.otg.bingo.navigation
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import com.otg.bingo.auth.MainActivity
-
+import com.otg.bingo.MainActivity
 
 @Composable
 actual fun SystemBackHandler(
     enabled: Boolean,
-    onBack: () -> Unit
+    onBack: () -> Unit,
 ) {
     BackHandler(enabled = enabled, onBack = onBack)
 }

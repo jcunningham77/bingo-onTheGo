@@ -17,7 +17,19 @@ struct ContentView: View {
 
 struct ComposeView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIViewController {
-        MainViewControllerKt.MainViewController()
+        MainViewControllerKt.initializeSession()
+
+        let window = UIApplication.shared.connectedScenes
+                    .compactMap { $0 as? UIWindowScene }
+                    .flatMap { $0.windows }
+                    .first { $0.isKeyWindow }
+
+        let appleSignInHandler = AppleSignInHandler(presentationAnchor: window ?? UIWindow())
+
+
+        return MainViewControllerKt.MainViewController(onSignInRequested: {
+                    appleSignInHandler.startSignIn()
+                })
     }
 
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
