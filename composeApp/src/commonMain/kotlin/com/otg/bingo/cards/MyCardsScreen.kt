@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.otg.bingo.di.LocalAppComponent
 import com.otg.bingo.model.SavedCard
+import com.otg.bingo.util.loggi
 import com.otg.bingo.views.ThemedText
 import com.otg.bingo.views.UiState
 import com.otg.bingo.views.toUIState
@@ -59,6 +60,8 @@ fun MyCardsScreen(myCardsViewModel: MyCardsViewModel = LocalAppComponent.current
     )
 
     val uiState = myCardsResult.toUIState()
+
+    loggi("MyCardsScreen: myCardsResult = $myCardsResult")
 
     AnimatedContent(
         targetState = uiState,

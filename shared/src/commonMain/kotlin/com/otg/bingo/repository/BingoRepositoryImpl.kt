@@ -67,6 +67,7 @@ class BingoRepositoryImpl(
             .currentUser()
             .flatMapLatest { userProfile ->
                 if (userProfile == null) {
+                    loggi("user profile is null")
                     flowOf(Result.failure(Exception("No user logged in")))
                 } else {
                     flow {
@@ -79,6 +80,7 @@ class BingoRepositoryImpl(
                                 val body = response.body<List<SavedCard>>()
                                 Result.success(body)
                             } else {
+                                loggi("get my cards failed with $response")
                                 Result.failure(Exception("GET my cards failed"))
                             },
                         )
