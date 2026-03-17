@@ -9,6 +9,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.ComposeUIViewController
+import com.otg.bingo.repository.internal.OAuthData
+import com.otg.bingo.repository.internal.OauthProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -46,3 +48,17 @@ fun initializeSession() {
         IosApp.authState.value = if (restored) IosAuthState.SignedIn else IosAuthState.SignedOut
     }
 }
+
+fun signInWithApple(idToken: String) {
+    CoroutineScope(Dispatchers.Default).launch {
+        val result = IosApp.appComponent.authRepository.signIn(
+            OAuthData(token = idToken, provider = OauthProvider.APPLE)
+        )
+        IosApp.authState.value = if (result.isSuccess) IosAuthState.SignedIn else IosAuthState.SignedOut
+    }
+}
+
+fun signInWithAppleFailed() {
+    IosApp.authState.value = IosAuthState.SignedOut
+}
+

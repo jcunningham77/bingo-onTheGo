@@ -39,24 +39,7 @@ class AppleSignInHandler: NSObject, ASAuthorizationControllerDelegate, ASAuthori
             return
         }
 
-        let authRepository = IosApp.shared.appComponent.authRepository
-
-        Task {
-            do {
-                let result = try await authRepository.signIn(
-                    oAuthData: OAuthData(idToken: idToken, provider: OauthProvider.APPLE)
-                )
-                if result.isSuccess {
-                    IosApp.shared.authState.value = IosAuthState.signedIn
-                } else {
-                    print("AppleSignInHandler: sign in failed")
-                    IosApp.shared.authState.value = IosAuthState.signedOut
-                }
-            } catch {
-                print("AppleSignInHandler: error - \(error)")
-                IosApp.shared.authState.value = IosAuthState.signedOut
-            }
-        }
+        MainViewControllerKt.signInWithApple(idToken: idToken)
     }
 
     func authorizationController(
@@ -64,12 +47,17 @@ class AppleSignInHandler: NSObject, ASAuthorizationControllerDelegate, ASAuthori
         didCompleteWithError error: Error
     ) {
         print("AppleSignInHandler: authorization error - \(error)")
-        IosApp.shared.authState.value = IosAuthState.signedOut
+        MainViewControllerKt.signInWithAppleFailed()
     }
 
     // MARK: - ASAuthorizationControllerPresentationContextProviding
 
     func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
-        return presentationAnchor ?? UIWindow()
+         if let anchor = presentationAnchor { return anchor }
+            guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                  let window = windowScene.windows.first else {
+                return UIWindow()
+            }
+            return window
     }
 }
