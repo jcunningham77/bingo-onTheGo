@@ -36,7 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.otg.bingo.di.LocalAppComponent
-import com.otg.bingo.model.SavedCard
+import com.otg.bingo.model.MyCard
 import com.otg.bingo.util.loggi
 import com.otg.bingo.views.ThemedText
 import com.otg.bingo.views.UiState
@@ -90,7 +90,7 @@ fun MyCardsScreen(myCardsViewModel: MyCardsViewModel = LocalAppComponent.current
                 Box(Modifier.fillMaxSize()) {
                     LazyColumn(modifier = Modifier.fillMaxSize()) {
                         items(state.items) { savedCard ->
-                            SavedCardItem(savedCard as SavedCard)
+                            SavedCardItem(savedCard as MyCard)
                         }
                     }
                 }
@@ -99,7 +99,7 @@ fun MyCardsScreen(myCardsViewModel: MyCardsViewModel = LocalAppComponent.current
 }
 
 @Composable
-fun SavedCardItem(savedCard: SavedCard) {
+fun SavedCardItem(myCard: MyCard) {
     Row(
         modifier =
             Modifier
@@ -120,18 +120,18 @@ fun SavedCardItem(savedCard: SavedCard) {
                     .size(30.dp)
                     .border(1.dp, Color.Black, RoundedCornerShape(16.dp))
                     .clip(CircleShape),
-            model = savedCard.gameTheme.imgUrl,
+            model = myCard.gameTheme.imgUrl,
             contentDescription = "Theme URI",
         )
         Spacer(modifier = Modifier.width(8.dp))
         ThemedText(
             modifier = Modifier.weight(1f),
-            text = "${savedCard.gameTheme.name} card",
+            text = "${myCard.gameTheme.name} card",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         TimeAgoText(
-            savedCard.createdAt,
+            myCard.createdAt,
             modifier = Modifier.align(Alignment.Top),
         )
     }

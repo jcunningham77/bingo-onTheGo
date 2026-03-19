@@ -2,7 +2,7 @@ package com.otg.bingo.repository
 
 import com.otg.bingo.model.CardTile
 import com.otg.bingo.model.GameTheme
-import com.otg.bingo.model.SavedCard
+import com.otg.bingo.model.MyCard
 import com.otg.bingo.repository.internal.SUPABASE_HOST
 import com.otg.bingo.repository.internal.isSuccess
 import com.otg.bingo.util.loggi
@@ -61,7 +61,7 @@ class BingoRepositoryImpl(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override fun myCards(): Flow<Result<List<SavedCard>>> {
+    override fun myCards(): Flow<Result<List<MyCard>>> {
         // FIXME we get infinite retry on 400
         return authRepository
             .currentUser()
@@ -77,7 +77,7 @@ class BingoRepositoryImpl(
                             )
                         emit(
                             if (response.isSuccess()) {
-                                val body = response.body<List<SavedCard>>()
+                                val body = response.body<List<MyCard>>()
                                 Result.success(body)
                             } else {
                                 loggi("get my cards failed with $response")
