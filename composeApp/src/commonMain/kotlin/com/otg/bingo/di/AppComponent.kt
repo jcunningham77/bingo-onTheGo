@@ -5,6 +5,7 @@ import com.otg.bingo.auth.SettingsViewModel
 import com.otg.bingo.cards.MyCardsViewModel
 import com.otg.bingo.createcard.cards.CreateCardViewModel
 import com.otg.bingo.createcard.gamethemes.GameThemesViewModel
+import com.otg.bingo.leaderboard.LeaderboardViewModel
 import com.otg.bingo.repository.AuthRepository
 import com.otg.bingo.repository.BingoRepository
 import com.otg.bingo.repository.internal.AuthTokenStore
@@ -20,6 +21,7 @@ interface AppComponent {
     val appScaffoldViewModel: AppScaffoldViewModel
     val createCardViewModel: CreateCardViewModel
     val myCardsViewModel: MyCardsViewModel
+    val leaderboardViewModel: LeaderboardViewModel
     val gameThemesViewModel: GameThemesViewModel
     val settingsViewModel: SettingsViewModel
 }

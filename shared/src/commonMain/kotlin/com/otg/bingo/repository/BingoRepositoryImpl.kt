@@ -2,6 +2,7 @@ package com.otg.bingo.repository
 
 import com.otg.bingo.model.CardTile
 import com.otg.bingo.model.GameTheme
+import com.otg.bingo.model.LeaderboardCard
 import com.otg.bingo.model.MyCard
 import com.otg.bingo.repository.internal.SUPABASE_HOST
 import com.otg.bingo.repository.internal.isSuccess
@@ -78,6 +79,35 @@ class BingoRepositoryImpl(
                         emit(
                             if (response.isSuccess()) {
                                 val body = response.body<List<MyCard>>()
+                                Result.success(body)
+                            } else {
+                                loggi("get my cards failed with $response")
+                                Result.failure(Exception("GET my cards failed"))
+                            },
+                        )
+                    }
+                }
+            }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun leaderboard(): Flow<Result<List<LeaderboardCard>>> {
+        // FIXME we get infinite retry on 400
+        return authRepository
+            .currentUser()
+            .flatMapLatest { userProfile ->
+                if (userProfile == null) {
+                    loggi("user profile is null")
+                    flowOf(Result.failure(Exception("No user logged in")))
+                } else {
+                    flow {
+                        val response =
+                            httpClient.get(
+                                urlString = "$SUPABASE_HOST/rest/v1/saved_games_with_profiles?select=id,created_at,username,avatar_url,GameTheme(*)&order=created_at.desc",
+                            )
+                        emit(
+                            if (response.isSuccess()) {
+                                val body = response.body<List<LeaderboardCard>>()
                                 Result.success(body)
                             } else {
                                 loggi("get my cards failed with $response")
