@@ -57,7 +57,7 @@ class AuthRepositoryImpl(
         if (response.status.isSuccess()) {
             val supabaseSession = response.body<SupabaseSession>()
             loggi("persisting user id as = ${supabaseSession.user.userId}")
-            authTokenStore.saveSession(response.body<SupabaseSession>().toPersistedSession())
+            authTokenStore.saveSession(supabaseSession.toPersistedSession())
             val userProfile =
                 UserProfile(
                     supabaseSession.user.userMetadata.name,

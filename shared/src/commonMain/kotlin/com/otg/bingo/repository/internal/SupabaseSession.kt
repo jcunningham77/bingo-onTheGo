@@ -21,8 +21,8 @@ data class User(
 
 @Serializable
 data class UserMetadata(
-    @SerialName("avatar_url") val avatarUrl: String,
-    @SerialName("name") val name: String,
+    @SerialName("avatar_url") val avatarUrl: String?,
+    @SerialName("name") val name: String?,
 )
 
 fun SupabaseSession.toPersistedSession(): PersistedSession =
