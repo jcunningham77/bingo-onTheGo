@@ -35,7 +35,7 @@ class AppleSignInHandler: NSObject, ASAuthorizationControllerDelegate, ASAuthori
             let tokenData = credential.identityToken,
             let idToken = String(data: tokenData, encoding: .utf8)
         else {
-            print("AppleSignInHandler: failed to extract identity token")
+            NSLog("AppleSignInHandler: failed to extract identity token")
             return
         }
 
@@ -46,7 +46,7 @@ class AppleSignInHandler: NSObject, ASAuthorizationControllerDelegate, ASAuthori
         controller: ASAuthorizationController,
         didCompleteWithError error: Error
     ) {
-        print("AppleSignInHandler: authorization error - \(error)")
+        NSLog("AppleSignInHandler: authorization error - \(error)")
         MainViewControllerKt.signInWithAppleFailed()
     }
 

@@ -40,35 +40,37 @@ class AuthRepositoryImpl(
     }
 
     override suspend fun signIn(oAuthData: OAuthData): Result<Unit> {
-        loggi("signInWithOauthToken = ${oAuthData.token}")
-        val url = "${SUPABASE_HOST}/auth/v1/token?grant_type=id_token"
+        return runCatching {
+            loggi("signInWithOauthToken = ${oAuthData.token}")
+            val url = "${SUPABASE_HOST}/auth/v1/token?grant_type=id_token"
 
-        val response =
-            httpClient.post(url) {
-                contentType(ContentType.Application.Json)
-                setBody(
-                    IdTokenGrantRequest(
-                        provider = oAuthData.provider.apiValue,
-                        idToken = oAuthData.token,
-                    ),
-                )
+            val response =
+                httpClient.post(url) {
+                    contentType(ContentType.Application.Json)
+                    setBody(
+                        IdTokenGrantRequest(
+                            provider = oAuthData.provider.apiValue,
+                            idToken = oAuthData.token,
+                        ),
+                    )
+                }
+
+            if (response.status.isSuccess()) {
+                val supabaseSession = response.body<SupabaseSession>()
+                loggi("persisting user id as = ${supabaseSession.user.userId}")
+                authTokenStore.saveSession(supabaseSession.toPersistedSession())
+                val userProfile =
+                    UserProfile(
+                        supabaseSession.user.userMetadata.name,
+                        supabaseSession.user.userMetadata.avatarUrl,
+                        supabaseSession.user.userId,
+                    )
+                setCurrentUser(userProfile)
+                return Result.success(Unit)
+            } else {
+                loggi(" error signing into Supabase ${response.status}")
+                return Result.failure(Exception("error signing into Supabase ${response.status}"))
             }
-
-        if (response.status.isSuccess()) {
-            val supabaseSession = response.body<SupabaseSession>()
-            loggi("persisting user id as = ${supabaseSession.user.userId}")
-            authTokenStore.saveSession(supabaseSession.toPersistedSession())
-            val userProfile =
-                UserProfile(
-                    supabaseSession.user.userMetadata.name,
-                    supabaseSession.user.userMetadata.avatarUrl,
-                    supabaseSession.user.userId,
-                )
-            setCurrentUser(userProfile)
-            return Result.success(Unit)
-        } else {
-            loggi(" error signing into Supabase ${response.status}")
-            return Result.failure(Exception("error signing into Supabase ${response.status}"))
         }
     }
 

@@ -14,6 +14,7 @@ import com.otg.bingo.repository.internal.OauthProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import platform.Foundation.NSLog
 import platform.UIKit.UIViewController
 
 fun MainViewController(onSignInRequested: () -> Unit): UIViewController {
@@ -44,17 +45,28 @@ fun MainViewController(onSignInRequested: () -> Unit): UIViewController {
 
 fun initializeSession() {
     CoroutineScope(Dispatchers.Default).launch {
-        val restored = IosApp.appComponent.authRepository.tryRestoreSession()
-        IosApp.authState.value = if (restored) IosAuthState.SignedIn else IosAuthState.SignedOut
+        try {
+            val restored = IosApp.appComponent.authRepository.tryRestoreSession()
+            IosApp.authState.value = if (restored) IosAuthState.SignedIn else IosAuthState.SignedOut
+        } catch (e: Exception) {
+            NSLog("initializeSession failed: $e")
+            IosApp.authState.value = IosAuthState.SignedOut
+        }
+
     }
 }
 
 fun signInWithApple(idToken: String) {
     CoroutineScope(Dispatchers.Default).launch {
-        val result = IosApp.appComponent.authRepository.signIn(
-            OAuthData(token = idToken, provider = OauthProvider.APPLE)
-        )
-        IosApp.authState.value = if (result.isSuccess) IosAuthState.SignedIn else IosAuthState.SignedOut
+        try {
+            val result = IosApp.appComponent.authRepository.signIn(
+                OAuthData(token = idToken, provider = OauthProvider.APPLE)
+            )
+            IosApp.authState.value = if (result.isSuccess) IosAuthState.SignedIn else IosAuthState.SignedOut
+        } catch (e: Exception) {
+            NSLog("signInWithApple failed: $e")
+            IosApp.authState.value = IosAuthState.SignedOut
+        }
     }
 }
 
